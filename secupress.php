@@ -5,7 +5,7 @@
  * Description: More than a plugin, the guarantee of a protected website by experts.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 2.0.3
+ * Version: 2.1.1
  * Code Name: Python (Mark XX)
  * Network: true
  * Contributors: SecuPress, juliobox, GregLone
@@ -21,26 +21,13 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** DEFINES ===================================================================================== */
-/** ----------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
 
-define( 'SECUPRESS_VERSION',                    '2.0.3' );
-// define( 'SECUPRESS_PRO_VERSION',                SECUPRESS_VERSION );
-define( 'SECUPRESS_MAJOR_VERSION',              '2.0' );
+define( 'SECUPRESS_VERSION',                    '2.1.1' );
+define( 'SECUPRESS_MAJOR_VERSION',              '2.1' );
 define( 'SECUPRESS_FILE',                       __FILE__ );
 define( 'SECUPRESS_PATH',                       realpath( dirname( SECUPRESS_FILE ) ) . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_INC_PATH',                   SECUPRESS_PATH . 'inc' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_PRO_INC_PATH',               SECUPRESS_PATH . 'pro' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_PRO_ADMIN_PATH',             SECUPRESS_PRO_INC_PATH . 'admin' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_PRO_CLASSES_PATH',           SECUPRESS_PRO_INC_PATH . 'classes' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_PRO_MODULES_PATH',           SECUPRESS_PRO_INC_PATH . 'modules' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_PRO_ADMIN_SETTINGS_MODULES', SECUPRESS_PRO_ADMIN_PATH . 'modules' . DIRECTORY_SEPARATOR );
-
-
-
-/** --------------------------------------------------------------------------------------------- */
-/** DEFINES ===================================================================================== */
-/** --------------------------------------------------------------------------------------------- */
-
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
 define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
@@ -57,7 +44,7 @@ define( 'SECUPRESS_ADMIN_PATH'            , SECUPRESS_INC_PATH . 'admin' . DIREC
 define( 'SECUPRESS_CLASSES_PATH'          , SECUPRESS_INC_PATH . 'classes' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_ADMIN_SETTINGS_MODULES', SECUPRESS_ADMIN_PATH . 'modules' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
-define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'inc/' );
+define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'core/' );
 define( 'SECUPRESS_FRONT_URL'             , SECUPRESS_INC_URL . 'front/' );
 define( 'SECUPRESS_ADMIN_URL'             , SECUPRESS_INC_URL . 'admin/' );
 define( 'SECUPRESS_ASSETS_URL'            , SECUPRESS_PLUGIN_URL . 'assets/' );
@@ -361,6 +348,7 @@ function secupress_load_functions() {
 	secupress_require_class( 'Scanner_Results' );
 
 	// Admin side but need when running cron.
+	require_once( SECUPRESS_ADMIN_PATH . 'functions/settings.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/scan-fix.php' );
 
 	if ( ! is_admin() ) {
@@ -383,7 +371,6 @@ function secupress_load_functions() {
 	// Functions for the admin side.
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/admin.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/options.php' );
-	require_once( SECUPRESS_ADMIN_PATH . 'functions/settings.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/ajax-post.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );

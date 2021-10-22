@@ -1,12 +1,23 @@
 jQuery( function($) {
+
+	$('#more-methods').click( function(e) {
+		e.preventDefault();
+		$(this).slideUp(100);
+		$('#more_methods').slideDown('slow');
+	});
+
+	$('#http_log_actions').submit( function(e){
+		var time = Date.now();
+		$('[name$="[since]"]').val( Math.floor( time / 1000 ) );
+	});
 	var handle = $( ".ui-slider-handle" );
 
 	$( ".secupress-slider" ).slider({
 		min: 1,
 		max: SecuPressi18nLogs.steps.length - 1,
-		animate: true,
+		// animate: true,
+		value: $('#input-' + $(this).data('sync-id') ).val(),
 		create: function() {
-			$( this ).slider( "value", 0 );
 			handle.html( '<span class="dashicons dashicons-leftright"></span>' );
 		},
 		slide : function( event, ui ) { secupress_log_slider( this, event, ui ); },
@@ -34,9 +45,13 @@ jQuery( function($) {
 		} else {
 			$($slider).slider({ range: '' }).data('min', 0);
 		}
+		$('#input-' + sync_id).val( ui.value );
 	}
 
 	//// get value by i18n from options
-	// $( ".secupress-slider:first" ).slider('value', 4);
+	$($(".secupress-slider").get().reverse()).each( function( i, el ) {
+		var v = $('#input-' + $(el).data('sync-id') ).val();
+		$(this).slider('value', v);
+	});
+	$(".secupress-slider").slider({'animate': true});
 } );
-

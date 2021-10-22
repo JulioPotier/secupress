@@ -261,11 +261,24 @@ function secupress_get_active_plugins() {
 /**
  * Get contents to put in the `.htaccess` file to ban IPs.
  *
- * @since 1.0
  * @since 1.4.9 Deprecated
+ * @since 1.0
  *
  * @return (string)
  */
 function secupress_get_htaccess_ban_ip() {
 	_deprecated_function( __FUNCTION__, '1.4.9' );
+}
+
+
+/**
+ * Update the 2 files for GeoIP database on demand
+ *
+ * @since 2.1 Deprecated function
+ * @since 1.4.9
+ * @author Julio Potier
+ **/
+function secupress_geoips_update_datafiles() {
+	_deprecated_function( __FUNCTION__, '2.1', 'secupress_geoips_update_datafile' );
+	secupress_geoips_update_datafile();
 }

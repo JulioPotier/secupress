@@ -503,7 +503,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		echo '<form action="' . esc_url_raw( secupress_get_current_url('raw') ) . '" id="form-search-ip"' . ( $ban_ips || $is_search ? '' : ' class="hidden"' ) . ' method="post">';
 			echo '<label for="secupress-search-banned-ip" class="screen-reader-text">' . __( 'Search IP', 'secupress' ) . '</label><br/>';
 			echo '<input type="search" id="secupress-search-banned-ip" name="secupress-search-banned-ip" value="' . esc_attr( wp_unslash( $search_val ) ) . '"/> ';
-			echo '<button type="submit" class="secupress-button secupress-button-primary" data-loading-i18n="' . esc_attr__( 'Searching...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Search IP', 'secupress' ) . '">' . __( 'Search IP', 'secupress' ) . '</button> ';
+			echo '<button type="submit" class="secupress-button secupress-button-primary" data-loading-i18n="' . esc_attr__( 'Searching&hellip;', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Search IP', 'secupress' ) . '">' . __( 'Search IP', 'secupress' ) . '</button> ';
 			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
 			echo '<a class="secupress-button secupress-button-secondary' . ( $search_val ? '' : ' hidden' ) . '" href="' . esc_url( $page_url ) . '" ">' . __( 'Cancel search', 'secupress' ) . '</a> ';
 		echo "</form>\n";
@@ -550,7 +550,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			echo '<a class="secupress-button secupress-button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-ips-button" href="' . esc_url( $clear_href ) . '" data-loading-i18n="' . esc_attr__( 'Clearing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
 			echo '<span class="spinner secupress-inline-spinner' . ( $ban_ips || $is_search ? ' hide-if-no-js' : ' hidden' ) . '"></span>';
 			// For JS: ban a IP.
-			echo '<button type="button" class="secupress-button secupress-button-primary hide-if-no-js" id="secupress-ban-ip-button" data-loading-i18n="' . esc_attr__( 'Ban in progress...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Disallow', 'secupress' ) . '">' . __( 'Disallow', 'secupress' ) . "</button>\n";
+			echo '<button type="button" class="secupress-button secupress-button-primary hide-if-no-js" id="secupress-ban-ip-button" data-loading-i18n="' . esc_attr__( 'Ban in progress&hellip;', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Disallow', 'secupress' ) . '">' . __( 'Disallow', 'secupress' ) . "</button>\n";
 			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
 		echo "</p>\n";
 	}
@@ -644,7 +644,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			echo '<a class="secupress-button secupress-button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-whitelist-ips-button" href="' . esc_url( $clear_href ) . '" data-loading-i18n="' . esc_attr__( 'Clearing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
 			echo '<span class="spinner secupress-inline-spinner' . ( $ban_ips || $is_search ? ' hide-if-no-js' : ' hidden' ) . '"></span>';
 			// For JS: ban a IP.
-			echo '<button type="button" class="secupress-button secupress-button-primary hide-if-no-js" id="secupress-whitelist-ip-button" data-loading-i18n="' . esc_attr__( 'Adding to allowed list...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Allow', 'secupress' ) . '">' . __( 'Allow', 'secupress' ) . "</button>\n";
+			echo '<button type="button" class="secupress-button secupress-button-primary hide-if-no-js" id="secupress-whitelist-ip-button" data-loading-i18n="' . esc_attr__( 'Adding to allowed list&hellip;', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Allow', 'secupress' ) . '">' . __( 'Allow', 'secupress' ) . "</button>\n";
 			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
 		echo "</p>\n";
 	}
@@ -724,6 +724,207 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		</form>
 		<?php
 	}
+
+
+	/**
+	 * Displays the checkbox to activate the "HTTP" Logs.
+	 *
+	 * @since 2.1
+	 *
+	 * @param (array) $args An array of parameters. See `::field()`.
+	 */
+	protected function activate_http_logs( $args ) {
+		return; ////
+		$name_attribute = 'secupress-plugin-activation[' . $args['name'] . ']';
+		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
+		$disabled       = $disabled ? ' disabled="disabled"' : '';
+		$value          = (int) secupress_is_submodule_active( 'logs', 'http-logs' );
+
+		// Labels.
+		$label_open  = '';
+		$label_close = '';
+		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
+			$label_open  = '<label' . ( $disabled ? ' class="disabled"' : '' ) . '>';
+			$label_close = '</label>';
+		}
+		?>
+		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_http_logs' ), 'secupress_activate_http_logs' ) ); ?>" id="form-activate-http-logs" method="post">
+			<p><?php echo $label_open; ?>
+				<?php
+				echo $args['label_before'];
+				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) . $disabled . 'class="secupress-checkbox" /> ';
+				echo '<span class="label-text">' . $args['label'] . '</span>';
+				?>
+			<?php echo $label_close; ?>
+			</p>
+			<?php echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary">' . __( 'Submit' ) . '</button></p>'; ?>
+		</form>
+		<?php
+	}
+
+
+	/**
+	 * Displays the restrictions for HTTP Log
+	 *
+	 * @since 2.1
+	 */
+	protected function http_logs_restrictions() {
+		$http_log_settings = get_option( SECUPRESS_HTTP_LOGS );
+		if ( ! $http_log_settings ) {
+			return;
+		}
+		?>
+		<style>
+
+		.secupress-http-settings th.column-hits {
+			width: 45px;
+		}
+		.secupress-http-settings .since {
+			color:#50575e;
+		}
+		.secupress-http-settings .square-box {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-sizing: content-box;
+		}
+		.secupress-http-settings .square-box-external {
+			width: 32px;
+			height: 32px;
+			border-radius: 5px;
+		}
+		.secupress-http-settings .square-box-internal {
+			width: 16px;
+			height: 16px;
+			border-radius: 50%;
+			border: 1.5px solid #fff;
+		}
+		.secupress-http-settings .square-box-percent {
+			width: 13px;
+			height: 13px;
+			border-radius: 50%;
+			box-sizing: border-box;
+		}
+
+
+		</style>
+		<h2>Stuff</h2>
+		<p class="description">Stuff Stuff Stuff Stuff</p>
+
+		<table class="secupress-http-settings wp-list-table widefat fixed striped posts">
+			<thead>
+				<tr>
+					<td class="manage-column column-cb check-column">
+						<label class="screen-reader-text" for="logs-select-all-1">Select All</label>
+						<input id="logs-select-all-1" type="checkbox">
+					</td>
+					<th scope="col" class="manage-column column-title column-primary">URL</th>
+					<th scope="col" class="manage-column column-max-calls">Max Calls</th>
+					<th scope="col" class="manage-column column-options">Options</th>
+					<th scope="col" class="manage-column column-hits">Hits</th>
+				</tr>
+			</thead>
+
+			<tbody id="the-list">
+
+			<?php
+			$last_host = '';
+			$max_index = count( secupress_get_http_logs_limits() ) - 1;
+			function secupress_get_square_box_background_color( $index ) {
+				$max     = count( secupress_get_http_logs_limits() ) - 1;
+				$percent = 100 - ( $index * 100 / $max );
+				$from    = [ 237, 95, 116 ]; // red RGB
+				$to      = [ 51, 194, 127 ]; // green RGB
+				$diff    = [ $to[0] - $from[0], $to[1] - $from[1], $to[2] - $from[2] ];
+				$color   = [];
+				for ( $i=0; $i < 3; $i++ ) {
+					$color[] = round( $from[ $i ] + ( $percent * $diff[ $i ] / 100 ) );
+				}
+				return implode( ',', $color );
+			}
+			foreach( $http_log_settings as $url => $setting ) {
+				$url_host = wp_parse_url( $url, PHP_URL_HOST );
+				$prefix   = $url_host === $last_host ? '— ' : '';
+				$level    = (int) ! empty( $prefix );
+			?>
+				<tr id="http-setting-<?php echo sanitize_html_class( $url ); ?>" class="level-<?php echo $level; ?>">
+					<th scope="row" class="check-column">
+						<label class="screen-reader-text" for="cb-select-1">Select <?php echo esc_html( $url ); ?></label>
+						<input type="checkbox" name="http-setting[]" value="<?php echo esc_attr( $url ); ?>">
+					</th>
+					<td class="column-title has-row-actions column-primary">
+						<strong>
+							<?php
+							$last_host = $url_host;
+							$url       = strlen( $url ) > 160 ? substr( $url, 0, 158 ) . '<abbr title="' . esc_attr( $url ) . '">&hellip;</abbr>' : esc_html( $url );
+							echo $prefix . $url;
+							?>
+						</strong>
+
+						<div class="row-actions">
+							<span class="since">Since: <abbr title="2019/08/22 9:00:46 am">22 April 2021</abbr></span> |
+							<span class="delete"><a href="#" class="submitdelete" aria-label="Delete “<?php echo esc_attr( $url ); ?>”">Delete</a></span>
+						</div>
+					</td>
+					<td class="column-max-calls">
+					<?php
+					$percent = 100 - round( $setting['index'] * 100 / $max_index, 2 );
+					$color   = secupress_get_square_box_background_color( $setting['index'] );
+					?>
+					<div class="square-box" title="<?php echo esc_attr( secupress_get_http_logs_limits()[ $setting['index'] ] ); ?>">
+						<div class="square-box square-box-external" style="background-color: rgb(<?php echo $color; ?>)">
+							<div class="square-box square-box-internal">
+								<div class="square-box square-box-percent" style="background: conic-gradient(#FFF <?php echo $percent; ?>%, #0000 0%);"></div>
+							</div>
+						</div>
+					</div>
+
+					</td>
+					<td class="column-options">
+						<?php
+						if ( isset( $setting['options']['ignore-param'] ) ) {
+							echo '<p>Parameters: <code>';
+							echo implode( '</code>, <code>', $setting['options']['ignore-param'] );
+							echo '</code>.</p>';
+						}
+						if ( isset( $setting['options']['block-method'] ) ) {
+							echo '<p>Blocked Methods: <code>';
+							echo implode( '</code>, <code>', $setting['options']['block-method'] );
+							echo '</code>.</p>';
+						}
+						if ( ! isset( $setting['options']['ignore-param'] ) && ! isset( $setting['options']['block-method'] ) ) {
+							echo '–';
+						}
+						$last    = isset( $setting['last'] ) && $setting['last'] > 0 ? sprintf( __( 'Last hit: %s', 'secupress' ), date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $setting['last'] ) ) : '';
+						$hits    = isset( $setting['hits'] ) ? number_format_i18n( (int) $setting['hits'] ) : '–';
+						$hit_fmt = ! empty( $last ) ? sprintf( '<span class="update-plugins"><span class="update-count"><abbr title="%1$s">%2$s</abbr></span></span>', esc_attr( $last ), esc_html( $hits ) ) : '–';
+						?>
+					</td>
+					<td class="column-hits">
+						<?php echo $hit_fmt; ?>
+					</td>
+				</tr>
+			<?php
+			}
+			?>
+
+			</tbody>
+			<tfoot>
+				<tr>
+					<td class="manage-column column-cb check-column">
+						<label class="screen-reader-text" for="logs-select-all-2">Select All</label>
+						<input id="logs-select-all-2" type="checkbox">
+					</td>
+					<th scope="col" class="manage-column column-title column-primary">URL</th>
+					<th scope="col" class="manage-column column-max-calls">Max Calls</th>
+					<th scope="col" class="manage-column column-options">Options</th>
+					<th scope="col" class="manage-column column-hits">Hits</th>
+				</tr>
+			</tfoot>
+		</table>
+		<?php
+	}
+
 
 
 	/**

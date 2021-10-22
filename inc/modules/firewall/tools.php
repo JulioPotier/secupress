@@ -117,6 +117,7 @@ add_filter( 'secupress_block_id', 'secupress_firewall_block_id' );
 /**
  * Translate block IDs into understandable things.
  *
+ * @since 2.1   NOUSER
  * @since 2.0   BRU
  * @since 1.4.9 BHC, BRC
  * @author Julio Potier
@@ -143,6 +144,8 @@ function secupress_firewall_block_id( $module ) {
 		// User-Agent.
 		'UAHT' => __( 'User-Agent With HTML Tags', 'secupress' ),
 		'UAHB' => __( 'User-Agent Disallowed', 'secupress' ),
+		// Users
+		'NOUSER' => __( 'Unknown user', 'secupress' ),
 	);
 
 	return isset( $block_ids[ $module ] ) ? $block_ids[ $module ] : $module;

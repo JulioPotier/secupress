@@ -770,6 +770,12 @@ function secupress_get_wp_directory() {
 	if ( ! empty( $home ) && 0 !== strcasecmp( $home, $siteurl ) ) {
 		$wp_siteurl_subdir = str_ireplace( $home, '', $siteurl ); /* $siteurl - $home */
 		$wp_siteurl_subdir = secupress_trailingslash_only( $wp_siteurl_subdir );
+	} else {
+		$parsed_url_path   = parse_url( $home, PHP_URL_PATH );
+		if ( '/' !== $parsed_url_path ) {
+			$wp_siteurl_subdir = secupress_trailingslash_only( $parsed_url_path );
+			return $wp_siteurl_subdir;
+		}
 	}
 
 	return $wp_siteurl_subdir;

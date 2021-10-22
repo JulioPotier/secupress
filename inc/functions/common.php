@@ -404,6 +404,10 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 		if ( ! empty( $args['response'] ) ) {
 			http_response_code( absint( $args['response'] ) );
 		}
+		// https://core.trac.wordpress.org/ticket/53262
+		remove_filter( 'wp_robots', 'wp_robots_noindex_embeds' );
+		remove_filter( 'wp_robots', 'wp_robots_noindex_search' );
+
 		wp_die( $message, $title, $args );
 	}
 }
@@ -441,6 +445,27 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 		$args = array( 'content' => (string) $args ); // Cast to prevent recursion.
 	}
 	$args     = wp_parse_args( $args, array( 'code' => 403, 'content' => '', 'b64' => [] ) );
+
+	// Preventing the display of possible sent passwords
+	$hidden = '***… // ' . sprintf( __( 'Hidden by %s.', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+	foreach ( [ 'password', 'psswrd', 'pass', 'pwd', 'pw' ] as $key ) {
+		if ( isset( $_REQUEST[ $key ] ) ) {
+			$_REQUEST[ $key ] = $hidden;
+		}
+		if ( isset( $_GET[ $key ] ) ) {
+			$_GET[ $key ] = $hidden;
+		}
+		if ( isset( $_POST[ $key ] ) ) {
+			$_POST[ $key ] = $hidden;
+		}
+	}
+
+	// Use these filters to remove or modify contents
+	$_REQUEST = apply_filters( 'secupress.block.remove_content_from._REQUEST', $_REQUEST );
+	$_GET     = apply_filters( 'secupress.block.remove_content_from._GET',     $_GET     );
+	$_POST    = apply_filters( 'secupress.block.remove_content_from._POST',    $_POST    );
+	$_COOKIE  = apply_filters( 'secupress.block.remove_content_from._COOKIE',  $_COOKIE  );
+	$_FILES   = apply_filters( 'secupress.block.remove_content_from._FILES',   $_FILES   );
 
 	$data     = var_export(
 			[   '$_REQUEST' => array_map( 'secupress_code_me', $_REQUEST ),
@@ -800,7 +825,7 @@ function secupress_send_mail( $to, $subject, $message, $headers = array(), $atta
 	], $headers );
 
 	// 'content-type' => 'content-type: text/html' ?
-	$header = apply_filters( 'secupress.mail.headers', $headers );
+	$headers = apply_filters( 'secupress.mail.headers', $headers );
 
 	return wp_mail( $to, $subject, $message, $headers, $attachments );
 }

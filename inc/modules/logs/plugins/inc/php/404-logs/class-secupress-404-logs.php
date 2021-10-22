@@ -92,8 +92,9 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 			'type'   => 'error-404',
 			'target' => esc_html( secupress_get_current_url( 'uri' ) ),
 			'data'   => array(
-				'get'  => $_GET,
+				'get'  => $_GET, // WPCS: CSRF ok.
 				'post' => $_POST, // WPCS: CSRF ok.
+				'ip'   => secupress_get_ip(), 
 			),
 		) );
 

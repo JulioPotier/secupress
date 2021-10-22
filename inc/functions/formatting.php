@@ -244,7 +244,7 @@ function secupress_unique_sorted_list( $list, $separator = false ) {
  * @return
  **/
 function secupress_readable_duration( $entry ) {
-	if ( ! is_numeric( $entry ) ) {
+	if ( ! is_numeric( $entry ) || INF === $entry ) {
 		$coeff    = [ 1, MINUTE_IN_SECONDS, HOUR_IN_SECONDS, DAY_IN_SECONDS, MONTH_IN_SECONDS, YEAR_IN_SECONDS ];
 		$data     = array_reverse( array_map( 'intval', explode( ':', $entry ) ) );
 		$entry    = 0;
@@ -256,6 +256,7 @@ function secupress_readable_duration( $entry ) {
 			return;
 		}
 	}
+
 	$from   = new \DateTime( '@0' );
 	$to     = new \DateTime( "@$entry" );
 	$data   = explode( ':', $from->diff( $to )->format('%s:%i:%h:%d:%m:%y') );
@@ -306,4 +307,47 @@ function secupress_tag_me( $str, $tag ) {
  **/
 function secupress_code_me( $str ) {
 	return secupress_tag_me( $str, 'code' );
+}
+
+/**
+ * Used in localize
+ *
+ * @since 2.1
+ * @author Julio Potier
+ * @return (array)
+ **/
+function secupress_get_http_logs_limits( $mode = 'text' ) {
+	if ( 'text' === $mode ) {
+		return [
+			'', // index 0 in JS
+			__( 'No Limits (default)', 'secupress' ),
+			__( '1440 per day / 1 per min', 'secupress' ),
+			__( '288 per day / 1 per 5 min', 'secupress' ),
+			__( '96 per day / 1 per 15 min', 'secupress' ),
+			__( '48 per day / 1 per 30 min', 'secupress' ),
+			__( '24 per day / 1 per hour', 'secupress' ),
+			__( '12 per day / 1 per 2 hours', 'secupress' ),
+			__( '8 per day / 1 per 3 hours', 'secupress' ),
+			__( '6 per day / 1 per 4 hours', 'secupress' ),
+			__( '4 per day / 1 per 6 hours', 'secupress' ),
+			__( '2 per day / 1 per 12 hours', 'secupress' ),
+			__( '1 per day / 1 per 24 hours', 'secupress' ),
+			__( '0 Calls (blocked)', 'secupress' ),
+		];
+	}
+	return [
+		-1,
+		MINUTE_IN_SECONDS,
+		MINUTE_IN_SECONDS * 5,
+		HOUR_IN_SECONDS / 4,
+		HOUR_IN_SECONDS / 2,
+		HOUR_IN_SECONDS,
+		HOUR_IN_SECONDS * 2,
+		HOUR_IN_SECONDS * 3,
+		HOUR_IN_SECONDS * 4,
+		HOUR_IN_SECONDS * 6,
+		HOUR_IN_SECONDS * 12,
+		DAY_IN_SECONDS,
+		0,
+	];
 }

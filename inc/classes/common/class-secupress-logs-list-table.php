@@ -126,6 +126,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		/** This filter is documented in wp-admin/includes/post.php */
 		$per_page = apply_filters( 'edit_posts_per_page', $per_page, $post_type ); // WPCS: override ok.
 
+
 		$avail_post_stati = get_available_post_statuses( $post_type ); // WPCS: override ok.
 
 		// Get posts.
@@ -240,7 +241,17 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		/** This filter is documented in wp-admin/includes/post.php */
 		$args['posts_per_page'] = apply_filters( 'edit_posts_per_page', $args['posts_per_page'], $args['post_type'] );
 
-		// Get posts.
+		if ( isset( $_GET['log'] ) ) {
+			// Custom query to be lighter.
+			global $wpdb;
+			$log_id           = (int) $_GET['log'];
+			$main_post        = $wpdb->get_var( $wpdb->prepare( 'SELECT post_parent from ' . $wpdb->posts . ' WHERE post_type="%s" AND ID = %s ORDER BY ID DESC', $this->screen->post_type, $log_id ) );
+			$main_post        = $main_post ? $main_post : $log_id;
+			$children         = $wpdb->get_col( $wpdb->prepare( 'SELECT ID from ' . $wpdb->posts . ' WHERE post_type="%s" AND post_parent = %d ORDER BY ID ASC', $this->screen->post_type, $main_post ) );
+			$ids              = array_filter( array_merge( [ $main_post ], $children ) );
+			$args['post__in'] = $ids;
+		}
+
 		wp( $args );
 	}
 
@@ -636,7 +647,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		?>
 		<label for="cb-select-<?php the_ID(); ?>">
 			<span class="screen-reader-text">
-				<?php printf( __( 'Select &#8220;%s&#8221;', 'secupress' ), strip_tags( $this->log->get_title() ) ); ?>
+				<?php printf( __( 'Select &#8220;%s&#8221;', 'secupress' ), strip_tags( $this->log->get_title( $post ) ) ); ?>
 			</span>
 			<input id="cb-select-<?php the_ID(); ?>" type="checkbox" name="post[]" value="<?php the_ID(); ?>" class="secupress-checkbox secupress-checkbox-mini" />
 			<span class="label-text"></span>
@@ -676,15 +687,16 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		global $avail_post_stati;
 
 		$logs_classname = $this->logs_classname;
-		$title          = $this->log->get_title();
+		$title          = $this->log->get_title( $post );
 		$view_href      = array( 'log' => $post->ID );
 		if ( ! empty( $_GET['critic'] ) && in_array( $_GET['critic'], $avail_post_stati, true ) ) {
 			$view_href['critic'] = $_GET['critic'];
 		}
 		$view_href      = add_query_arg( $view_href, $this->paged_page_url() );
+		$prefix         = 0 === $post->post_parent ? '' : ' — ';
 
 		echo '<a class="secupress-view-log" href="' . esc_url( $view_href ) . '" title="' . esc_attr( sprintf( __( 'View &#8220;%s&#8221;', 'secupress' ), strip_tags( $title ) ) ) . '">';
-			echo $title;
+			echo $prefix . $title;
 		echo "</a>\n";
 
 		if ( ! secupress_wp_version_is( '4.3.0' ) ) {
@@ -744,13 +756,17 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 * @param (int)        $level Level of the post (level as in parent/child relation).
 	 */
 	public function single_row( $post, $level = 0 ) {
-		$global_post = get_post();
-		$post        = get_post( $post );
-
+		$global_post     = get_post();
+		$post            = get_post( $post );
 		$GLOBALS['post'] = $post; // WPCS: override ok.
 		setup_postdata( $post );
+		$class           = [ 'level' => 'level-' . ( (int) !! $post->post_parent ), 'hidden' => (int) !! $post->post_parent ? 'hid e-if-js' : '', 'parent' => 'parent-post-' . $post->post_parent ];
+		if ( isset( $_GET['log'] ) ) {
+			unset( $class['hidden'] );
+		}
+		$classes         = implode( ' ', get_post_class( $class, $post->ID ) );
 		?>
-		<tr id="post-<?php echo $post->ID; ?>" class="<?php echo implode( ' ', get_post_class( 'level-0', $post->ID ) ); ?>">
+		<tr id="post-<?php echo $post->ID; ?>" class="<?php echo $classes; ?>">
 			<?php $this->single_row_columns( $post ); ?>
 		</tr>
 		<?php
@@ -791,15 +807,20 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		$logs_classname = $this->logs_classname;
 		$delete_href    = $logs_classname::get_instance()->delete_log_url( $post->ID, $this->page_url() );
 		$view_href      = array( 'log' => $post->ID );
+		$critic         = null;
 		if ( ! empty( $_GET['critic'] ) && in_array( $_GET['critic'], $avail_post_stati, true ) ) {
-			$view_href['critic'] = $_GET['critic'];
+			$critic              = $_GET['critic'];
+			$view_href['critic'] = $critic;
 		}
 		$view_href      = add_query_arg( $view_href, $this->paged_page_url() );
 
-		$actions = array(
-			'delete' => '<a class="secupress-delete-log submitdelete" href="' . esc_url( $delete_href ) . '" title="' . esc_attr__( 'Delete this item permanently' ) . '">' . __( 'Delete Permanently' ) . '</a> <span class="spinner secupress-inline-spinner"></span>',
-			'view'   => '<a class="secupress-view-log" href="' . esc_url( $view_href ) . '" title="' . esc_attr__( 'View this log details', 'secupress' ) . '" tabindex="-1">' . __( 'View' ) . '</a>',
-		);
+		$actions = [];
+		if ( count( get_children( $post ) ) ) {
+			$actions['delete'] = '<a class="secupress-delete-log submitdelete" href="' . esc_url( $delete_href ) . '" title="' . esc_attr__( 'Delete this item and its children permanently' ) . '">' . __( 'Delete Permanently with its children' ) . '</a> <span class="spinner secupress-inline-spinner"></span>';
+		} else {
+			$actions['delete'] = '<a class="secupress-delete-log submitdelete" href="' . esc_url( $delete_href ) . '" title="' . esc_attr__( 'Delete this item permanently' ) . '">' . __( 'Delete Permanently' ) . '</a> <span class="spinner secupress-inline-spinner"></span>';
+		}
+		$actions['view']   = '<a class="secupress-view-log" href="' . esc_url( $view_href ) . '" title="' . esc_attr__( 'View this log details', 'secupress' ) . '" tabindex="-1">' . __( 'View' ) . '</a>';
 
 		/**
 		* Filter the actions, only for secupress
@@ -808,7 +829,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		* @param (WP_Post) $post
 		* @param (string) $criticity
 		*/
-		$actions = apply_filters( 'secupress.post_row_actions', $actions, $post, $_GET['critic'] );
+		$actions = apply_filters( 'secupress.post_row_actions', $actions, $post, $critic );
 
 		return $this->row_actions( $actions );
 	}

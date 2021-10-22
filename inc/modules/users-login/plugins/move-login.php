@@ -411,6 +411,7 @@ function secupress_move_login_maybe_deny_login_page( $secure = true ) {
 	$parsed = trim( $parsed, '/' );
 	$subdir = secupress_get_wp_directory();
 	$slugs  = secupress_move_login_get_slugs();
+
 	if ( $subdir ) {
 		foreach ( $slugs as $action => $slug ) {
 			$slugs[ $action ] = $subdir . $slug;
@@ -478,24 +479,13 @@ function secupress_fallback_slug_redirect( $wp, $test = false ) {
 		return;
 	}
 	$slugs  = secupress_move_login_get_slugs();
-	$wp_dir = secupress_get_wp_directory();
-
-	if ( secupress_is_subfolder_install() ) {
-		$base  = wp_parse_url( trailingslashit( secupress_get_main_url() ) );
-		$base  = ltrim( $base['path'], '/' );
-		$base .= $wp_dir ? '[_0-9a-zA-Z-]+/' : '([_0-9a-zA-Z-]+/)?';
-	} else {
-		$base  = wp_parse_url( trailingslashit( get_option( 'home' ) ) );
-		$base  = ltrim( $base['path'], '/' );
-		$base .= $wp_dir ? ltrim( $wp_dir, '/' ) : '';
-	}
+	$base   = secupress_get_wp_directory();
 	$regex  = '^' . $base . '(' . implode( '|', $slugs ) . ')$';
 	$parsed = wp_parse_url( $_SERVER['REQUEST_URI'] );
 	$parsed = ! empty( $parsed['path'] ) ? $parsed['path'] : '';
 	$parsed = trim( $parsed, '/' );
 
 	if ( preg_match( "@{$regex}@", $parsed ) ) {
-
 		$slugs  = array_flip( secupress_move_login_get_slugs() );
 		$parsed = explode( '/', $parsed );
 		$parsed = end( $parsed );
@@ -503,13 +493,17 @@ function secupress_fallback_slug_redirect( $wp, $test = false ) {
 		if ( ! isset( $_REQUEST['action'] ) && isset( $slugs[ $parsed ] ) ) {
 			$_REQUEST['action'] = $slugs[ $parsed ];
 		}
+
 		if ( ! $test && is_user_logged_in() && ! isset( $_REQUEST['action'] ) ) {
 			wp_safe_redirect( admin_url(), 302 );
 			die();
 		}
+
 		if ( $test ) {
 			return true;
 		}
+		$user_login = '';
+		$error      = '';
 		require( ABSPATH . 'wp-login.php' );
 		die();
 	}

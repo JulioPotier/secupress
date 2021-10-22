@@ -7,7 +7,7 @@
  * Version: 1.0
  */
 
-defined( 'ABSPATH' ) or die( 'Something went wrong.' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 add_action( 'template_redirect', 'secupress_set_404_for_author_pages' );
 /**
@@ -74,13 +74,16 @@ add_filter( 'rest_request_before_callbacks', 'secupress_stop_user_enumeration_re
 /**
  * Block the author page for REST API
  *
+ * @param WP_Error|null   $response The current error object if any.
+ * *
  * @since 2.0 'uri'
  * @since 1.0 'base'
  * @author Julio Potier
  **/
-function secupress_stop_user_enumeration_rest() {
+function secupress_stop_user_enumeration_rest( $response ) {
 	$rest_base_url = home_url( 'wp-json/' . Secupress_WP_REST_Users_Controller::get_rest_base() );
 	if ( ! current_user_can( 'list_users' ) && strpos( home_url( secupress_get_current_url( 'uri' ) ), $rest_base_url ) === 0 ) {
 		wp_send_json( array( 'code' => 'rest_cannot_access', 'message' => __( 'Something went wrong.', 'secupress' ), 'data' => array( 'status' => 401 ) ) , 401 );
 	}
+    return $response;
 }

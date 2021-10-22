@@ -1611,6 +1611,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		if ( '0' === r.responseText && 400 === r.status ) {
 			$( '#captcha_activate' ).prop( 'disabled', false ).parent().removeClass( 'disabled' ).parent().next().hide();
 			$( '#captcha_activate' ).prop( 'checked', 1 == $('#captcha_activate').data( 'value' ) );
+			$( '#login_auth_submit' ).prop( 'disabled', false );
 		}
 	});
 } )(jQuery, document, window);

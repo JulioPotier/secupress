@@ -114,7 +114,7 @@ class SecuPress_Scan_HTTPS extends SecuPress_Scan implements SecuPress_Scan_Inte
 	 */
 	protected function init() {
 		$this->title    = __( 'Check if your website is using an active HTTPS connection.', 'secupress' );
-		$this->more     = __( 'An HTTPS connection is needed for many features on the web today, it also gains the trust of your visitors by helping to protecting their online privacy.' );
+		$this->more     = __( 'An HTTPS connection is needed for many features on the web today, it also gains the trust of your visitors by helping to protecting their online privacy.', 'secupress' );
 		$this->more_fix = static::get_messages( 301 );
 		if ( false === $this->need_fix() ) {
 			// "bad"

@@ -9,7 +9,7 @@ $this->add_section( __( 'Malicious URLs', 'secupress' ) );
 $main_field_name = $this->get_field_name( 'bad-contents' );
 
 $this->add_field( array(
-	'title'             => __( 'Block bad content', 'secupress' ),
+	'title'             => __( 'Block Bad Content', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
@@ -42,7 +42,7 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'             => __( 'Block 404 requests on PHP files', 'secupress' ),
-	'description'       => __( 'When someone is tring to find a hidden or malicious PHP file, they could just get a 404 error, page not found. Block them.', 'secupress' ),
+	'description'       => __( 'Allows you to redirect people who attempt to access hidden or malicious PHP files on a 404 page not found error.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'ban-404-php' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',

@@ -30,7 +30,7 @@ class SecuPress_404_Log extends SecuPress_Log {
 		 * The URI is stored in the post title: add it at the beginning of the data, it will be displayed in the title and the message.
 		 */
 		$args = get_post( $args );
-
+		
 		$this->data = array_merge( array(
 			'uri' => '/' . $args->post_title,
 		), $this->data );
@@ -46,10 +46,10 @@ class SecuPress_404_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function set_title() {
+	protected function set_title( $post = null ) {
 		$this->title = __( 'Error 404 for %1$s', 'secupress' );
 
-		parent::set_title();
+		parent::set_title( $post );
 	}
 
 
@@ -61,7 +61,7 @@ class SecuPress_404_Log extends SecuPress_Log {
 	 * @since 1.0
 	 */
 	protected function set_message() {
-		$this->message  = __( 'Error 404 for %1$s', 'secupress' ) . '<br/>';
+		$this->message  = __( 'Error 404 for %1$s from IP %4$s', 'secupress' ) . '<br/>';
 		$this->message .= sprintf( __( '%s:', 'secupress' ), '<code>$_GET</code>' ) . ' %2$s';
 		$this->message .= sprintf( __( '%s:', 'secupress' ), '<code>$_POST</code>' ) . ' %3$s';
 

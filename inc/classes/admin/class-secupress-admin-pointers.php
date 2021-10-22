@@ -47,15 +47,12 @@ final class SecuPress_Admin_Pointers {
 		 */
 		$registered_pointers = [
 			'secupress_page_secupress_modules' => [
-				'any'            => [ 'sp20_ad1month', 'sp20_addonszz' ],
-				'sensitive-data' => [ 'sp20_404guess' ],
-				'welcome'        => [ 'sp20_advanced' ],
-				'users-login'    => [ 'sp20_lockedzz' ],
-				'wordpress-core' => [ 'sp20_dbprefix', 'sp20_wpconfig' ],
-				'file-system'    => [ 'sp20_malwares' ],
-				'alerts'         => [ 'sp20_slacknot' ],
+				'any'          => [ 'sp20_ad1month' ],
+				//'logs'         => [ 'sp21_httplogs' ],
 			],
+			'users.php'        => [ 'any' => [ 'sp21_sessions' ] ],
 		];
+
 		// Check if screen related pointer is registered.
 		if ( ! isset( $registered_pointers[ $hook_suffix ] ) ) {
 			return;
@@ -67,7 +64,7 @@ final class SecuPress_Admin_Pointers {
 		}
 		$dismissed    = explode( ',', (string) get_user_meta( get_current_user_id(), 'dismissed_wp_pointers', true ) );
 		$pointers     = array_diff( $pointers, $dismissed );
-		// Limit pointers to 2 per screenn order by the natural array order
+		// Limit pointers to 2 per screen order by the natural array order
 		$pointers     = array_slice( $pointers, 0, 2 );
 		foreach ( $pointers as $pointer ) {
 			// Bind pointer print function
@@ -166,17 +163,18 @@ final class SecuPress_Admin_Pointers {
 	}
 
 	/**
-	 * New feature 404 guessing
+	 * New GeoIP Localisation API
 	 *
-	 * @since 2.0
+	 * @since 2.1
 	 */
-	public static function pointer__sp20_404guess() {
-		$content  = '<h3><span class="dashicons dashicons-star-filled"></span> ' . __( 'New SecuPress Pro Feature', 'secupress' ) . '</h3>';
-		$content .= '<h4>' . __( 'Anti 404 Guessing', 'secupress' ) . '</h4>';
+	public static function pointer__sp21_httplogs() {
+		$content  = '<h3><span class="dashicons dashicons-star-filled"></span> ' . __( 'New HTTP Logs Feature', 'secupress' ) . '</h3>';
+		$content .= '<h4>' . __( 'You can now filter the HTTP outputs', 'secupress' ) . '</h4>';
+		$content .= '<p>' . __( 'You can restrict how many time per day each URL can be called.<br>You can also just check which URLs are called from your site.<br>These filters will help you to improve the security AND the loading speed of your site.', 'secupress' ) . '</p>';
 
 		$position = array(
 			'edge'  => 'right',
-			'align' => 'bottom',
+			'align' => 'top',
 		);
 
 		$js_args = array(
@@ -186,7 +184,7 @@ final class SecuPress_Admin_Pointers {
 			/** Translators: Format 'ddd%' or 'ddd', not 'px' */
 			'pointerWidth' => _x( '400', 'pointerWidth', 'secupress' ),
 		);
-		self::print_js( str_replace( 'pointer__', '', __FUNCTION__ ), '.secupress-setting-row_content-protect_404guess', $js_args );
+		self::print_js( str_replace( 'pointer__', '', __FUNCTION__ ), '.secupress-setting-row_logs_http-logs-activated', $js_args );
 	}
 
 	/**
@@ -248,35 +246,10 @@ final class SecuPress_Admin_Pointers {
 	 *
 	 * @since 2.0
 	 */
-	public static function pointer__sp20_advanced() {
-		$content  = '<h3><span class="dashicons dashicons-shield-alt"></span> ' . __( 'New SecuPress Free Features', 'secupress' ) . '</h3>';
-		$content .= '<h4>' . __( 'Advanced Settings', 'secupress' ) . '</h4>';
-		$content .= '<p>' . __( 'You can now hide the <em>Admin Bar Menu</em> from SecuPress and disable the <em>Grade System</em>.', 'secupress' ) . '</p>';
-
-		$position = array(
-			'edge'  => 'right',
-			'align' => 'top',
-		);
-
-		$js_args = array(
-			'content'  => $content,
-			'position' => $position,
-			'pointerClass' => 'wp-pointer arrow-bottom',
-			/** Translators: Format 'ddd%' or 'ddd', not 'px' */
-			'pointerWidth' => _x( '400', 'pointerWidth', 'secupress' ),
-		);
-		self::print_js( str_replace( 'pointer__', '', __FUNCTION__ ), '#secupress-settings-module_welcome--secupress_advanced_settings', $js_args );
-	}
-
-	/**
-	 * New locked features
-	 *
-	 * @since 2.0
-	 */
-	public static function pointer__sp20_lockedzz() {
-		$content  = '<h3><span class="dashicons dashicons-shield-alt"></span> ' . __( 'New SecuPress Free Features', 'secupress' ) . '</h3>';
-		$content .= '<h4>' . __( 'Lock Sensible WP Settings', 'secupress' ) . '</h4>';
-		$content .= '<p>' . __( 'You can now lock the <em>Default Role Setting</em>, the <em>Subscription Setting</em>, and the <em>Admin Email Setting</em>.', 'secupress' ) . '</p>';
+	public static function pointer__sp21_sessions() {
+		$content  = '<h3><span class="dashicons dashicons-id-alt"></span> ' . __( 'SecuPress Improved Features', 'secupress' ) . '</h3>';
+		$content .= '<h4>' . __( 'Sessions Details', 'secupress' ) . '</h4>';
+		$content .= '<p>' . __( 'Get a better view with more details on each user sessions now.', 'secupress' ) . '</p>';
 
 		$position = array(
 			'edge'  => 'right',
@@ -286,115 +259,13 @@ final class SecuPress_Admin_Pointers {
 		$js_args = array(
 			'content'  => $content,
 			'position' => $position,
-			'pointerClass' => 'wp-pointer arrow-top',
-			/** Translators: Format 'ddd%' or 'ddd', not 'px' */
-			'pointerWidth' => _x( '400', 'pointerWidth', 'secupress' ),
-		);
-		self::print_js( str_replace( 'pointer__', '', __FUNCTION__ ), '.secupress-setting-row_blacklist-logins_default-role-activated', $js_args );
-	}
-
-	/**
-	 * New db prefix change
-	 *
-	 * @since 2.0
-	 */
-	public static function pointer__sp20_dbprefix() {
-		$dashicon = secupress_has_pro() ? '<span class="dashicons dashicons-star-filled"></span>' : '<span class="dashicons dashicons-privacy"></span>';
-		$content  = '<h3>' . $dashicon . ' ' . __( 'New SecuPress Pro Feature', 'secupress' ) . '</h3>';
-		$content .= '<h4>' . __( 'Change WordPress Database Prefix', 'secupress' ) . '</h4>';
-		$content .= '<p>' . __( 'You can now manually change the <em>WordPress Database Prefix</em> on demand.', 'secupress' ) . '</p>';
-
-		$position = array(
-			'edge'  => 'right',
-			'align' => 'top',
-		);
-
-		$js_args = array(
-			'content'  => $content,
-			'position' => $position,
 			'pointerClass' => 'wp-pointer arrow-bottom',
 			/** Translators: Format 'ddd%' or 'ddd', not 'px' */
 			'pointerWidth' => _x( '400', 'pointerWidth', 'secupress' ),
 		);
-		self::print_js( str_replace( 'pointer__', '', __FUNCTION__ ), '#module-database', $js_args );
+		self::print_js( str_replace( 'pointer__', '', __FUNCTION__ ), '.secupress-sessions a.current-user', $js_args );
 	}
 
-	/**
-	 * New malware scan
-	 *
-	 * @since 2.0
-	 */
-	public static function pointer__sp20_malwares() {
-		$dashicon = secupress_has_pro() ? '<span class="dashicons dashicons-star-filled"></span>' : '<span class="dashicons dashicons-privacy"></span>';
-		$content  = '<h3>' . $dashicon . ' ' . __( 'Revamped SecuPress Pro Feature', 'secupress' ) . '</h3>';
-		$content .= '<h4>' . __( 'New Malware Scan Data', 'secupress' ) . '</h4>';
-		$content .= '<p>' . __( 'Our scanner is now way more <strong>accurate</strong>, will display <strong>Malware Signatures</strong> and comes with 95% less false positives!', 'secupress' ) . '</p>';
-
-		$position = array(
-			'edge'  => 'right',
-			'align' => 'bottom',
-		);
-
-		$js_args = array(
-			'content'  => $content,
-			'position' => $position,
-			'pointerClass' => 'wp-pointer arrow-top',
-			/** Translators: Format 'ddd%' or 'ddd', not 'px' */
-			'pointerWidth' => _x( '400', 'pointerWidth', 'secupress' ),
-		);
-		self::print_js( str_replace( 'pointer__', '', __FUNCTION__ ), '#secupress-settings-module_file-system--file-scanner', $js_args );
-	}
-
-	/**
-	 * New Slack Notifications
-	 *
-	 * @since 2.0
-	 */
-	public static function pointer__sp20_slacknot() {
-		$dashicon = secupress_has_pro() ? '<span class="dashicons dashicons-star-filled"></span>' : '<span class="dashicons dashicons-privacy"></span>';
-		$content  = '<h3>' . $dashicon . ' ' . __( 'New SecuPress Pro Feature', 'secupress' ) . '</h3>';
-		$content .= '<h4>' . __( 'Slack Webhook Notifications', 'secupress' ) . '</h4>';
-		$content .= '<p>' . __( 'You can now send the SecuPress alerts directly in your favorite Slack team and Channel.', 'secupress' ) . '</p>';
-
-		$position = array(
-			'edge'  => 'right',
-			'align' => 'top',
-		);
-
-		$js_args = array(
-			'content'  => $content,
-			'position' => $position,
-			'pointerClass' => 'wp-pointer arrow-top',
-			/** Translators: Format 'ddd%' or 'ddd', not 'px' */
-			'pointerWidth' => _x( '400', 'pointerWidth', 'secupress' ),
-		);
-		self::print_js( str_replace( 'pointer__', '', __FUNCTION__ ), '#row-notification-types_slack', $js_args );
-	}
-
-	/**
-	 * New wp config values
-	 *
-	 * @since 2.0
-	 */
-	public static function pointer__sp20_wpconfig() {
-		$content  = '<h3><span class="dashicons dashicons-shield-alt"></span> ' . __( 'New SecuPress Free Features', 'secupress' ) . '</h3>';
-		$content .= '<h4>' . __( '7 new features', 'secupress' ) . '</h4>';
-		$content .= '<p>' . __( 'You can now protect your <em>Website Addresses</em>, your <em>DB Repair Page</em>, your <em>Database Errors Display</em>, your <em>Debug Settings</em>, your <em>Default Cookie Name</em> and manually change your <em>WordPress Security Keys</em>.', 'secupress' ) . '</p>';
-
-		$position = array(
-			'edge'  => 'right',
-			'align' => 'top',
-		);
-
-		$js_args = array(
-			'content'  => $content,
-			'position' => $position,
-			'pointerClass' => 'wp-pointer arrow-top',
-			/** Translators: Format 'ddd%' or 'ddd', not 'px' */
-			'pointerWidth' => _x( '400', 'pointerWidth', 'secupress' ),
-		);
-		self::print_js( str_replace( 'pointer__', '', __FUNCTION__ ), '#secupress-settings-module_wordpress-core--wp_config', $js_args );
-	}
 
 	/**
 	 * Prevents new users from seeing existing pointers.

@@ -89,27 +89,20 @@ function secupress_get_notupdated_plugins() {
  */
 function secupress_get_vulnerable_plugins() {
 	static $vulnerable_plugins;
-	$errors = array( '-1', '-2', '-3', '-99' );
 
 	if ( isset( $vulnerable_plugins ) ) {
 		return $vulnerable_plugins;
 	}
 
-	if ( false !== ( $from_transient = get_site_transient( 'secupress_vulnerable_plugins' ) ) ) {
-		return array_diff( $from_transient, $errors );
-	}
-
 	$temp = get_site_option( 'secupress_bad_plugins' );
-	$temp = $temp ? (array) json_decode( $temp ) : array();
-	$temp = $temp ? array_diff( $temp, $errors ) : array();
+	$temp = $temp ? (array) json_decode( $temp, true ) : [];
 
 	if ( $temp ) {
 		$vulnerable_plugins = $temp;
-		set_site_transient( 'secupress_vulnerable_plugins', $vulnerable_plugins, 6 * HOUR_IN_SECONDS );
 		return $vulnerable_plugins;
 	}
 
-	return array();
+	return [];
 }
 
 /**

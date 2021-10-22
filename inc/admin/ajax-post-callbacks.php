@@ -642,65 +642,6 @@ function secupress_admin_post_reset_settings_post_cb( $module = '', $bypass = fa
 }
 
 
-add_action( 'admin_post_secupress_refresh_bad_plugins', 'secupress_refresh_bad_plugins_list_ajax_post_cb' );
-/**
- * Call the refresh of the vulnerable plugins.
- * Moved from Pro to Free + renamed. Originally `secupress_refresh_bad_plugins_ajax_post_cb()` and `secupress_refresh_vulnerable_plugins()`.
- *
- * @since 1.1.3
- */
-function secupress_refresh_bad_plugins_list_ajax_post_cb() {
-	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'detect-bad-plugins' ) ) {
-		secupress_admin_die();
-	}
-
-	$plugins  = get_plugins();
-	$plugins  = wp_list_pluck( $plugins, 'Version' );
-	$args     = array( 'body' => array( 'items' => $plugins, 'type' => 'plugin' ) );
-
-	$response = wp_remote_post( SECUPRESS_WEB_MAIN . 'api/plugin/vulns.php', $args );
-
-	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-		$response = wp_remote_retrieve_body( $response );
-
-		// Store the result only if it's not an error (not -1, -2, -3, or -99).
-		if ( (int) $response > 0 ) {
-			update_site_option( 'secupress_bad_plugins', $response );
-		}
-	}
-}
-
-
-add_action( 'admin_post_secupress_refresh_bad_themes', 'secupress_refresh_bad_themes_list_ajax_post_cb' );
-/**
- * Call the refresh of the vulnerable themes.
- * Moved from Pro to Free + renamed. Originally `secupress_refresh_bad_themes_ajax_post_cb()` and `secupress_refresh_vulnerable_themes()`.
- *
- * @return void
- * @since 1.0
- */
-function secupress_refresh_bad_themes_list_ajax_post_cb() {
-	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'detect-bad-themes' ) ) {
-		secupress_admin_die();
-	}
-
-	$themes = wp_get_themes();
-	$themes = wp_list_pluck( $themes, 'Version' );
-	$args   = array( 'body' => array( 'items' => $themes, 'type' => 'theme' ) );
-
-	$response = wp_remote_post( SECUPRESS_WEB_MAIN . 'api/plugin/vulns.php', $args );
-
-	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-		$response = wp_remote_retrieve_body( $response );
-
-		// Store the result only if it's not an error (not -1, -2, -3, or -99).
-		if ( (int) $response > 0 ) {
-			update_site_option( 'secupress_bad_themes', $response );
-		}
-	}
-}
-
-
 add_action( 'wp_ajax_sanitize_move_login_slug', 'secupress_sanitize_move_login_slug_ajax_post_cb' );
 /**
  * Sanitize a value for a Move Login slug.
@@ -768,14 +709,13 @@ Have a nice day !
 
 Regards,
 All at ###SITENAME###
-###SITEURL###
-
-ps: you can also deactivate the Move Login module:
-%3$s', 'secupress' ),
+###SITEURL###', 'secupress' ),
 							$user->display_name,
-							'<a href="' . $url_remember . '">' . $url_remember . '</a>',
-							'<a href="' . $url_remove . '">' . $url_remove . '</a> ' . __( '(Valid 1 day)', 'secupress' )
+							'<a href="' . $url_remember . '">' . $url_remember . '</a>'
 					);
+	if ( apply_filters( 'secupress.plugins.move_login.email.deactivation_link', true ) ) {
+		$message .= "\n" . sprintf( __( "ps: you can also deactivate the Move Login module:\n%s", 'secupress' ), '<a href="' . $url_remove . '">' . $url_remove . '</a> ' . __( '(Valid 1 day)', 'secupress' ) );
+	}
 	$sent = secupress_send_mail( $_CLEAN['email'], $subject, $message );
 	secupress_die( $sent ? __( 'Email sent, check your mailbox.', 'secupress' ) : __( 'Email not sent, please contact the support.', 'secupress' ), __( 'Email', 'secupress' ), array( 'force_die' => true ) );
 }
@@ -899,7 +839,7 @@ function secupress_get_malwarescastatus_admin_post_cb() {
 	}
 	$response                      = [];
 	$response['malwareScanStatus'] = ! secupress_file_monitoring_get_instance()->is_monitoring_running();
-	$response['currentItems']      = array_map( function( $val ) { return str_replace( ABSPATH, '/', $val ); }, get_site_transient( SECUPRESS_FULL_FILETREE ) );
+	$response['currentItems']      = get_site_transient( SECUPRESS_FULL_FILETREE ) !== false ? array_map( function( $val ) { return str_replace( ABSPATH, '/', $val ); }, get_site_transient( SECUPRESS_FULL_FILETREE ) ) : [];
 	wp_send_json_success( $response );
 }
 
@@ -970,4 +910,60 @@ function secupress_dismiss_pointer_admin_post_cb( $_pointer = '' ) {
 	if ( ! $_pointer ) {
 		wp_send_json_success();
 	}
+}
+
+// add_action( 'admin_post_http_log_actions', 'secupress_http_log_actions_admin_post_cb' );
+function secupress_http_log_actions_admin_post_cb() {
+	if ( ! isset( $_POST['_wpnonce'], $_POST['log_id'], $_POST['http_log'] ) || ! check_admin_referer( 'http_log_actions' . $_POST['log_id'] ) ) {
+		die( '0' );
+	}
+	$http_logs = get_option( SECUPRESS_HTTP_LOGS );
+	$http_logs = is_array( $http_logs ) ? $http_logs : [];
+	$options   = isset( $_POST['http_log']['options'] ) ? $_POST['http_log']['options'] : [];
+	unset( $_POST['http_log']['options'] );
+	$_CLEAN    = $_POST['http_log'];
+	foreach ( $_CLEAN as $url => $values ) {
+		if ( empty( $values['index'] ) || '1' === $values['index'] ) {
+			unset( $_CLEAN[ $url ] );
+			continue;
+		}
+
+		$parsed_url         = shortcode_atts( [ 'scheme' => '', 'host' => '', 'path' => '', 'query' => '' ], wp_parse_url( $url ) );
+		if ( empty( $parsed_url['scheme'] ) ) {
+			unset( $_CLEAN[ $url ] );
+			continue;
+		}
+		if ( ! empty( $parsed_url['query'] ) ) {
+			parse_str( html_entity_decode( $parsed_url['query'] ), $get_params );
+			if ( ! empty( $options['ignore-param'] ) ) {
+				$get_params = array_diff_key( $get_params, array_flip( $options['ignore-param'] ) );
+			}
+			ksort( $get_params );
+			$path_name      = $parsed_url['scheme'] . '://' . untrailingslashit( $parsed_url['host'] ) . $parsed_url['path'];
+			$query          = http_build_query( $get_params );
+			$query          = ! empty( $query ) ? '?' . $query : '';
+			$temp           = $_CLEAN[ $url ];
+			unset( $_CLEAN[ $url ] );
+			$url            = $path_name . $query;
+			$_CLEAN[ $url ] = $temp;
+		}
+		if ( isset( $options ) ) {
+			$_CLEAN[ $url ]['options'] = $options;
+			unset( $options );
+		}
+
+		if ( ! isset( $http_logs[ $url ]['since'] ) ) {
+			$_CLEAN[ $url ]['since'] = time();
+		}
+		if ( ! isset( $http_logs[ $url ]['hits'] ) ) {
+			$_CLEAN[ $url ]['hits']  = 0;
+		}
+		// Always reset the last call on save/update.
+		$_CLEAN[ $url ]['last']      = 0;
+	}
+	$http_logs = array_merge( $http_logs, $_CLEAN );
+	ksort( $http_logs );
+	update_option( SECUPRESS_HTTP_LOGS, $http_logs, false );
+	wp_safe_redirect( wp_get_referer() );
+	die();
 }

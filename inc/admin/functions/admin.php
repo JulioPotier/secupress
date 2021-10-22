@@ -192,18 +192,19 @@ function secupress_text_diff( $left_string, $right_string, $args = array() ) {
 		return __( 'No differences', 'secupress' );
 	}
 
-	$r  = "<table class=\"diff\">\n";
-		$r .= '<col class="content diffsplit left" /><col class="content diffsplit middle" /><col class="content diffsplit right" />';
+	$r = "<table class='diff is-split-view'>\n";
 		$r .= '<thead>';
-			$r .= '<tr class="diff-title"><th colspan="4">' . $args['title'] . "</th></tr>\n";
+			$r .= '<tr class="diff-title"><th colspan="2">' . $args['title'] . "</th></tr>\n";
 		$r .= "</thead>\n";
+
 		$r .= '<tbody>';
-		$r .= "<tr class=\"diff-sub-title\">\n";
-			$r .= "\t<th>" . $args['title_left'] . "</th><td></td>\n";
-			$r .= "\t<th>" . $args['title_right'] . "</th><td></td>\n";
-		$r .= "</tr>\n";
-		$r .= $diff;
+			$r .= "<tr class='diff-sub-title'>\n";
+				$r .= "\t<th>$args[title_left]</th>\n";
+	 			$r .= "\t<th>$args[title_right]</th>\n";
+			$r .= "</tr>\n";
+			$r .= $diff;
 		$r .= "</tbody>\n";
+
 	$r .= "</table>\n";
 
 	return $r;

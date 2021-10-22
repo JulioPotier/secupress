@@ -42,7 +42,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 		$this->more  = __( 'SQL injection is a way to read, modify, delete any content of your database, this is a powerful vulnerability, don’t let anyone play with that.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
-			'<em>' . __( 'Block bad content', 'secupress' ) . '</em>',
+			'<em>' . __( 'Block Bad Content', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-contents">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}
@@ -60,7 +60,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	public static function get_messages( $message_id = null ) {
 		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
 		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
-			'<strong>' . __( 'Block bad content', 'secupress' ) . '</strong>',
+			'<strong>' . __( 'Block Bad Content', 'secupress' ) . '</strong>',
 			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-contents">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 
