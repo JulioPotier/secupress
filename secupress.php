@@ -5,7 +5,7 @@
  * Description: More than a plugin, the guarantee of a protected website by experts.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 2.1.1
+ * Version: 2.1.2
  * Code Name: Python (Mark XX)
  * Network: true
  * Contributors: SecuPress, juliobox, GregLone
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 /** DEFINES ===================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-define( 'SECUPRESS_VERSION',                    '2.1.1' );
+define( 'SECUPRESS_VERSION',                    '2.1.2' );
 define( 'SECUPRESS_MAJOR_VERSION',              '2.1' );
 define( 'SECUPRESS_FILE',                       __FILE__ );
 define( 'SECUPRESS_PATH',                       realpath( dirname( SECUPRESS_FILE ) ) . DIRECTORY_SEPARATOR );
@@ -44,7 +44,7 @@ define( 'SECUPRESS_ADMIN_PATH'            , SECUPRESS_INC_PATH . 'admin' . DIREC
 define( 'SECUPRESS_CLASSES_PATH'          , SECUPRESS_INC_PATH . 'classes' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_ADMIN_SETTINGS_MODULES', SECUPRESS_ADMIN_PATH . 'modules' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
-define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'core/' );
+define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'inc/' );
 define( 'SECUPRESS_FRONT_URL'             , SECUPRESS_INC_URL . 'front/' );
 define( 'SECUPRESS_ADMIN_URL'             , SECUPRESS_INC_URL . 'admin/' );
 define( 'SECUPRESS_ASSETS_URL'            , SECUPRESS_PLUGIN_URL . 'assets/' );

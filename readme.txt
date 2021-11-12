@@ -4,7 +4,7 @@ Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.9
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -178,6 +178,11 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 2.1.2 =
+
+* 25 October 2021
+* Fix: Captcha not working anymore, sorry!
 
 = 2.1.1 =
 
