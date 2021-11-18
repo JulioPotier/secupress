@@ -4,7 +4,7 @@ Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.9
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,18 +179,10 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 2.1.2 =
+= 2.1.3 =
 
-* 25 October 2021
-* Fix: Captcha not working anymore, sorry!
-
-= 2.1.1 =
-
-* 22 October 2021
-* Fix#942: Move Login in Subfolder, S2E11
-* Fix#941: Warning: explode() expects parameter 2 to be string, array given in secupress-pro/inc/modules/firewall/plugins/bad-referer.php on line 13
-* Fix#940: DB scan error on XMLHttpRequest
-* Fix#939: secupress_stop_user_enumeration_rest does not return the $response param
-* Fix#929: hidden passwords in logs always add variables in global arrays
+* 19 November 2021
+* Fix#944: PHP Notice: Undefined variable: ip in /functions/ip.php on line 59
+* Fix#945: Uncaught Error: Object of class stdClass could not be converted to string in /modules/plugins-themes/tools.php:174
 
 == Upgrade Notice ==

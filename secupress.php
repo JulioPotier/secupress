@@ -5,7 +5,7 @@
  * Description: More than a plugin, the guarantee of a protected website by experts.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 2.1.2
+ * Version: 2.1.3
  * Code Name: Python (Mark XX)
  * Network: true
  * Contributors: SecuPress, juliobox, GregLone
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 /** DEFINES ===================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-define( 'SECUPRESS_VERSION',                    '2.1.2' );
+define( 'SECUPRESS_VERSION',                    '2.1.3' );
 define( 'SECUPRESS_MAJOR_VERSION',              '2.1' );
 define( 'SECUPRESS_FILE',                       __FILE__ );
 define( 'SECUPRESS_PATH',                       realpath( dirname( SECUPRESS_FILE ) ) . DIRECTORY_SEPARATOR );
@@ -271,6 +271,17 @@ function secupress_load_plugins() {
 	do_action( 'secupress.plugins.loaded' );
 }
 
+/**
+ * Check is the $locale if a FR one
+ *
+ * @return (bool) True if $locale is fr_FR (france) or fr_BE (belgium) or fr_CA (canada)
+ * @author Julio Potier
+ * @since 2.1.3
+ * @param (string) $locale The locale to be tested
+ **/
+function secupress_locale_is_FR( $locale ) {
+	return 'fr_FR' === $locale || 'fr_CA' === $locale || 'fr_BE' === $locale;
+}
 
 /**
  * Include files that contain our functions.
@@ -385,6 +396,7 @@ add_filter( 'load_textdomain_mofile', 'secupress_load_own_i18n', 10, 2 );
 /**
  * Load our own i18n to prevent too long strings or spelling errors from voluteers at translate.wp.org, sorry guys.
  *
+ * @since 2.1.3 Usage of secupress_locale_is_FR()
  * @since 2.0.3 fr_BE & fr_CA = fr_FR
  * @since 2.0
  * @author Julio Potier
@@ -406,7 +418,7 @@ function secupress_load_own_i18n( $mofile, $domain ) {
 			$determined_locale = determine_locale();
 		}
 		$locale = apply_filters( 'plugin_locale', $determined_locale, $domain );
-		if ( 'fr_CA' === $locale || 'fr_BE' === $locale ) {
+		if ( secupress_locale_is_FR( $locale ) ) {
 			$locale = 'fr_FR';
 		}
 		$mofile = WP_PLUGIN_DIR . '/' . dirname( plugin_basename( SECUPRESS_FILE ) ) . '/languages/' . $domain . '-' . $locale . '.mo';
