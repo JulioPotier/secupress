@@ -27,7 +27,7 @@ function secupress_get_ip( $priority = null ) {
 	if ( ! is_null( $priority ) ) {
 		array_unshift( $keys, $priority );
 	}
-
+	$ip = '0.0.0.0'; 
 	foreach ( $keys as $key ) {
 		if ( array_key_exists( $key, $_SERVER ) ) {
 			$ip = explode( ',', $_SERVER[ $key ], 2 );
