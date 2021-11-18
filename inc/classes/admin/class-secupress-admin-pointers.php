@@ -47,10 +47,9 @@ final class SecuPress_Admin_Pointers {
 		 */
 		$registered_pointers = [
 			'secupress_page_secupress_modules' => [
-				'any'          => [ 'sp20_ad1month' ],
+				'any'          => [ 'sp213_ad' ],
 				//'logs'         => [ 'sp21_httplogs' ],
 			],
-			'users.php'        => [ 'any' => [ 'sp21_sessions' ] ],
 		];
 
 		// Check if screen related pointer is registered.
@@ -66,6 +65,8 @@ final class SecuPress_Admin_Pointers {
 		$pointers     = array_diff( $pointers, $dismissed );
 		// Limit pointers to 2 per screen order by the natural array order
 		$pointers     = array_slice( $pointers, 0, 2 );
+		$pointers     = array_flip( $pointers );
+		$pointers     = array_flip( $pointers );
 		foreach ( $pointers as $pointer ) {
 			// Bind pointer print function
 			add_action( 'admin_print_footer_scripts', array( 'SecuPress_Admin_Pointers', 'pointer__' . $pointer ) );
@@ -89,8 +90,9 @@ final class SecuPress_Admin_Pointers {
 	 * @param array  $args Arguments to be passed to the pointer JS (see wp-pointer.js).
 	 */
 	private static function print_js( $pointer_id, $selector, $args ) {
-		if ( empty( $pointer_id ) || empty( $selector ) || empty( $args ) || empty( $args['content'] ) )
+		if ( empty( $pointer_id ) || empty( $selector ) || empty( $args ) || empty( $args['content'] ) ) {
 			return;
+		}
 		?>
 		<script type="text/javascript">
 		(function($){
@@ -188,14 +190,28 @@ final class SecuPress_Admin_Pointers {
 	}
 
 	/**
-	 * New ad, try SP pro 1 month
+	 * New ad, try SP pro
 	 *
-	 * @since 2.0
+	 * @since 2.2
 	 */
-	public static function pointer__sp20_ad1month() {
-		$content  = '<h3><span class="dashicons dashicons-money-alt"></span> ' . __( 'Special Offer: <strike>69$/year</strike> 6$!', 'secupress' ) . '</h3>';
-		$content .= '<h4>' . __( 'Try SecuPress Pro for 1 Month for 6$', 'secupress' ) . '</h4>';
-		$content .= '<p>' . __( 'Use the discount code <code>SP1MONTH</code> to get a 1st month of SecuPress Pro for only 6$, cancel anytime.', 'secupress' ) . '</p>';
+	public static function pointer__sp213_ad() {
+		if ( false !== apply_filters( 'secupress.no_sideads', false ) ) { // Filter secupress_no_sideads.
+			return;
+		}
+
+		$sideads = get_transient( 'secupress_sideads' );
+		if ( ! $sideads || ! isset( $sideads[0]['pointer'] ) ) {
+			return;
+		}
+		// var_dump( $sideads );
+
+		$key = 'pointer';
+		if ( secupress_locale_is_FR( get_user_locale() ) ) {
+			$key .= '-fr_FR';
+		}
+		$content  = '<h3>' . $sideads[0][ $key ]['title']    . '</h3>';
+		$content .= '<h4>' . $sideads[0][ $key ]['subtitle'] . '</h4>';
+		$content .= '<p>'  . $sideads[0][ $key ]['desc']     . '</p>';
 
 		$position = array(
 			'edge'  => 'right',
@@ -242,32 +258,6 @@ final class SecuPress_Admin_Pointers {
 	}
 
 	/**
-	 * New advanced settings
-	 *
-	 * @since 2.0
-	 */
-	public static function pointer__sp21_sessions() {
-		$content  = '<h3><span class="dashicons dashicons-id-alt"></span> ' . __( 'SecuPress Improved Features', 'secupress' ) . '</h3>';
-		$content .= '<h4>' . __( 'Sessions Details', 'secupress' ) . '</h4>';
-		$content .= '<p>' . __( 'Get a better view with more details on each user sessions now.', 'secupress' ) . '</p>';
-
-		$position = array(
-			'edge'  => 'right',
-			'align' => 'bottom',
-		);
-
-		$js_args = array(
-			'content'  => $content,
-			'position' => $position,
-			'pointerClass' => 'wp-pointer arrow-bottom',
-			/** Translators: Format 'ddd%' or 'ddd', not 'px' */
-			'pointerWidth' => _x( '400', 'pointerWidth', 'secupress' ),
-		);
-		self::print_js( str_replace( 'pointer__', '', __FUNCTION__ ), '.secupress-sessions a.current-user', $js_args );
-	}
-
-
-	/**
 	 * Prevents new users from seeing existing pointers.
 	 *
 	 * @since 2.0
@@ -277,6 +267,6 @@ final class SecuPress_Admin_Pointers {
 	 * @param int $user_id User ID.
 	 */
 	public static function dismiss_pointers_for_new_users( $user_id ) {
-		// add_user_meta( $user_id, 'dismissed_wp_pointers', 'spxx_foobar' );
+		add_user_meta( $user_id, 'dismissed_wp_pointers', 'sp213_ad' );
 	}
 }
