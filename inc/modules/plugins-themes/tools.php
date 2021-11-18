@@ -170,7 +170,7 @@ function secupress_get_vulnerable_themes() {
 	}
 
 	$temp = get_site_option( 'secupress_bad_themes' );
-	$temp = $temp ? (array) json_decode( $temp ) : array();
+	$temp = $temp ? (array) json_decode( $temp, true ) : array();
 	$temp = $temp ? array_diff( $temp, $errors ) : array();
 
 	if ( $temp ) {
