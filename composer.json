@@ -1,9 +1,0 @@
-{
-    "name": "JulioPotier/secupress",
-    "require-dev": {
-        "squizlabs/php_codesniffer": "*",
-        "wimg/php-compatibility": "dev-master",
-        "simplyadmire/composer-plugins": "@dev",
-        "wp-coding-standards/wpcs": "dev-master"
-    }
-}

@@ -1201,32 +1201,6 @@ label.secupress-setting-row-title {
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
 }
 
-/* Products */
-.secupress-wprocket-ad {
-	background: #43255B url( '../images/ad-rocket-bg.jpg' ) 100% 100% no-repeat;
-}
-.secupress-imagify-ad {
-	background: #353B4C url( '../images/ad-imagify-bg.jpg' ) 100% 100% no-repeat;
-	background-size: cover;
-}
-.secupress-wprocket-ad .secupress-button {
-	background: #F39C12;
-}
-.secupress-wprocket-ad span {
-	color: #F39C12;
-}
-.secupress-wprocket-ad .secupress-coupon {
-	color: #F0C30F;
-}
-.secupress-imagify-ad .secupress-button {
-	background: #15A8DC;
-}
-.secupress-imagify-ad span {
-	color: #15A8DC;
-}
-.secupress-imagify-ad .secupress-coupon {
-	color: #3FCDFF;
-}
 .secupress-product-ads .secupress-button {
 	font-size: .775em;
 	letter-spacing: 0.1em;

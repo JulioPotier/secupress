@@ -231,7 +231,7 @@ jQuery( document ).ready( function( $ ) {
 						return ! $this.prop( 'checked' );
 					}
 
-					return controlChecked ? true : false;
+					return controlChecked;
 				} );
 
 			$wrap.children( '.secupress-sg-content' ).find( '.secupress-row-check' )
@@ -240,7 +240,7 @@ jQuery( document ).ready( function( $ ) {
 						return false;
 					}
 
-					return controlChecked ? true : false;
+					return controlChecked;
 				} );
 		} );
 

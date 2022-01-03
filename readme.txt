@@ -2,9 +2,9 @@
 Contributors: SecuPress, juliobox, GregLone, Superment
 Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.9
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 5.6
-Stable tag: 2.1.3
+Stable tag: 2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -147,13 +147,13 @@ Yes, SecuPress can be activated for all your sub-sites, just activate it from yo
 
 = Is SecuPress compatible with all web hosters? =
 
-Yes, SecuPress is compatible with all web hosters like WP Serveur, OVH, Siteground, BlueHost, PlanetHoster, WP Engine, O2Switch or GoDaddy? If you encounter an issue, do not hesitate to contact our support team.
+Yes, SecuPress is compatible with all web hosters like o2switch, OVH, Siteground, BlueHost, PlanetHoster, WP Engine or GoDaddy? If you encounter an issue, do not hesitate to contact our support team.
 
-= Is SecuPress compatible with all caching plugins like WP Rocket, W3 Total Cache, WP Super Cache? =
+= Is SecuPress compatible with all caching plugins like WP Rocket, WP Fastest Cache, W3 Total Cache, WP Super Cache? =
 
 Yes, SecuPress is compatible with all WordPress caching plugins. If you encounter an issue, do not hesitate to contact our support team.
 
-= Is SecuPress compatible with all multilingual plugins like PolyLang, WPML, qTranslate? =
+= Is SecuPress compatible with all multilingual plugins like WeGlot, PolyLang, WPML, qTranslate? =
 
 Yes, SecuPress is compatible with all multilingual WordPress plugins. If you have an issue, please get in touch with us and let us know!
 
@@ -175,14 +175,33 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 5. The 2nd step: choose what to automatically fix (1)
 6. SecuPress is fixing issue for you
 7. The 3rd step: manual fix, when you have to decide something
-8. The 4th step: final report, you can export it as PDF (1)
+8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
 
-= 2.1.3 =
+= 2.2 =
 
-* 19 November 2021
-* Fix#944: PHP Notice: Undefined variable: ip in /functions/ip.php on line 59
-* Fix#945: Uncaught Error: Object of class stdClass could not be converted to string in /modules/plugins-themes/tools.php:174
+* 03 January 2022
+* New#930: Scan for @include as a malware in wp-config.php only (known for that)
+* New#932: Add support for .php[12345678] .phtml files in malware scanner
+* New#937: New option to force FTP creds when adding a theme or plugin, see "Disable .zip uploads" in "Plugins & Themes" module page
+* Improvement#455: Add filters to all our email subject and messages. Search for "secupress.mail."
+* Improvement#954: Better filetree for both free and pro version. No more /core, /inc, no more 2 uninstall files, no more weird file inclusions.
+* Improvement#885: remove FaceBook share button
+* Improvement#931: Do not log 404 that are redirected by SEO plugins
+* Improvement#935: Support MemberPress to prevent login out of passwordless when activated
+* Improvement#958: Update zxcvbnphp lib
+* Fix#889: files from core still show themes as diff files
+* Fix#944: PHP Notice: Undefined variable: ip in/core/functions/ip.php on line 59
+* Fix#945: Uncaught Error: Object of class stdClass could not be converted to string in /core/modules/plugins-themes/tools.php:174
+* Fix#946: PHP Fatal error: Uncaught Error: Call to a member function views() on null in /core/classes/common/class-secupress-logs-list.php:165
+* Fix#947: set_time_limit() is forbidden on infomaniak, leads to fatal error in PHP8+
+* Fix#948: Whitelabel is not displaying a plugin author url in settings
+* Fix#949: missing subfolder in secupress_bad_file_extensions_get_regex_pattern
+* Fix#950: i18n files showing up in core file differences
+* Fix#951: "toggle all" checkbox in "file core diff" does not work
+* Fix#950: i18n files showing up in core file differences
+* Fix#955: PHP Fatal error: Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in /core/admin/multisite/settings.php:96
+* Fix#957: Move Login can still disclose the login page when registration is disabled.
 
 == Upgrade Notice ==

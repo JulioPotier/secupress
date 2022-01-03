@@ -1539,6 +1539,47 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		}
 	} );
 
+	// Check all checkboxes.
+	$( '.secupress-check-group .secupress-row-check' ).on( 'click', function( e ) {
+		var $group     = $( this ).closest( '.secupress-check-group' ),
+			allChecked = 0 === $group.find( '.secupress-row-check' ).filter( ':visible:enabled' ).not( ':checked' ).length;
+
+		// Toggle "check all" checkboxes.
+		$group.find( '.secupress-toggle-check' ).prop( 'checked', allChecked );
+	} )
+	.first().trigger( 'change.secupress' );
+
+	$( '.secupress-check-group .secupress-toggle-check' ).on( 'click.wp-toggle-checkboxes', function( e ) {
+		var $this          = $( this ),
+			$wrap          = $this.closest( '.secupress-check-group' ),
+			controlChecked = $this.prop( 'checked' ),
+			toggle         = e.shiftKey || $this.data( 'wp-toggle' );
+
+		$wrap.find( '.secupress-toggle-check' )
+			.prop( 'checked', function() {
+				var $this = $( this );
+
+				if ( $this.is( ':hidden,:disabled' ) ) {
+					return false;
+				}
+
+				if ( toggle ) {
+					return ! $this.prop( 'checked' );
+				}
+
+				return controlChecked;
+			} );
+
+		$wrap.find( '.secupress-row-check' )
+			.prop( 'checked', function() {
+				if ( toggle ) {
+					return false;
+				}
+
+				return controlChecked;
+			} );
+	} );
+
 } )(window, document, jQuery);
 
 // Checked checkbox class ==========================================================================

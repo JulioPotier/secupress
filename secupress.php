@@ -5,7 +5,7 @@
  * Description: More than a plugin, the guarantee of a protected website by experts.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 2.1.3
+ * Version: 2.2
  * Code Name: Python (Mark XX)
  * Network: true
  * Contributors: SecuPress, juliobox, GregLone
@@ -15,7 +15,6 @@
  * Requires PHP: 5.6
  * Copyright 2012-2021 SecuPress
  */
-
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
@@ -23,11 +22,14 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 /** DEFINES ===================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-define( 'SECUPRESS_VERSION',                    '2.1.3' );
-define( 'SECUPRESS_MAJOR_VERSION',              '2.1' );
-define( 'SECUPRESS_FILE',                       __FILE__ );
-define( 'SECUPRESS_PATH',                       realpath( dirname( SECUPRESS_FILE ) ) . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_INC_PATH',                   SECUPRESS_PATH . 'inc' . DIRECTORY_SEPARATOR );
+// Common constants
+if ( ! defined( 'SECUPRESS_FILE' ) ) {
+	define( 'SECUPRESS_FILE', __FILE__ );
+}
+if ( file_exists( plugin_dir_path( __FILE__ ) . 'defines.php' ) ) {
+	require_once( plugin_dir_path( __FILE__ ) . 'defines.php' );
+}
+
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
 define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
@@ -44,9 +46,9 @@ define( 'SECUPRESS_ADMIN_PATH'            , SECUPRESS_INC_PATH . 'admin' . DIREC
 define( 'SECUPRESS_CLASSES_PATH'          , SECUPRESS_INC_PATH . 'classes' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_ADMIN_SETTINGS_MODULES', SECUPRESS_ADMIN_PATH . 'modules' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
-define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'inc/' );
-define( 'SECUPRESS_FRONT_URL'             , SECUPRESS_INC_URL . 'front/' );
-define( 'SECUPRESS_ADMIN_URL'             , SECUPRESS_INC_URL . 'admin/' );
+define( 'SECUPRESS_FREE_URL'              , SECUPRESS_PLUGIN_URL . 'free/' );
+define( 'SECUPRESS_FRONT_URL'             , SECUPRESS_FREE_URL . 'front/' );
+define( 'SECUPRESS_ADMIN_URL'             , SECUPRESS_FREE_URL . 'admin/' );
 define( 'SECUPRESS_ASSETS_URL'            , SECUPRESS_PLUGIN_URL . 'assets/' );
 define( 'SECUPRESS_ADMIN_CSS_URL'         , SECUPRESS_ASSETS_URL . 'admin/css/' );
 define( 'SECUPRESS_ADMIN_JS_URL'          , SECUPRESS_ASSETS_URL . 'admin/js/' );
@@ -62,6 +64,11 @@ if ( defined( 'SECUPRESS_API_EMAIL' ) && defined( 'SECUPRESS_API_KEY' ) && ! def
 /** --------------------------------------------------------------------------------------------- */
 /** INIT ======================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
+
+/**
+ * Requires hotfixes first because it's hot.
+ */ 
+require_once( SECUPRESS_INC_PATH . 'functions/hotfixes.php' );
 
 /**
  * All the stuff for the plugin activation and deactivation.
@@ -276,7 +283,7 @@ function secupress_load_plugins() {
  *
  * @return (bool) True if $locale is fr_FR (france) or fr_BE (belgium) or fr_CA (canada)
  * @author Julio Potier
- * @since 2.1.3
+ * @since 2.2
  * @param (string) $locale The locale to be tested
  **/
 function secupress_locale_is_FR( $locale ) {
@@ -337,7 +344,6 @@ function secupress_load_functions() {
 	require_once( SECUPRESS_INC_PATH . 'functions/deprecated.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/common.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/3rdparty.php' );
-	require_once( SECUPRESS_INC_PATH . 'functions/hotfixes.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/formatting.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/options.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/modules.php' );
@@ -396,7 +402,7 @@ add_filter( 'load_textdomain_mofile', 'secupress_load_own_i18n', 10, 2 );
 /**
  * Load our own i18n to prevent too long strings or spelling errors from voluteers at translate.wp.org, sorry guys.
  *
- * @since 2.1.3 Usage of secupress_locale_is_FR()
+ * @since 2.2 Usage of secupress_locale_is_FR()
  * @since 2.0.3 fr_BE & fr_CA = fr_FR
  * @since 2.0
  * @author Julio Potier
