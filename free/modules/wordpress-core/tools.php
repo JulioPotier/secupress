@@ -133,6 +133,7 @@ function secupress_wpconfig_modules_deactivation( $marker ) {
 /**
  * Return correct constants and their value for a designated marker
  *
+ * @since 2.2.1 add "remove_all_filters"
  * @since 2.0
  * @author Julio Potier
  *
@@ -161,6 +162,12 @@ function secupress_get_constants_from_marker( $marker ) {
 		break;
 
 		case 'locations':
+			remove_all_filters( 'pre_option_siteurl' );
+			remove_all_filters( 'option_siteurl' );
+			remove_all_filters( 'site_url' );
+			remove_all_filters( 'pre_option_home' );
+			remove_all_filters( 'option_home' );
+			remove_all_filters( 'home_url' );
 			return [ 'RELOCATE' => false, 'WP_SITEURL' => get_site_url(), 'WP_HOME' => get_home_url() ];
 		break;
 

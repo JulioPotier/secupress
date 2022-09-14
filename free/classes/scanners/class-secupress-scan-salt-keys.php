@@ -129,8 +129,9 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			204 => [],
 			205 => [],
 		];
-
-		preg_match_all( '/' . implode( '|', $keys ) . '/', $wp_config_content, $matches );
+		$pattern  = "'" . implode( "'|'", $keys ) . "'|";
+		$pattern .= '"' . implode( '"|"', $keys ) . '"';
+		preg_match_all( '/' . $pattern . '/', $wp_config_content, $matches );
 
 		if ( ! empty( $matches[0] ) ) {
 			// Hardcoded.

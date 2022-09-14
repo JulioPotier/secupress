@@ -879,7 +879,7 @@ function secupress_regen_hash_key_admin_post_cb() {
 	$options['hash_key'] = secupress_generate_key( 64 );
 	secupress_update_options( $options );
 
-	secupress_auto_login( 'Admin_User' );
+	secupress_auto_login( 'Salt_Keys' );
 }
 
 add_action( 'admin_post_secupress_accept_notification', 'secupress_accept_notification_admin_post_cb' );

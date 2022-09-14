@@ -162,12 +162,8 @@ function secupress_manage_captcha( $raw_user, $username ) {
 
 	unset( $captcha_keys[ $captcha_key ] );
 
-	if ( ! secupress_wp_version_is( '4.2.0-alpha' ) ) {
-		delete_site_option( 'secupress_captcha_keys' );
-		add_site_option( 'secupress_captcha_keys', $captcha_keys, false );
-	} else {
-		update_site_option( 'secupress_captcha_keys', $captcha_keys, false );
-	}
+	delete_site_option( 'secupress_captcha_keys' );
+	add_site_option( 'secupress_captcha_keys', $captcha_keys, false );
 
 	$running = false;
 	return $raw_user;

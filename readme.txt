@@ -4,13 +4,17 @@ Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.9
 Tested up to: 5.9
 Requires PHP: 5.6
-Stable tag: 2.2
+Stable tag: 2.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
 
 == Description ==
+
+= Test it now! =
+
+You can [test SecuPress Free now](https://demo.tastewp.com/secupress/).
 
 = YOU MADE IT, WE KEEP IT SAFE! =
 
@@ -179,29 +183,17 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 2.2 =
+= 2.2.3 =
 
-* 03 January 2022
-* New#930: Scan for @include as a malware in wp-config.php only (known for that)
-* New#932: Add support for .php[12345678] .phtml files in malware scanner
-* New#937: New option to force FTP creds when adding a theme or plugin, see "Disable .zip uploads" in "Plugins & Themes" module page
-* Improvement#455: Add filters to all our email subject and messages. Search for "secupress.mail."
-* Improvement#954: Better filetree for both free and pro version. No more /core, /inc, no more 2 uninstall files, no more weird file inclusions.
-* Improvement#885: remove FaceBook share button
-* Improvement#931: Do not log 404 that are redirected by SEO plugins
-* Improvement#935: Support MemberPress to prevent login out of passwordless when activated
-* Improvement#958: Update zxcvbnphp lib
-* Fix#889: files from core still show themes as diff files
-* Fix#944: PHP Notice: Undefined variable: ip in/core/functions/ip.php on line 59
-* Fix#945: Uncaught Error: Object of class stdClass could not be converted to string in /core/modules/plugins-themes/tools.php:174
-* Fix#946: PHP Fatal error: Uncaught Error: Call to a member function views() on null in /core/classes/common/class-secupress-logs-list.php:165
-* Fix#947: set_time_limit() is forbidden on infomaniak, leads to fatal error in PHP8+
-* Fix#948: Whitelabel is not displaying a plugin author url in settings
-* Fix#949: missing subfolder in secupress_bad_file_extensions_get_regex_pattern
-* Fix#950: i18n files showing up in core file differences
-* Fix#951: "toggle all" checkbox in "file core diff" does not work
-* Fix#950: i18n files showing up in core file differences
-* Fix#955: PHP Fatal error: Uncaught TypeError: count(): Argument #1 ($value) must be of type Countable|array, null given in /core/admin/multisite/settings.php:96
-* Fix#957: Move Login can still disclose the login page when registration is disabled.
+* 14 September 2022
+* Update: Malware Database v22.9.14
+* Security Fix#985: IP Spoofing, thanks to Calvin Alkan on https://snicco.io/
+* Fix#987: new passwordless UI didn't need to validate the captcha to get the magic link
+* Fix#986: unban link for admins does not always work
+* Fix#984: fix "two factor authentication" plugin detection
+* Fix#981: Move Login could be activated without pretty permalinks
+* Fix#980: key regeneration button is hidden by the helpers style
+* Fix#962: Ranged IPs can prevent ip detection to be blocked
+* Fix global i18n
 
 == Upgrade Notice ==

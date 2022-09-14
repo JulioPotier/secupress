@@ -37,7 +37,29 @@ foreach ( $override_plugins as $plugin_path => $plugin_page) {
 	}
 }
 
+/**
+* If pretty permalinks are not active, do not let move login do its works
+*/
+$wp_rewrite = new WP_Rewrite();
+if ( ! $wp_rewrite->using_permalinks() ) {
+	$this->add_field( array(
+		'title'             => __( 'Move the login and admin pages', 'secupress' ),
+		'label_for'         => $main_field_name,
+		'plugin_activation' => true,
+		'type'              => 'checkbox',
+		'value'             => false,
+		'disabled'          => true,
+		'label'             => __( 'Yes, move the login and admin pages', 'secupress' ),
+		'helpers'           => array(
+			array(
+				'type'        => 'warning',
+				'description' => sprintf( __( 'Your website is not using <b>Pretty Permalinks</b> but this module needs that. You can activate that in the <a href="%s">Permalinks Settings Page</a> and do not use "Plain" setting.', 'secupress' ), esc_url( admin_url( 'options-permalink.php' ) ) ),
+			),
+		),
+	) );
 
+	return;
+}
 
 $this->add_field( array(
 	'title'             => __( 'Move the login and admin pages', 'secupress' ),

@@ -23,6 +23,11 @@ if ( function_exists( 'is_plugin_active' ) && (
 	return;
 }
 
+$wp_rewrite = new WP_Rewrite();
+if ( ! $wp_rewrite->using_permalinks() ) {
+	return;
+}
+
 // EMERGENCY BYPASS!
 if ( defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRESS_ALLOW_LOGIN_ACCESS ) {
 	return;
@@ -202,7 +207,7 @@ function secupress_move_login_redirect( $location ) {
 
 		wp_parse_str( $location_query['query'], $location_query );
 
-		if ( ! empty( $location_query['registration'] ) || 'disabled' === $location_query['registration'] ) {
+		if ( ! empty( $location_query['registration'] ) && 'disabled' === $location_query['registration'] ) {
 			return $_REQUEST['action'] = 'registration_disabled';
 		}
 		if ( empty( $location_query['action'] ) ) {

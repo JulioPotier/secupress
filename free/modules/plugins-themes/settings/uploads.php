@@ -60,7 +60,7 @@ $this->add_field( array(
 	'label_screen'      => sprintf( __( 'Disallow %s uploads', 'secupress' ), '<code>.zip</code>' ),
 	'options'           => array(
 		'uploads'       => __( 'Yes, <strong>disable</strong> any uploads of themes and plugins', 'secupress' ),
-		'force-ftp'     => __( 'Yes, <strong>restrict</strong> all uploads of themes, plugins ans translations by forcing FTP usage', 'secupress' ),
+		'force-ftp'     => __( 'Yes, <strong>restrict</strong> all updates of themes, plugins, translations and WordPress Core by forcing FTP usage', 'secupress' ),
 	),
 	'helpers' => $helpers
 ) );

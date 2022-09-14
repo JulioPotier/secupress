@@ -1,0 +1,111 @@
+{
+    "packages": [
+        {
+            "name": "perfopsone/decalog",
+            "version": "2.0.0",
+            "version_normalized": "2.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Pierre-Lannoy/wp-decalog-sdk.git",
+                "reference": "a6f64d3a856b6250af443098aeea57ccdda5d366"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Pierre-Lannoy/wp-decalog-sdk/zipball/a6f64d3a856b6250af443098aeea57ccdda5d366",
+                "reference": "a6f64d3a856b6250af443098aeea57ccdda5d366",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6",
+                "psr/log": "^1.0.1"
+            },
+            "time": "2021-06-21T17:39:16+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "DecaLog\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pierre Lannoy",
+                    "email": "pierre@lannoy.fr"
+                }
+            ],
+            "description": "A SDK to use DecaLog observability features in all your plugins or themes development projects for WordPress.",
+            "homepage": "https://decalog.io",
+            "keywords": [
+                "logging",
+                "monitoring",
+                "observability",
+                "tracing",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/Pierre-Lannoy/wp-decalog-sdk/issues",
+                "source": "https://github.com/Pierre-Lannoy/wp-decalog-sdk/tree/2.0.0"
+            },
+            "install-path": "../perfopsone/decalog"
+        },
+        {
+            "name": "psr/log",
+            "version": "1.1.4",
+            "version_normalized": "1.1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "time": "2021-05-03T11:20:27+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/log/tree/1.1.4"
+            },
+            "install-path": "../psr/log"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

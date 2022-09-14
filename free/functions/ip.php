@@ -4,59 +4,22 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 /**
  * Get the IP address of the current user.
  *
+ * @since 2.2.3 Security Fix: Only get IP from REMOTE_ADDR
  * @since 1.4.3 Add $priority param
  * @since 1.0
  *
  * @param (string) $priority Contains a key from $keys to be read first.
  * @return (string)
  */
-function secupress_get_ip( $priority = null ) {
-	// Find the best order.
-	$keys = [
-		'HTTP_CF_CONNECTING_IP', // CF = CloudFlare.
-		'HTTP_CLIENT_IP',
-		'HTTP_X_FORWARDED_FOR',
-		'HTTP_X_FORWARDED',
-		'HTTP_X_CLUSTER_CLIENT_IP',
-		'HTTP_X_REAL_IP',
-		'HTTP_FORWARDED_FOR',
-		'HTTP_FORWARDED',
-		'REMOTE_ADDR',
-	];
-
-	if ( ! is_null( $priority ) ) {
-		array_unshift( $keys, $priority );
-	}
-	$ip = '';
-	foreach ( $keys as $key ) {
-		if ( array_key_exists( $key, $_SERVER ) ) {
-			$ip = explode( ',', $_SERVER[ $key ], 2 );
-			$ip = reset( $ip );
-
-			if ( false !== secupress_ip_is_valid( $ip ) ) {
-				/**
-				 * Filter the valid IP address.
-				 *
-				 * @since 1.0
-				 *
-				 * @param (string) $ip The IP address.
-				 */
-				return apply_filters( 'secupress.ip.get_ip', $ip );
-			}
-		}
-	}
-
+function secupress_get_ip() {
 	/**
-	 * Filter the default IP address.
+	 * Filter the IP address.
 	 *
-	 * @since 2.0 $ip + $priority params
 	 * @since 1.0
 	 *
-	 * @param (string) The fake IP address.
-	 * @param (string) $ip The original IP address.
-	 * @param (string) $priority
+	 * @param (string) $ip The IP address.
 	 */
-	return apply_filters( 'secupress.ip.default_ip', '0.0.0.0', $ip, $priority );
+	return apply_filters('secupress.ip.get_ip', isset( $_SERVER['REMOTE_ADDR'] ) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0' );
 }
 
 
@@ -136,8 +99,9 @@ function secupress_get_full_ipv6( $ipv6, $mask ) {
 /**
  * Tell if an IP address is whitelisted.
  *
- * @since 1.0
+ * @since 2.2.3 0.0.0.0 is not whitelisted anymore
  * @since 1.4.9 $in_range param
+ * @since 1.0
  *
  * @param (string) $ip An IP address. If not provided, the current IP by default.
  * @param (bool) $in_range Specify if the whitelist should aso be tested including ranged ips
@@ -154,7 +118,7 @@ function secupress_ip_is_whitelisted( $ip = null, $in_range = true ) {
 	// Some hardcoded IPs that are always whitelisted.
 	$whitelist = [
 		'::1'  => 1,
-		'0.0.0.0' => 1,
+		// '0.0.0.0' => 1, // now blacklisted by default
 		'127.0.0.1' => 1,
 		// WP Rocket.
 		'37.187.85.82' => 1,
@@ -735,6 +699,7 @@ function secupress_ip_is_whitelisted( $ip = null, $in_range = true ) {
 /**
  * Tell if an IP address is blacklisted.
  *
+ * @since 2.2.3 0.0.0.0 is now blacklisted
  * @since 1.4.9
  *
  * @param (string) $ip An IP address. If not provided, the current IP by default.
@@ -749,8 +714,9 @@ function secupress_ip_is_blacklisted( $ip = null ) {
 	}
 
 	// The IPs from the settings page.
-	$blacklist = get_site_option( SECUPRESS_BAN_IP );
-	$blacklist = array_flip( array_keys( $blacklist ) );
+	$blacklist            = get_site_option( SECUPRESS_BAN_IP );
+	$blacklist            = array_flip( array_keys( $blacklist ) );
+	$blacklist['0.0.0.0'] = 1;
 	/**
 	 * Filter the IPs blacklist.
 	 *
@@ -781,6 +747,7 @@ function secupress_ip_is_blacklisted( $ip = null ) {
  * • fedc:6482:cafe::/32 = from fedc:6482:cafe:0:0:0:0:0 to fedc:cafe:FFFF:ffff:ffff:ffff:ffff:ffff
  * • fedc:6482:cafe:* = from fedc:6482:cafe:0:0:0:0:0    to fedc:6482:FFFF:ffff:ffff:ffff:ffff:ffff
  *
+ * @since 2.2.3 Use "continue" instad of "return" too soon.
  * @since 1.4.9
  * @author Julio Potier
  *
@@ -803,7 +770,10 @@ function secupress_is_ip_in_range( $ip, $ips ) {
 				$_ip[3]   = $mask;
 				$last_ip  = implode('.', $_ip);
 
-				return ip2long( $ip ) >= ip2long( $first_ip ) && ip2long( $ip ) <= ip2long( $last_ip );
+				if ( ip2long( $ip ) >= ip2long( $first_ip ) && ip2long( $ip ) <= ip2long( $last_ip ) ) {
+					return true;
+				}
+				continue;
 			}
 			if ( strpos( $_ips, '/' ) ) {
 				list( $first_ip, $mask ) = explode( '/', $_ips );
@@ -811,9 +781,12 @@ function secupress_is_ip_in_range( $ip, $ips ) {
 					return true;
 				}
 				if ( $mask < 0 || $mask > 32 ) {
-					return false;
+					continue;
 				}
-				return 0 === substr_compare( sprintf( '%032b', ip2long( $ip ) ), sprintf( '%032b', ip2long( $first_ip ) ), 0, $mask );
+				if ( 0 === substr_compare( sprintf( '%032b', ip2long( $ip ) ), sprintf( '%032b', ip2long( $first_ip ) ), 0, $mask ) ) {
+					return true;
+				}
+				continue;
 			}
 			if ( strpos( $_ips, '*' ) ) {
 				$mask     = str_replace( '*', '', $_ips );
@@ -824,41 +797,54 @@ function secupress_is_ip_in_range( $ip, $ips ) {
 				$first_ip = str_replace( '0/255', '0', $mask );
 				$last_ip  = str_replace( '0/255', '255', $mask );
 
-				return secupress_ipv6_numeric( $ip ) >= secupress_ipv6_numeric( $first_ip ) && secupress_ipv6_numeric( $ip ) <= secupress_ipv6_numeric( $last_ip );
+				if ( secupress_ipv6_numeric( $ip ) >= secupress_ipv6_numeric( $first_ip ) && secupress_ipv6_numeric( $ip ) <= secupress_ipv6_numeric( $last_ip ) ) {
+					return true;
+				}
+				continue;
 			}
 		} elseif ( secupress_ip_is_valid( $ip, true, FILTER_FLAG_IPV6 ) && secupress_ip_is_valid( $_ips, true, FILTER_FLAG_IPV6 ) ) {
+			if ( 0 === strcmp( $ip, $_ips ) ) {
+				return true;
+			}
 			if ( strpos( $_ips, '::-' ) ) {
 				$temp     = explode( '::-', $_ips );
 				$first_ip = $temp[0] . str_repeat( ':0', 7 - substr_count( $temp[0], ':' ) );
 				$last_ip  = $temp[1];
 
-				return secupress_ipv6_numeric( $ip ) >= secupress_ipv6_numeric( $first_ip ) && secupress_ipv6_numeric( $ip ) <= secupress_ipv6_numeric( $last_ip );
+				if ( secupress_ipv6_numeric( $ip ) >= secupress_ipv6_numeric( $first_ip ) && secupress_ipv6_numeric( $ip ) <= secupress_ipv6_numeric( $last_ip ) ) {
+					return true;
+				}
+				continue;
 			}
 			if ( strpos( $_ips, '/' ) ) {
 				list( $first_ip, $mask ) = explode( '/', $_ips, 2 );
 				if ($mask < 1 || $mask > 128) {
-					return false;
+					continue;
 				}
 				$bytesAddr = unpack( 'n*', @inet_pton( $first_ip ) );
 				$bytesTest = unpack( 'n*', @inet_pton( $ip ) );
 				if ( ! $bytesAddr || ! $bytesTest ) {
-					return false;
+					continue;
 				}
 				for ( $i = 1, $ceil = ceil( $mask / 16 ); $i <= $ceil; ++$i ) {
 					$left = $mask - 16 * ( $i - 1 );
 					$left = ( $left <= 16 ) ? $left : 16;
 					$mask = ~ ( 0xffff >> $left ) & 0xffff;
 					if ( ( $bytesAddr[$i] & $mask ) != ( $bytesTest[$i] & $mask ) ) {
-						return false;
+						continue;
 					}
+					return true;
 				}
-				return true;
+				continue;
 			}
 			if ( strpos( $_ips, '*' ) ) {
 				$_ips     = str_replace( '*', '', $_ips );
 				$first_ip = secupress_get_full_ipv6( $_ips, '0' );
 				$last_ip  = secupress_get_full_ipv6( $_ips, 'ffff' );
-				return secupress_ipv6_numeric( $ip ) >= secupress_ipv6_numeric( $first_ip ) && secupress_ipv6_numeric( $ip ) <= secupress_ipv6_numeric( $last_ip );
+				if ( secupress_ipv6_numeric( $ip ) >= secupress_ipv6_numeric( $first_ip ) && secupress_ipv6_numeric( $ip ) <= secupress_ipv6_numeric( $last_ip ) ) {
+					return true;
+				}
+				continue;
 			}
 		}
 	}

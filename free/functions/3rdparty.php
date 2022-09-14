@@ -39,7 +39,7 @@ function secupress_3rd_compat__unikname_connect( $activated ) {
 // https://plugins.svn.wordpress.org/two-factor-authentication/trunk/two-factor-login.php .
 add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__two_factor_authentication' );
 function secupress_3rd_compat__two_factor_authentication( $activated ) {
-	if ( ! $activated && defined( 'SIMBA_TFA_PLUGIN_DIR' ) ) {
+	if ( ! $activated && defined( 'SIMBA_TFA_TEXT_DOMAIN' ) ) {
 		return 'Two Factor Authentication';
 	}
 	return $activated;

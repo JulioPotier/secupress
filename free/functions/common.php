@@ -1649,3 +1649,23 @@ function secupress_time_limit( $seconds ) {
 	}
 	return false;
 }
+
+
+/**
+ * Get a scan or fix status, formatted with icon and human readable text.
+ *
+ * @since 1.0
+ *
+ * @param (string) $status The status code.
+ * @return (string) Formatted status.
+ */
+function secupress_status( $status ) {
+	$statuses            = [];
+	$statuses['bad']     = __( 'Bad', 'secupress' );
+	$statuses['good']    = __( 'Good', 'secupress' );
+	$statuses['warning'] = __( 'Warning', 'secupress' );
+	$statuses['cantfix'] = __( 'Error', 'secupress' );
+
+	return isset( $statuses[ $status ] ) ? $statuses[ $status ] : __( 'New', 'secupress' );
+}
+

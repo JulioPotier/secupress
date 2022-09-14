@@ -158,8 +158,8 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	}
 
 	// Send message.
-	$url     = esc_url_raw( wp_nonce_url( home_url( '?action=secupress_self-unban-ip' ), 'secupress_self-unban-ip-' . $ip ) );
-	$message = '<p>' . sprintf(
+	$url     = str_replace( '&amp;', '&', esc_url_raw( wp_nonce_url( home_url( '?action=secupress_self-unban-ip' ), 'secupress_self-unban-ip-' . $ip ) ) );
+	$message = sprintf(
 		/** Translators: %s is a "unlock yourself" link. */
 		__( 'You got yourself locked out?
 
@@ -168,8 +168,8 @@ No problem, simply follow this link to %s.
 Regards,
 All at ###SITENAME###
 ###SITEURL###', 'secupress' ),
-		'<a href="' . $url . '">' . __( 'unlock yourself', 'secupress' ) . '</a> (' . $url . ')'
-	) . '</p>';
+		__( 'unlock yourself', 'secupress' ) . ' ( ' . $url . ' )'
+	);
 
 	$subject = sprintf( __( 'Unban yourself from %s', 'secupress' ), home_url() );
 	/**
@@ -511,7 +511,6 @@ function secupress_add_cookiehash_muplugin() {
 	secupress_auto_login( 'WP_Config' );
 }
 
-
 add_action( 'plugins_loaded', 'secupress_add_salt_muplugin', 50 );
 /**
  * Will create a mu plugin to early set the salt keys.
@@ -535,7 +534,7 @@ function secupress_add_salt_muplugin() {
 		return;
 	}
 
-	if ( ! is_array( $data ) || ! isset( $data['ID'], $data['username'] ) ) {
+	if ( ! is_array( $data ) || ! isset( $data['ID'] ) ) {
 		secupress_delete_site_transient( 'secupress-add-salt-muplugin' );
 		return;
 	}
@@ -546,15 +545,8 @@ function secupress_add_salt_muplugin() {
 
 	secupress_delete_site_transient( 'secupress-add-salt-muplugin' );
 
-	// Make sure we find the `wp-config.php` file.
-	$wpconfig_filepath = secupress_is_wpconfig_writable();
-
-	if ( ! $wpconfig_filepath ) {
-		return;
-	}
-
 	// Create the MU plugin.
-	if ( ! defined( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE' ) ) {
+	if ( ! defined( 'SECUPRESS_SALT_KEYS_MODULE_EXISTS' ) ) {
 		$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt-keys.phps' );
 		$args        = array(
 			'{{PLUGIN_NAME}}' => SECUPRESS_PLUGIN_NAME,
@@ -571,48 +563,45 @@ function secupress_add_salt_muplugin() {
 		}
 	}
 
-	/**
-	 * Remove old secret keys from the `wp-config.php` file and add a comment.
-	 * We have to make sure the comment is added, only once, only if one or more keys are found, even if some secret keys are missing, and do not create useless empty lines.
-	 */
-	$wp_filesystem    = secupress_get_filesystem();
-	$wpconfig_content = $wp_filesystem->get_contents( $wpconfig_filepath );
-	$keys             = array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
-	$comment_added    = false;
-	$comment          = '/** If you want to add secret keys back in wp-config.php, get new ones at https://api.wordpress.org/secret-key/1.1/salt, then delete this file. */';
-	$placeholder      = '/** SecuPress salt placeholder. */';
-
-	foreach ( $keys as $i => $constant ) {
-		$pattern = '@define\s*\(\s*([\'"])' . $constant . '\1.*@';
-
-		if ( preg_match( $pattern, $wpconfig_content, $matches ) ) {
-			$replace          = $comment_added ? $placeholder : $comment;
-			$wpconfig_content = str_replace( $matches[0], $replace, $wpconfig_content );
-			$comment_added    = true;
-		}
-	}
-
-	if ( $comment_added ) {
-		$wpconfig_content = str_replace( $placeholder . "\n", '', $wpconfig_content );
-
-		$wp_filesystem->put_contents( $wpconfig_filepath, $wpconfig_content, FS_CHMOD_FILE );
-	}
-
+	$keys = array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
 	// Remove old secret keys from the database.
 	foreach ( $keys as $constant ) {
 		delete_site_option( $constant );
 	}
 
-	// Destroy the user session.
-	wp_clear_auth_cookie();
-	if ( function_exists( 'wp_destroy_current_session' ) ) { // WP 4.0 min.
-		wp_destroy_current_session();
+	// Make sure we find the `wp-config.php` file.
+	$wpconfig_filepath = secupress_is_wpconfig_writable();
+
+
+	if ( $wpconfig_filepath ) {
+		/**
+		 * Remove old secret keys from the `wp-config.php` file and add a comment.
+		 * We have to make sure the comment is added, only once, only if one or more keys are found, even if some secret keys are missing, and do not create useless empty lines.
+		 */
+		$wp_filesystem    = secupress_get_filesystem();
+		$wpconfig_content = $wp_filesystem->get_contents( $wpconfig_filepath );
+		$comment_added    = false;
+		$comment          = '/** If you want to add secret keys back in wp-config.php, get new ones at https://api.wordpress.org/secret-key/1.1/salt, then delete this file. */';
+		$placeholder      = '/** SecuPress salt placeholder. */';
+
+		foreach ( $keys as $i => $constant ) {
+			$pattern = '@define\s*\(\s*([\'"])' . $constant . '\1.*@';
+
+			if ( preg_match( $pattern, $wpconfig_content, $matches ) ) {
+				$replace          = $comment_added ? $placeholder : $comment;
+				$wpconfig_content = str_replace( $matches[0], $replace, $wpconfig_content );
+				$comment_added    = true;
+			}
+		}
+
+		if ( $comment_added ) {
+			$wpconfig_content = str_replace( $placeholder . "\n", '', $wpconfig_content );
+
+			$wp_filesystem->put_contents( $wpconfig_filepath, $wpconfig_content, FS_CHMOD_FILE );
+		}
 	}
 
-	$token = md5( time() );
-	secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'Salt_Keys' ), MINUTE_IN_SECONDS );
-
-	wp_safe_redirect( esc_url_raw( add_query_arg( 'secupress_auto_login_token', $token, secupress_get_current_url( 'raw' ) ) ) );
+	secupress_auto_login( 'Salt_Keys' );
 	die();
 }
 
@@ -742,4 +731,50 @@ function secupress_get_php_versions() {
  **/
 if ( is_admin() ) {
 	add_action( 'user_register', array( 'SecuPress_Admin_Pointers', 'dismiss_pointers_for_new_users' ) );
+}
+
+
+/**
+ * Redirect the user on a specific URL to be autologged-in
+ *
+ * @since 2.0
+ * @author Julio Potier
+ *
+ * @param (string)      $module The SecuPress module to be redirected
+ * @param (WP_User|int) $user The user to be logged in
+ **/
+function secupress_auto_login( $module, $user = null ) {
+	if( is_int( $user ) ) {
+		$user = new WP_User( $user );
+	}
+	if ( is_a( $user, 'WP_User' ) ) {
+		$current_user = $user;
+	} else {
+		$current_user = wp_get_current_user();
+	}
+	if ( ! $current_user ) {
+		return;
+	}
+	$token = md5( time() . $module );
+	secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $current_user->user_login, $module ), MINUTE_IN_SECONDS );
+
+	wp_safe_redirect( esc_url_raw( add_query_arg( 'secupress_auto_login_token', $token ) ) );
+	die();
+}
+
+add_filter( 'authenticate', 'secupress_authenticate_cookie', 0 );
+function secupress_authenticate_cookie( $user ) {
+	$data = secupress_get_site_transient( 'secupress-auto-login' );
+
+	if ( ! $data ) {
+		return $user;
+	}
+
+	secupress_delete_site_transient( 'secupress-auto-login' );
+
+	if ( ! is_array( $data ) || ! isset( $data['ID'] ) ) {
+		return $user;
+	}
+	
+	secupress_auto_login( 'Salt_Keys', $user );
 }

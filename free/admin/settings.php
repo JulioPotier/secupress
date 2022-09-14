@@ -981,31 +981,6 @@ function secupress_scanners_template() {
 
 
 /**
- * Get a scan or fix status, formatted with icon and human readable text.
- *
- * @since 1.0
- *
- * @param (string) $status The status code.
- *
- * @return (string) Formatted status.
- */
-function secupress_status( $status ) {
-	switch ( $status ) :
-		case 'bad':
-			return __( 'Bad', 'secupress' );
-		case 'good':
-			return __( 'Good', 'secupress' );
-		case 'warning':
-			return __( 'Warning', 'secupress' );
-		case 'cantfix':
-			return __( 'Error', 'secupress' );
-		default:
-			return __( 'New', 'secupress' );
-	endswitch;
-}
-
-
-/**
  * Print a box with title.
  *
  * @since 1.0

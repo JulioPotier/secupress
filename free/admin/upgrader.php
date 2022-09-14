@@ -207,7 +207,7 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 	if ( version_compare( $actual_version, '2.0', '<' ) ) {
 		// Cannot use secupress_is_submodule_active() here because these are not modules yet (< 2.0...)
 		if ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) ) {
-			secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
+			secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID ) );
 		}
 		if ( defined( 'COOKIEHASH' ) && COOKIEHASH !== md5( get_site_option( 'siteurl' ) ) ) {
 			secupress_set_site_transient( 'secupress-add-cookiehash-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );

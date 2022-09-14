@@ -29,6 +29,12 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	protected static $_instance;
 
+	/**
+	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
+	 *
+	 * @var (bool|string)
+	 */
+	protected $fixable = 'pro';
 
 	/** Init and messages. ====================================================================== */
 

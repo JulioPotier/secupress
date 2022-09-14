@@ -11,12 +11,11 @@
 
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
-define( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE', true );
-
-
 if ( ! get_site_option( 'secupress_active_submodule_wp-config-constant-saltkeys' ) ) {
 	return;
 }
+
+define( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE', true );
 
 global $blog_id;
 

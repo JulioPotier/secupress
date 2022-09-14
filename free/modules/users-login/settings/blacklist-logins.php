@@ -24,7 +24,7 @@ $this->add_field( array(
 ) );
 
 $this->add_field( array(
-	'title'             => __( 'Forbid usernames', 'secupress' ),
+	'title'             => __( 'Forbid Usernames', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'activated' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',

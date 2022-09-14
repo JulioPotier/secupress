@@ -1624,6 +1624,9 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 // Regenerate keys button ====================
 (function($, d, w, undefined) {
 	$( '#secupress-regen-keys' ).on( 'click', function(e) {
+		if ( $(this).attr('href') == '#' ) {
+			return false;
+		}
 		var _this = this;
 		e.preventDefault();
 		swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {

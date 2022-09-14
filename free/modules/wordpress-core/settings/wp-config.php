@@ -164,8 +164,6 @@ $this->add_field( array(
 $active = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-saltkeys' );
 					// retrocompat < SP 2.0
 $active   = $active || ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) && SECUPRESS_SALT_KEYS_ACTIVE ) || ( defined( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE' ) && SECUPRESS_SALT_KEYS_MODULE_ACTIVE );
-$disabled = ! $active ? ' disab led="disabled"' : '';
-$url      = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-regen-keys' ), 'secupress-regen-keys' );
 $this->add_field( array(
 	'title'             => __( 'WordPress Security Keys', 'secupress' ),
 	'description'       => __( 'Creates tamper-proof security keys for your installation.', 'secupress' ),
@@ -176,10 +174,6 @@ $this->add_field( array(
 	'label'             => __( 'Yes, create secure keys for my installation.', 'secupress' ),
 	'disabled'          => ! $is_writable,
 	'helpers'           => array(
-		array(
-			'type'        => 'description',
-			'description' => '<a href="' . $url . '"' . $disabled . ' id="secupress-regen-keys" class="button secupress-button button-small">' . __( 'Regenerate the secure keys', 'secupress' ) . '</a>',
-		),
 		array(
 			'type'        => 'description',
 			'description' => ! $active ? __( '<strong>8 constants</strong> will be created in a must-use plugin and the ones in your <code>wp-config.php</code> file and database removed.', 'secupress' ) : '',
@@ -195,6 +189,13 @@ $this->add_field( array(
 	),
 ) );
 
+if ( $active ) {
+	$this->add_field( array(
+		'title'       => __( 'Regenerate the secure keys', 'secupress' ),
+		'type'        => 'html',
+		'description' => '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress-regen-keys' ), 'secupress-regen-keys' ) . '"' . ' id="secupress-regen-keys" class="button secupress-button button-small">' . __( 'Regenerate the secure keys', 'secupress' ) . '</a>'
+	) );
+}
 
 $active = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-cookiehash' );
 $active = $active || ( defined( 'COOKIEHASH' ) && md5( get_site_option( 'siteurl' ) ) !== COOKIEHASH );

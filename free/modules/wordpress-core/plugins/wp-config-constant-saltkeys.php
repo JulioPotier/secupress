@@ -31,7 +31,7 @@ function secupress_wpconfig_saltkeys_activation() {
 	}
 
 	$current_user = wp_get_current_user();
-	secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
+	secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID ) );
 }
 
 
@@ -44,6 +44,8 @@ add_action( 'secupress.plugins.deactivation', 'secupress_wpconfig_saltkeys_deact
  * @author Julio Potier
  */
 function secupress_wpconfig_saltkeys_deactivation() {
+    $current_user = wp_get_current_user();
+    secupress_set_site_transient( 'secupress-auto-login', array( 'ID' => $current_user->ID ) );
 	// $mu = reset( secupress_find_muplugin( '_secupress_salt_keys_' ) );
 	// secupress_remove_old_plugin_file( $mu );
 }

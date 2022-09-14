@@ -1,0 +1,22 @@
+{
+  "name": "perfopsone/decalog",
+  "type"  : "library",
+  "description": "A SDK to use DecaLog observability features in all your plugins or themes development projects for WordPress.",
+  "keywords": ["wordpress", "logging", "monitoring", "tracing", "observability"],
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pierre Lannoy",
+      "email": "pierre@lannoy.fr"
+    }
+  ],
+  "homepage": "https://decalog.io",
+  "require": {
+    "php": ">=5.6",
+    "psr/log": "^1.0.1"
+  },
+  "autoload": {
+    "psr-4": {"DecaLog\\": "./src"}
+  }
+}

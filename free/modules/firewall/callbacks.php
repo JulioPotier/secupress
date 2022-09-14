@@ -83,10 +83,9 @@ function secupress_bad_headers_settings_callback( $modulenow, &$settings, $activ
 	}
 
 	if ( secupress_is_pro() && ! empty( $settings['bbq-headers_bad-referer-list'] ) ) {
-		$settings['bbq-headers_bad-referer-list'] = secupress_unique_sorted_list( $settings['bbq-headers_bad-referer-list'], ', ' );
+		$settings['bbq-headers_bad-referer-list'] = trim( implode( ',', secupress_unique_sorted_list( $settings['bbq-headers_bad-referer-list'], "\n", 'array' ) ), ',' );
 	}
 }
-
 
 /**
  * Bad Contents plugins.

@@ -288,23 +288,3 @@ function secupress_print_pro_advantages() {
 	</div>
 	<?php
 }
-
-/**
- * Redirect the user on a specific URL to be autologged-in
- *
- * @since 2.0
- * @author Julio Potier
- *
- * @param (string) $module The SecuPress module to be redirected
- **/
-function secupress_auto_login( $module ) {
-	$current_user = wp_get_current_user();
-	if ( ! $current_user ) {
-		return;
-	}
-	$token = md5( time() . $module );
-	secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $current_user->user_login, $module ), MINUTE_IN_SECONDS );
-
-	wp_safe_redirect( esc_url_raw( add_query_arg( 'secupress_auto_login_token', $token ) ) );
-	die();
-}
