@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2022-09-14 15:24+0200\n"
-"PO-Revision-Date: 2022-09-14 15:24+0200\n"
+"POT-Creation-Date: 2023-04-17 17:05+0200\n"
+"PO-Revision-Date: 2023-04-17 17:06+0200\n"
 "Last-Translator: Julio Potier <julio@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -463,6 +463,10 @@ msgstr ""
 "Toutes les actions considérées comme dangereuses sont gardées dans ces "
 "journaux disponible à tout moment pour vérifier ce qui arrive à votre site."
 
+#: free/admin/functions/admin.php:317
+msgid "Fix done."
+msgstr "Correction effectuée."
+
 #: free/admin/functions/ajax-post.php:40
 msgid "Please try again."
 msgstr "Veuillez réessayer."
@@ -470,10 +474,6 @@ msgstr "Veuillez réessayer."
 #: free/admin/functions/ajax-post.php:45
 msgid "WordPress Failure Notice"
 msgstr "Avertissement d’échec de WordPress"
-
-#: free/admin/functions/ajax-post.php:193
-msgid "Fix done."
-msgstr "Correction effectuée."
 
 #: free/admin/functions/modules.php:118
 #, php-format
@@ -2514,10 +2514,10 @@ msgid ""
 "cannot be protected automatically but you can do it yourself by adding the "
 "following code to your %1$s file: %2$s"
 msgstr ""
-"Votre serveur utilise le système <i>Ngnix</i>. Les fichiers utilisant des "
-"mauvaises extensions ne peuvent pas être protégés automatiquement, mais vous "
-"pouvez le faire vous même en ajoutant le code suivant dans votre fichier "
-"%1$s : %2$s"
+"Votre serveur utilise le système <strong>Ngnix</strong>. Les fichiers "
+"utilisant des mauvaises extensions ne peuvent pas être protégés "
+"automatiquement, mais vous pouvez le faire vous même en ajoutant le code "
+"suivant dans votre fichier %1$s : %2$s"
 
 #: free/classes/scanners/class-secupress-scan-bad-file-extensions.php:112
 msgid ""
@@ -3177,8 +3177,8 @@ msgid ""
 "Your installation may contain vulnerable plugins. The PRO version will be "
 "more accurate."
 msgstr ""
-"Votre installation peut contenir des extensions connus pour être "
-"vulnérables. La version PRO serait plus précise."
+"Votre installation peut contenir des extensions connues pour être "
+"vulnérables. La version PRO sera plus précise."
 
 #: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:127
 msgid "https://docs.secupress.me/article/121-vulnerable-plugins-check"
@@ -3458,10 +3458,10 @@ msgid ""
 "cannot be fixed automatically but you can do it yourself by adding the "
 "following code to your %1$s file: %2$s"
 msgstr ""
-"Votre serveur utilise le système Ngnix, la divulgation de la liste des "
-"fichiers dans les dossiers ne peut pas être corrigées automatiquement mais "
-"vous pouvez le faire vous même en ajoutant le code suivant dans votre "
-"fichier %1$s : %2$s"
+"Votre serveur utilise le système <strong>Ngnixq</strong>, la divulgation de "
+"la liste des fichiers dans les dossiers ne peut pas être corrigées "
+"automatiquement mais vous pouvez le faire vous même en ajoutant le code "
+"suivant dans votre fichier %1$s : %2$s"
 
 #: free/classes/scanners/class-secupress-scan-directory-listing.php:91
 msgid ""
@@ -4224,9 +4224,10 @@ msgid ""
 "protected automatically but you can do it yourself by adding the following "
 "code to your %1$s file: %2$s"
 msgstr ""
-"Votre serveur utilise le système Ngnix, la divulgation des modules PHP "
-"installée ne peut pas être protégée automatiquement mais vous pouvez le "
-"faire vous même en ajoutant le code suivant dans votre fichier %1$s : %2$s"
+"Votre serveur utilise le système <strong>Ngnix</strong>, la divulgation des "
+"modules PHP installée ne peut pas être protégée automatiquement mais vous "
+"pouvez le faire vous même en ajoutant le code suivant dans votre fichier "
+"%1$s : %2$s"
 
 #: free/classes/scanners/class-secupress-scan-php-disclosure.php:89
 msgid ""
@@ -4410,9 +4411,9 @@ msgid ""
 "automatically but you can do it yourself by adding the following code to "
 "your %2$s file: %3$s"
 msgstr ""
-"Votre serveur utilise le système Ngnix, les fichiers %1$s ne peuvent pas "
-"être protégés automatiquement mais vous pouvez le faire vous même en "
-"ajoutant le code suivant dans votre fichier %2$s : %3$s"
+"Votre serveur utilise le système <strong>Ngnix</strong>, les fichiers %1$s "
+"ne peuvent pas être protégés automatiquement mais vous pouvez le faire vous "
+"même en ajoutant le code suivant dans votre fichier %2$s : %3$s"
 
 #: free/classes/scanners/class-secupress-scan-readme-discloses.php:94
 #, php-format
@@ -6391,6 +6392,10 @@ msgid "You may want to copy your message before logging in:"
 msgstr ""
 "Vous aurez besoin d’une copie de votre message avant de vous connecter :"
 
+#: free/modules/antispam/plugins/fightspam.php:887
+msgid "Sorry, you cannot send that now."
+msgstr "Désolé, vous ne pouvez pas envoyer ça maintenant."
+
 #: free/modules/antispam/settings/antispam.php:6
 msgid "Anti Spam Rules"
 msgstr "Règles Anti Spam"
@@ -6538,6 +6543,25 @@ msgstr "<strong>Interdire</strong> l’utilisation des Pingbacks & Trackbacks"
 msgid "It will also hide all Pingbacks & Trackbacks from your post comments."
 msgstr ""
 "Cela va aussi cacher tous les Pingbacks & Trackbacks de vos commentaires."
+
+#: free/modules/antispam/settings/antispam.php:123
+msgid "Delay before posting a comment"
+msgstr ""
+
+#: free/modules/antispam/settings/antispam.php:124
+msgid ""
+"A human has to read the post then write a comment before posting. Let them "
+"wait 30 secondes before posting."
+msgstr ""
+
+#: free/modules/antispam/settings/antispam.php:129
+msgid "<strong>Wait 30 seconds</strong> before posting a comment"
+msgstr ""
+
+#: free/modules/antispam/settings/antispam.php:133
+msgid ""
+"If someone tries to post before that, we consider it a bot and block it."
+msgstr ""
 
 #: free/modules/backups/settings/backup-db.php:5
 msgid "Database Backups"
@@ -7048,39 +7072,43 @@ msgstr ""
 "<br />Si vous rencontrez un comportement étrange comme trop ou pas assez de "
 "blocages, essayez de mettre à jour manuellement.<br>Dernière mise à jour : %s"
 
-#: free/modules/firewall/tools.php:134
+#: free/modules/firewall/tools.php:135
 msgid "Antispam, Anti-Usurpation"
 msgstr "Anti-spam, anti-usurpation"
 
 #: free/modules/firewall/tools.php:136
+msgid "Antispam, Too soon"
+msgstr "Anti-spam, trop tôt"
+
+#: free/modules/firewall/tools.php:138
 msgid "Bad Referer URL"
 msgstr "Mauvais site référant"
 
-#: free/modules/firewall/tools.php:138
+#: free/modules/firewall/tools.php:140
 msgid "Bad Host Contents"
 msgstr "Mauvais contenu dans l’hôte"
 
-#: free/modules/firewall/tools.php:139
+#: free/modules/firewall/tools.php:141
 msgid "Bad Referer Contents"
 msgstr "Mauvais contenu dans l’URL"
 
-#: free/modules/firewall/tools.php:141
+#: free/modules/firewall/tools.php:143
 msgid "Bad GeoIP"
 msgstr "Mauvaise Géolocalisation"
 
-#: free/modules/firewall/tools.php:143
+#: free/modules/firewall/tools.php:145
 msgid "Bad Request Method"
 msgstr "Mauvaise méthode de requête"
 
-#: free/modules/firewall/tools.php:145
+#: free/modules/firewall/tools.php:147
 msgid "User-Agent With HTML Tags"
 msgstr "User-Agent contenant des balises HTML"
 
-#: free/modules/firewall/tools.php:146
+#: free/modules/firewall/tools.php:148
 msgid "User-Agent Disallowed"
 msgstr "User-Agents interdits"
 
-#: free/modules/firewall/tools.php:148
+#: free/modules/firewall/tools.php:150
 #: free/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:937
 msgid "Unknown user"
 msgstr "Compte inconnu"
@@ -8552,17 +8580,17 @@ msgid "You have to deactivate the module first to change the default role."
 msgstr ""
 "Vous devez d'abord désactiver ce module pour changer le rôle par défaut."
 
-#: free/modules/users-login/settings/blacklist-logins.php:85
+#: free/modules/users-login/settings/blacklist-logins.php:89
 msgid "You cannot lock the membership now since anyone can register."
 msgstr ""
 "Vous ne pouvez pas verrouiller les inscriptions maintenant car elles sont "
 "ouvertes."
 
-#: free/modules/users-login/settings/blacklist-logins.php:89
+#: free/modules/users-login/settings/blacklist-logins.php:93
 msgid "Lock the Membership Setting"
 msgstr "Verrouiller le réglage des inscriptions"
 
-#: free/modules/users-login/settings/blacklist-logins.php:90
+#: free/modules/users-login/settings/blacklist-logins.php:94
 msgid ""
 "Some attacks will try to set the membership status on <em>Anyone can "
 "register</em>, lock the membership setting to <em>No</em> and forbid any "
@@ -8572,15 +8600,15 @@ msgstr ""
 "<em>Tout le monde peut s’inscrire</em>, verrouillez ce réglage sur <em>Non</"
 "em> et interdire un futur changement."
 
-#: free/modules/users-login/settings/blacklist-logins.php:96
+#: free/modules/users-login/settings/blacklist-logins.php:100
 msgid "Yes, forbid the modification of the membership status."
 msgstr "Oui, interdire la modification du statut des inscriptions."
 
-#: free/modules/users-login/settings/blacklist-logins.php:104
+#: free/modules/users-login/settings/blacklist-logins.php:108
 msgid "Lock the Admin Email"
 msgstr "Verrouiller l’e-mail de l’administration"
 
-#: free/modules/users-login/settings/blacklist-logins.php:105
+#: free/modules/users-login/settings/blacklist-logins.php:109
 msgid ""
 "Some attacks will try to set the admin email on their, lock the website’s "
 "admin email to forbid any future change."
@@ -8588,11 +8616,11 @@ msgstr ""
 "Des attaques peuvent tenter de modifier l’adresse e-mail de l’administration "
 "sur le leur, verrouillez l’adresse e-mail pour interdire tout changement."
 
-#: free/modules/users-login/settings/blacklist-logins.php:110
+#: free/modules/users-login/settings/blacklist-logins.php:114
 msgid "Yes, forbid the modification of the admin email."
 msgstr "Oui, interdire la modification de l’e-mail de l’administration."
 
-#: free/modules/users-login/settings/blacklist-logins.php:112
+#: free/modules/users-login/settings/blacklist-logins.php:116
 #, php-format
 msgid "For information, the admin email on this site is: %s"
 msgstr ""

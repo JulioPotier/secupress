@@ -797,7 +797,7 @@ function secupress_is_ip_in_range( $ip, $ips ) {
 				$first_ip = str_replace( '0/255', '0', $mask );
 				$last_ip  = str_replace( '0/255', '255', $mask );
 
-				if ( secupress_ipv6_numeric( $ip ) >= secupress_ipv6_numeric( $first_ip ) && secupress_ipv6_numeric( $ip ) <= secupress_ipv6_numeric( $last_ip ) ) {
+				if ( ip2long( $ip ) >= ip2long( $first_ip ) && ip2long( $ip ) <= ip2long( $last_ip ) ) {
 					return true;
 				}
 				continue;

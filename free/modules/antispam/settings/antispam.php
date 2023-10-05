@@ -118,3 +118,19 @@ $this->add_field( array(
 		),
 	),
 ) );
+
+$this->add_field( array(
+	'title'        => __( 'Delay before posting a comment', 'secupress' ),
+	'description'  => __( 'A human has to read the post then write a comment before posting. Let them wait 30 secondes before posting.', 'secupress' ),
+	'depends'      => $main_field_name,
+	'label_for'    => $this->get_field_name( 'comment-delay' ),
+	'type'         => 'checkbox',
+	'default'      => 1,
+	'label'        => __( '<strong>Wait 30 seconds</strong> before posting a comment', 'secupress' ),
+	'helpers' => array(
+		array(
+			'type'        => 'description',
+			'description' => __( 'If someone tries to post before that, we consider it a bot and block it.', 'secupress' ),
+		),
+	),
+) );

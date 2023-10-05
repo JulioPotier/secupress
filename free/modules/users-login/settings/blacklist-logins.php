@@ -74,6 +74,10 @@ $this->add_field( array(
 							[ 'type' => 'warning',     'description' => $is_plugin_active ? __( 'You have to deactivate the module first to change the default role.', 'secupress' ) : '', ],
 						]
 ) );
+$this->add_field( array(
+	'type'              => 'html',
+	'value'             => $is_plugin_active ? '<input type="hidden" name="secupress_users-login_settings[blacklist-logins_default-role]" value="' . esc_attr( get_option( 'default_role' ) ) . '" ' . disabled( $is_plugin_active, false, false ) . '/>' : '',
+) );
 
 $usable            = get_option( 'users_can_register' );
 $main_field_name   = $this->get_field_name( 'membership-activated' );

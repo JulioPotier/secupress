@@ -2,9 +2,9 @@
 Contributors: SecuPress, juliobox, GregLone, Superment
 Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.9
-Tested up to: 5.9
+Tested up to: 6.2
 Requires PHP: 5.6
-Stable tag: 2.2.3
+Stable tag: 2.2.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -183,17 +183,16 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 2.2.3 =
+= 2.2.4 =
 
-* 14 September 2022
-* Update: Malware Database v22.9.14
-* Security Fix#985: IP Spoofing, thanks to Calvin Alkan on https://snicco.io/
-* Fix#987: new passwordless UI didn't need to validate the captcha to get the magic link
-* Fix#986: unban link for admins does not always work
-* Fix#984: fix "two factor authentication" plugin detection
-* Fix#981: Move Login could be activated without pretty permalinks
-* Fix#980: key regeneration button is hidden by the helpers style
-* Fix#962: Ranged IPs can prevent ip detection to be blocked
+* 17 April 2023
+* Update: Malware Database
+* Fix#1001: Call to undefined function secupress_format_message() in /secupress-pro/free/admin/functions/scan-fix.php:51
+* Fix#1000: Passing null to parameter #1 ($string) of type string is deprecated in /secupress/free/functions/files.php on line 693
+* Fix#996: PHP Fatal error:  Allowed memory size of 1075838976 bytes exhausted in secupress-pro/pro/modules/file-system/tools.php on line 88
+* Fix#993: joker in IPs ban everything
+* Fix#977: Time to soon for antispam
+* Fix#904: cannot deactivate default role lock
 * Fix global i18n
 
 == Upgrade Notice ==

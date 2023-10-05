@@ -1,13 +1,11 @@
 <?php
 /**
  * Plugin Name: SecuPress Free — WordPress Security
- * 
-
  * Plugin URI: https://secupress.me
  * Description: More than a plugin, the guarantee of a protected website by experts.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 2.2.3
+ * Version: 2.2.4.1
  * Code Name: Python (Mark XX)
  * Network: true
  * Contributors: SecuPress, juliobox, GregLone
@@ -15,7 +13,7 @@
  * Domain Path: /languages/
  * Requires at least: 4.9
  * Requires PHP: 5.6
- * Copyright 2012-2022 SecuPress
+ * Copyright 2012-2023 SecuPress
  */
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 

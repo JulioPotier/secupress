@@ -886,7 +886,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				} elseif ( method_exists( $this, $args['type'] ) ) {
 					call_user_func( array( $this, $args['type'] ), $args );
 				} else {
-					echo 'Missing or incorrect type'; // Do not translate.
+					echo '<!--// Missing or incorrect type //-->'; // Do not translate.
 				}
 		}
 

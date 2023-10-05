@@ -39,6 +39,7 @@ function secupress_antispam_settings_callback( $settings ) {
 	$settings['antispam_block-shortcodes']         = (int) ! empty( $settings['antispam_block-shortcodes'] );
 	$settings['antispam_better-blacklist-comment'] = (int) ! empty( $settings['antispam_better-blacklist-comment'] );
 	$settings['antispam_forbid-pings-trackbacks']  = (int) ! empty( $settings['antispam_forbid-pings-trackbacks'] );
+	$settings['antispam_comment-delay']            = (int) ! empty( $settings['antispam_comment-delay'] );
 
 	/**
 	 * Filter the settings before saving.

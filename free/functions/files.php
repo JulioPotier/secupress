@@ -690,7 +690,7 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
  * @return (string) The path with no heading slash and a trailing slash.
  */
 function secupress_trailingslash_only( $slug ) {
-	return ltrim( trim( $slug, '/' ) . '/', '/' );
+	return ! is_null( $slug ) ? ltrim( trim( $slug, '/' ) . '/', '/' ) : '';
 }
 
 

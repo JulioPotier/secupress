@@ -288,3 +288,55 @@ function secupress_print_pro_advantages() {
 	</div>
 	<?php
 }
+
+
+/**
+ * Retrieve messages by their ID and format them by wrapping them in `<ul>` and `<li>` tags.
+ *
+ * @since 1.0
+ *
+ * @param (array)  $msgs      An array of messages.
+ * @param (string) $test_name The scanner name.
+ *
+ * @return (string) An HTML list of formatted messages.
+ */
+function secupress_format_message( $msgs, $test_name ) {
+	$classname = 'SecuPress_Scan_' . $test_name;
+	$messages  = $classname::get_instance()->get_messages();
+
+	$output = array();
+
+	if ( empty( $msgs ) ) {
+		return implode( '<br/>', $output );
+	}
+
+	foreach ( $msgs as $id => $atts ) {
+
+		if ( ! isset( $messages[ $id ] ) ) {
+
+			$string = __( 'Fix done.', 'secupress' );
+
+		} elseif ( is_array( $messages[ $id ] ) ) {
+
+			$count  = array_shift( $atts );
+			$string = translate_nooped_plural( $messages[ $id ], $count );
+
+		} else {
+
+			$string = $messages[ $id ];
+
+		}
+
+		if ( $atts ) {
+			foreach ( $atts as $i => $att ) {
+				if ( is_array( $att ) ) {
+					$atts[ $i ] = wp_sprintf_l( '%l', $att );
+				}
+			}
+		}
+
+		$output[] = ! empty( $atts ) ? vsprintf( $string, $atts ) : $string;
+	}
+
+	return implode( '<br/>', $output );
+}

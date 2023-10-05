@@ -117,6 +117,7 @@ add_filter( 'secupress_block_id', 'secupress_firewall_block_id' );
 /**
  * Translate block IDs into understandable things.
  *
+ * @since 2.3   ATS
  * @since 2.1   NOUSER
  * @since 2.0   BRU
  * @since 1.4.9 BHC, BRC
@@ -132,6 +133,7 @@ function secupress_firewall_block_id( $module ) {
 	$block_ids = array(
 		// Antispam.
 		'AAU'  => __( 'Antispam, Anti-Usurpation', 'secupress' ),
+		'ATS'  => __( 'Antispam, Too soon', 'secupress' ),
 		// Firewall.
 		'BRU'  => __( 'Bad Referer URL', 'secupress' ),
 		// URL Contents.
