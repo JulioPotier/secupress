@@ -771,8 +771,8 @@ function secupress_fightspam_dont_comment_too_soon_timer() {
 	if ( ! secupress_get_module_option( 'antispam_comment-delay', 1, 'antispam' ) ) {
 		return;
 	}
-	// Only do this if we are on a post type page which supports comments with a non logged in user
-	if ( is_user_logged_in() || ! get_post_type() || ! post_type_supports( get_post_type(), 'comments' ) ) {
+	// Only do this if we are on a singular page which supports comments and where comments are open with a non logged in user
+	if ( ! is_singular() || is_user_logged_in() || post_type_supports( get_post_type(), 'comments' ) || comments_open() ) {
 		return;
 	}
 	// Set our timer in PHP with a filter

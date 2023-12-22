@@ -167,6 +167,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 
 		if ( $has_response ) {
 			$powered_by = wp_remote_retrieve_header( $response, 'x-powered-by' );
+			$powered_by = is_array( $powered_by ) ? reset( $powered_by ) : $powered_by;
 			$body       = wp_remote_retrieve_body( $response );
 		}
 
@@ -289,6 +290,14 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 
 		if ( $has_response ) {
 			$powered_by = wp_remote_retrieve_header( $response, 'x-powered-by' );
+			if ( is_array( $powered_by ) ) {
+				foreach( $powered_by as $p ) {
+					if ( strpos( $p, 'PHP/' ) === 0 ) {
+						$powered_by = $p;
+						break;
+					}
+				}
+			}
 			$body       = wp_remote_retrieve_body( $response );
 		}
 

@@ -511,12 +511,19 @@ function secupress_scanners() {
 												<?php _e( 'Good', 'secupress' ); ?>
 												<span class="secupress-count-good"></span>
 											</li>
+											<?php if ( $counts['warning'] > 0 ) : ?>
+											<li class="status-warning" data-status="warning">
+												<span class="secupress-carret"></span>
+												<?php _e( 'Pending', 'secupress' ); ?>
+												<span class="secupress-count-warning"></span>
+											</li>
+											<?php endif; ?>
 											<li class="status-bad" data-status="bad">
 												<span class="secupress-carret"></span>
 												<?php _e( 'Bad', 'secupress' ); ?>
 												<span class="secupress-count-bad"></span>
 											</li>
-											<?php if ( $counts['notscannedyet'] ) : ?>
+											<?php if ( $counts['notscannedyet'] > 0 ) : ?>
 											<li class="status-notscannedyet" data-status="notscannedyet">
 												<span class="secupress-carret"></span>
 												<?php _e( 'New Scan', 'secupress' ); ?>

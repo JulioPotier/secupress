@@ -21,6 +21,7 @@ add_action( 'authenticate', 'secupress_limitloginattempts', SECUPRESS_INT_MAX, 2
  * @return (null|object)
  */
 function secupress_limitloginattempts( $raw_user, $username ) {
+	global $wpdb;
 	static $done = false;
 
 	if ( $done ) {
@@ -37,7 +38,43 @@ function secupress_limitloginattempts( $raw_user, $username ) {
 	}
 
 	$max_attempts  = secupress_get_module_option( 'login-protection_number_attempts', 10, 'users-login' );
-	$user_attempts = (int) get_user_meta( $uid, '_secupress_limitloginattempts', true );
+
+	// Adding initial Value
+	$wpdb->query(
+		$wpdb->prepare(
+			"
+			INSERT INTO {$wpdb->usermeta} (user_id, meta_key, meta_value)
+			SELECT * FROM (SELECT %d, '_secupress_limitloginattempts', 0) as tmp
+			WHERE NOT EXISTS (
+				SELECT * FROM {$wpdb->usermeta}
+				WHERE user_id = %d 
+				AND meta_key = '_secupress_limitloginattempts'
+			);
+		",
+		$uid,
+		$uid
+		)
+	);
+
+	// Start transaction
+	$wpdb->query("START TRANSACTION");
+
+	// Removed in 2.2.5, TOCTOU flaw
+	// $user_attempts = (int) get_user_meta( $uid, '_secupress_limitloginattempts', true );
+
+	// Get the number of attempts (line lock with FOR UPDATE)
+	$user_attempts = $wpdb->get_var(
+		$wpdb->prepare(
+						"
+						SELECT meta_value FROM {$wpdb->usermeta}
+                        WHERE {$wpdb->usermeta}.meta_key = '_secupress_limitloginattempts'
+                        AND {$wpdb->usermeta}.user_id = %d
+                        LIMIT 1 FOR UPDATE
+						",
+						$uid
+		)
+	);
+
 	++$user_attempts;
 
 	if ( $user_attempts >= $max_attempts ) {
@@ -45,7 +82,22 @@ function secupress_limitloginattempts( $raw_user, $username ) {
 		secupress_ban_ip( (int) secupress_get_module_option( 'login-protection_time_ban', 5, 'users-login' ) );
 	}
 
-	update_user_meta( $uid, '_secupress_limitloginattempts', $user_attempts );
+	//  Removed in 2.2.5, TOCTOU flaw
+	// update_user_meta( $uid, '_secupress_limitloginattempts', $user_attempts );
+
+	// Update number of attempts
+	$wpdb->query(
+		$wpdb->prepare(
+			"UPDATE {$wpdb->usermeta} SET meta_value = %d WHERE user_id = %d and meta_key = '_secupress_limitloginattempts'",
+			$user_attempts,
+			$uid
+		)
+	);
+	
+	// End transaction with a COMMIT command
+	$wpdb->query("COMMIT");
+
+
 	$user_attempts_left = $max_attempts - $user_attempts;
 
 	if ( $user_attempts_left <= 3 ) {

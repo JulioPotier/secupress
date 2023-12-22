@@ -148,7 +148,7 @@ class SecuPress_Scan_HTTPS extends SecuPress_Scan implements SecuPress_Scan_Inte
 			// "bad"
 			200 => __( 'Your site is not totally using HTTPS/SSL: %s', 'secupress' ),
 			201 => __( 'Your site does not use HTTPS/SSL. Error: %s', 'secupress' ),
-			202   => __( 'Your website seems to run under maintenance mode, rescan this later when you set it off.', 'secupress' ),
+			202   => __( 'Your website seems to run under maintenance mode, relaunch the HTTPS scanner later when you set it off.', 'secupress' ),
 			// "cantfix"
 			300 => __( 'Cannot be fixed automatically. You have to contact you host provider to ask him to <strong>upgrade your site with HTTPS/SSL</strong>.', 'secupress' ),
 			301 => __( 'Update your HOME url and SITE url with <code>https://</code>.', 'secupress' ),

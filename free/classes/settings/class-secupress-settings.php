@@ -1554,8 +1554,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				if ( 'secupress_ad_before' !== $sidead['hook'] ) {
 					continue;
 				}
-				if ( ( 'free' === $sidead['when'] && ! secupress_is_pro() )
-					|| ( 'pro' === $sidead['when'] && secupress_is_pro() )
+				if ( ( 'free' === $sidead['when'] && ! secupress_has_pro() )
+					|| ( 'pro' === $sidead['when'] && secupress_has_pro() )
 					|| 'both' === $sidead['when']
 				 ) {
 				 	$content_locale = 'content-' . get_user_locale();

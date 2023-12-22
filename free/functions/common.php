@@ -369,6 +369,7 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	$message         = '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . $message;
 	$url             = secupress_get_current_url( 'raw' );
 	$force_die       = ! empty( $args['force_die'] );
+	$context         = ! empty( $args['context'] ) ? $args['context'] : '';
 	$is_scan_request = secupress_is_scan_request(); // Used to bypass the whitelist for scans.
 
 	/**
@@ -381,7 +382,7 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	 * @param (array)  $args            Facultative arguments.
 	 * @param (bool)   $is_scan_request Tell if the request comes from one of our scans.
 	 */
-	$message = apply_filters( 'secupress.die.message', $message, $url, $args, $is_scan_request );
+	$message = apply_filters( 'secupress.die.message', $message, $url, $args, $is_scan_request, $context );
 
 	/**
 	 * Fires right before `wp_die()`.
@@ -393,7 +394,7 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	 * @param (array)  $args            Facultative arguments.
 	 * @param (bool)   $is_scan_request Tell if the request comes from one of our scans.
 	 */
-	do_action( 'secupress.before.die', $message, $url, $args, $is_scan_request );
+	do_action( 'secupress.before.die', $message, $url, $args, $is_scan_request, $context );
 
 	if ( $force_die || $is_scan_request ) {
 		// Die.
@@ -1663,9 +1664,60 @@ function secupress_status( $status ) {
 	$statuses            = [];
 	$statuses['bad']     = __( 'Bad', 'secupress' );
 	$statuses['good']    = __( 'Good', 'secupress' );
-	$statuses['warning'] = __( 'Warning', 'secupress' );
+	$statuses['warning'] = __( 'Pending', 'secupress' );
 	$statuses['cantfix'] = __( 'Error', 'secupress' );
 
 	return isset( $statuses[ $status ] ) ? $statuses[ $status ] : __( 'New', 'secupress' );
 }
 
+
+/**
+ * Retrieve messages by their ID and format them by wrapping them in `<ul>` and `<li>` tags.
+ *
+ * @since 1.0
+ *
+ * @param (array)  $msgs      An array of messages.
+ * @param (string) $test_name The scanner name.
+ *
+ * @return (string) An HTML list of formatted messages.
+ */
+function secupress_format_message( $msgs, $test_name ) {
+	$classname = 'SecuPress_Scan_' . $test_name;
+	$messages  = $classname::get_instance()->get_messages();
+
+	$output = array();
+
+	if ( empty( $msgs ) ) {
+		return implode( '<br/>', $output );
+	}
+
+	foreach ( $msgs as $id => $atts ) {
+
+		if ( ! isset( $messages[ $id ] ) ) {
+
+			$string = __( 'Fix done.', 'secupress' );
+
+		} elseif ( is_array( $messages[ $id ] ) ) {
+
+			$count  = array_shift( $atts );
+			$string = translate_nooped_plural( $messages[ $id ], $count );
+
+		} else {
+
+			$string = $messages[ $id ];
+
+		}
+
+		if ( $atts ) {
+			foreach ( $atts as $i => $att ) {
+				if ( is_array( $att ) ) {
+					$atts[ $i ] = wp_sprintf_l( '%l', $att );
+				}
+			}
+		}
+
+		$output[] = ! empty( $atts ) ? vsprintf( $string, $atts ) : $string;
+	}
+
+	return implode( '<br/>', $output );
+}

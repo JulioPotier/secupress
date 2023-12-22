@@ -86,6 +86,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 			104 => __( 'No plugins selected for deactivation.', 'secupress' ),
 			105 => _n_noop( 'Selected plugin has been deactivated (but some are still there).', 'All selected plugins have been deactivated (but some are still there).', 'secupress' ),
 			106 => _n_noop( 'Sorry, the following plugin could not be deactivated: %s.', 'Sorry, the following plugins could not be deactivated: %s.', 'secupress' ),
+			107 => __( 'Your installation may contain vulnerable plugins. The PRO version will be more accurate.', 'secupress' ),
 			// "bad"
 			/** Translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
 			200 => _n_noop( '<strong>%1$d plugin</strong> is known to be vulnerable: %2$s.', '<strong>%1$d plugins</strong> are known to be vulnerable: %2$s.', 'secupress' ),
@@ -94,7 +95,6 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 			203 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),
 			204 => _n_noop( 'The following plugin should be deactivated if you don’t need it: %s.', 'The following plugins should be deactivated if you don’t need them: %s.', 'secupress' ),
 			205 => _n_noop( 'Sorry, this plugin could not be deactivated.', 'Sorry, those plugins could not be deactivated.', 'secupress' ),
-			206 => __( 'Your installation may contain vulnerable plugins. The PRO version will be more accurate.', 'secupress' ),
 			// "cantfix"
 			/** Translators: %d is a number. */
 			300 => _n_noop( '<strong>%d</strong> plugin can be <strong>deleted</strong>.', '<strong>%d</strong> plugins can be <strong>deleted</strong>.', 'secupress' ),
@@ -152,7 +152,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 			$bad_plugins = $this->get_installed_plugins_vulnerables();
 
 			if ( is_numeric( $bad_plugins ) ) {
-				$this->add_message( 206 );
+				$this->add_message( 107 );
 			} elseif ( $count = count( $bad_plugins ) ) {
 				// "bad"
 				$this->add_message( 200, array( $count, $count, self::wrap_in_tag( $bad_plugins ) ) );

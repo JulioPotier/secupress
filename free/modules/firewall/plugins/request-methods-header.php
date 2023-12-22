@@ -14,6 +14,18 @@ if ( ! defined( 'DOING_CRON' ) ) {
 	* @since 2.0 Allow all requests methods but customs and TRACE.
 	*/
 	$methods = array( 'GET' => true, 'POST' => true, 'HEAD' => true, 'PUT' => true, 'PATCH' => true, 'DELETE' => true, 'CONNECT' => true, 'OPTIONS' => true );
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+	if ( is_plugin_active( 'matomo/matomo.php' ) && isset( $_SERVER['REQUEST_METHOD'] ) && ! array_key_exists( $_SERVER['REQUEST_METHOD'], $methods ) ) {
+		$methods[ $_SERVER['REQUEST_METHOD'] ] = true;
+	}
+	/**
+	 * Filters the methods array
+	 * @param (array) $methods
+	 * @since 2.2.5
+	 * **/
+	$methods = apply_filters( 'secupress.plugins.bbrm.methods', $methods );
 
 	if ( ! isset( $methods[ $_SERVER['REQUEST_METHOD'] ] ) ) {
 		secupress_block( 'RMHM', [ 'code' => 405, 'b64' => [ 'data' => $_SERVER['REQUEST_METHOD'] ] ] );

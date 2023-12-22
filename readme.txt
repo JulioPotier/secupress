@@ -2,9 +2,9 @@
 Contributors: SecuPress, juliobox, GregLone, Superment
 Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.9
-Tested up to: 6.2
+Tested up to: 6.4.2
 Requires PHP: 5.6
-Stable tag: 2.2.4.1
+Stable tag: 2.2.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -183,16 +183,25 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 2.2.4 =
+= 2.2.5.1 =
 
-* 17 April 2023
-* Update: Malware Database
-* Fix#1001: Call to undefined function secupress_format_message() in /secupress-pro/free/admin/functions/scan-fix.php:51
-* Fix#1000: Passing null to parameter #1 ($string) of type string is deprecated in /secupress/free/functions/files.php on line 693
-* Fix#996: PHP Fatal error:  Allowed memory size of 1075838976 bytes exhausted in secupress-pro/pro/modules/file-system/tools.php on line 88
-* Fix#993: joker in IPs ban everything
-* Fix#977: Time to soon for antispam
-* Fix#904: cannot deactivate default role lock
-* Fix global i18n
+* 21 Dec 2023
+* Security Fix: TOCTOU in Limit Login Attempts (Thanks to Konan Nagashima)
+* Improvement#963: Add context for secupress_die()
+* Improvement: Add DE translations (Thanks to Klaus Bei)
+* Improvement: Status "bad" into "warning" on bad plugins scanner results in free version
+* Fix#1036: Remove REST API calls made using query parameters (Thanks to JB Audras) + usage of rawurldecode() (Thanks to Aether Black)
+* Fix#1035: Malware scan file too big
+* Fix#1034: Matomo was blocked
+* Fix#1033: Bad referer default list, "cialis"
+* Fix#1032: Uncaught TypeError: Cannot read properties of null (reading 'querySelectorAll')
+* Fix#1030: Plugins&Themes settings on MS does not save correctly
+* Fix#1021: PHP Deprecated: filter_var() null in parameter 3
+* Fix#1015: Better output secupress_pro_sessions_control_users_column_content()
+* Fix#1010: Uncaught TypeError: strpos(): Argument 1 must be of type string, array given
+* Fix#1001: Move secupress_format_message()
+* Fix#962: Ranged IPs can prevent ip detection to block
+* Update Malware Database
+* Update global i18n
 
 == Upgrade Notice ==

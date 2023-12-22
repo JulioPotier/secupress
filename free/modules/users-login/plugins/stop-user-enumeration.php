@@ -76,13 +76,19 @@ add_filter( 'rest_request_before_callbacks', 'secupress_stop_user_enumeration_re
  *
  * @param WP_Error|null   $response The current error object if any.
  * *
+ * @since 2.2.5 Remove REST API calls made using query parameters + usage of rawurldecode()
  * @since 2.2.2 'raw'
  * @since 2.0 'uri'
  * @since 1.0 'base'
  * @author Julio Potier
  **/
 function secupress_stop_user_enumeration_rest( $response ) {
-	if ( ! current_user_can( 'list_users' ) && strpos( secupress_get_current_url( 'raw' ), Secupress_WP_REST_Users_Controller::get_rest_base() ) > 0 ) {
+	$rest_base_url  = home_url( 'wp-json/' . Secupress_WP_REST_Users_Controller::get_rest_base() );
+	$rest_query_url = 'rest_route=/wp/v2/users';
+	if ( ! current_user_can( 'list_users' ) && (
+		strpos( rawurldecode( home_url( secupress_get_current_url( 'raw' ) ) ), $rest_base_url ) === 0 ||
+		strpos( rawurldecode( home_url( secupress_get_current_url( 'raw' ) ) ), $rest_query_url ) !== false )
+	) {
 		wp_send_json( array( 'code' => 'rest_cannot_access', 'message' => __( 'Something went wrong.', 'secupress' ), 'data' => array( 'status' => 401 ) ) , 401 );
 	}
     return $response;

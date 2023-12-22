@@ -34,7 +34,7 @@ function secupress_get_ip() {
  *
  * @return (bool) True is valid IP
  */
-function secupress_ip_is_valid( $ip, $range_format = false , $flag = null ) {
+function secupress_ip_is_valid( $ip, $range_format = false , $flag = 0 ) {
 	if ( ! $ip || ! is_string( $ip ) ) {
 		return false;
 	}
@@ -891,7 +891,7 @@ function secupress_ban_ip( $time_ban = 5, $ip = null, $die = true ) {
 			_n( 'Your IP address %1$s has been banned for %2$s minute, please do not retry until then.', 'Your IP address %1$s has been banned for %2$s minutes, please do not retry until then.', $time_ban, 'secupress' ),
 			'<code>' . esc_html( $ip ) . '</code>',
 			'<strong>' . number_format_i18n( $time_ban ) . '</strong>'
-		), array( 'force_die' => true ) );
+		), array( 'force_die' => true, 'context' => 'ban_ip' ) );
 	}
 }
 
