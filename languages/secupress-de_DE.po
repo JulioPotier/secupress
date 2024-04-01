@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2023-04-17 17:05+0200\n"
-"PO-Revision-Date: 2023-12-18 13:45+0100\n"
+"POT-Creation-Date: 2024-04-01 10:14+0200\n"
+"PO-Revision-Date: 2024-04-01 10:20+0200\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.4.1\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: _x:1,2c;__;_e;_ex:1,2c;_n:1,2;_nx:1,2;esc_html__;"
 "esc_html_e;esc_attr__;esc_attr_e;_n_noop:1,2;_nx_noop:4c,1,2\n"
@@ -387,8 +387,8 @@ msgctxt "Latest scans"
 msgid "M dS, Y \\a\\t h:ia"
 msgstr "M dS, Y \a\\t h:ia"
 
-#: free/admin/functions/admin.php:179 pro/modules/file-system/callbacks.php:134
-#: pro/modules/file-system/callbacks.php:142
+#: free/admin/functions/admin.php:179 pro/modules/file-system/callbacks.php:132
+#: pro/modules/file-system/callbacks.php:140
 msgid "File Differences"
 msgstr "Datei-Unterschiede"
 
@@ -465,10 +465,6 @@ msgstr ""
 "Alle Aktionen, die als gefährlich eingestuft werden, sind in diesem "
 "Protokoll jederzeit verfügbar, um zu prüfen, was auf deiner Website "
 "geschieht."
-
-#: free/admin/functions/admin.php:317
-msgid "Fix done."
-msgstr "Fix fertig."
 
 #: free/admin/functions/ajax-post.php:40
 msgid "Please try again."
@@ -597,7 +593,7 @@ msgstr ""
 #: free/admin/modal.php:80 free/admin/modal.php:89 free/admin/modal.php:99
 #: free/admin/scanner-step-3.php:288
 #: free/classes/settings/class-secupress-settings.php:1708
-#: free/functions/common.php:561
+#: free/functions/common.php:562
 msgid "pricing"
 msgstr "Preisgestaltung"
 
@@ -808,7 +804,7 @@ msgid "Scan your website for security issues, right now."
 msgstr "Scanne deine Website jetzt gleich nach Sicherheitslücken."
 
 #: free/admin/notices.php:303 free/admin/settings.php:178
-#: free/admin/settings.php:679
+#: free/admin/settings.php:686
 msgid "Scan my website"
 msgstr "Sanne meine Website"
 
@@ -1013,8 +1009,8 @@ msgid "How to fix this issue"
 msgstr "Wie dieses Problem zu beheben ist"
 
 #: free/admin/scanner-step-3.php:265 free/admin/scanner-step-3.php:288
-#: free/admin/settings.php:541 free/admin/settings.php:882
-#: free/admin/settings.php:885
+#: free/admin/settings.php:548 free/admin/settings.php:889
+#: free/admin/settings.php:892
 #: free/classes/admin/class-secupress-admin-pro-upgrade.php:157
 #: free/classes/admin/class-secupress-admin-pro-upgrade.php:178
 #: free/modules/welcome/callbacks.php:404
@@ -1096,12 +1092,13 @@ msgid "Not fixed"
 msgstr "Nicht behoben"
 
 #: free/admin/scanner-step-4.php:214 free/admin/settings.php:147
-#: free/admin/settings.php:226 free/functions/common.php:1667
-#: pro/classes/vendors/edd-software-licensing/SecuPress_EDD_SL_Plugin_Updater.php:396
+#: free/admin/settings.php:226 free/functions/common.php:1670
+#: pro/classes/vendors/edd-software-licensing/SecuPress_EDD_SL_Plugin_Updater.php:397
 msgid "Error"
 msgstr "Fehler"
 
-#: free/admin/scanner-step-4.php:219
+#: free/admin/scanner-step-4.php:219 free/admin/settings.php:517
+#: free/functions/common.php:1669
 msgid "Pending"
 msgstr "Ausstehend"
 
@@ -1127,7 +1124,7 @@ msgstr "%s Module"
 msgid "Fine-tune your security"
 msgstr "Feinsteuerung deiner Sicherheit"
 
-#: free/admin/scanner-step-4.php:308 free/admin/settings.php:637
+#: free/admin/scanner-step-4.php:308 free/admin/settings.php:644
 msgid "Manage your recurring scans"
 msgstr "Verwalte deine wiederkehrenden Scans"
 
@@ -1138,7 +1135,7 @@ msgstr ""
 "Lass %s mit Hilfe von geplanten Scans deine Website scannen während du weg "
 "bist."
 
-#: free/admin/scanner-step-4.php:315 free/admin/settings.php:636
+#: free/admin/scanner-step-4.php:315 free/admin/settings.php:643
 msgid "Schedule Scans"
 msgstr "Geplante Scans"
 
@@ -1228,8 +1225,8 @@ msgstr "Sicherung gelöscht"
 msgid "Impossible to backup."
 msgstr "Unmöglich, eine Sicherung zu erstellen."
 
-#: free/admin/settings.php:165 pro/admin/settings.php:560
-#: pro/admin/settings.php:600
+#: free/admin/settings.php:165 pro/admin/settings.php:576
+#: pro/admin/settings.php:616
 msgid "Backuping&hellip;"
 msgstr "Erstelle Sicherung &hellip;"
 
@@ -1296,16 +1293,16 @@ msgstr ""
 "<br>Möglicherweise musst du dich erneut anmelden."
 
 #: free/admin/settings.php:212 free/admin/settings.php:511
-#: free/functions/common.php:1665
+#: free/functions/common.php:1668
 msgid "Good"
 msgstr "Gut"
 
-#: free/admin/settings.php:213 free/functions/common.php:1666
+#: free/admin/settings.php:213
 msgid "Warning"
 msgstr "Warnung"
 
-#: free/admin/settings.php:214 free/admin/settings.php:516
-#: free/functions/common.php:1664
+#: free/admin/settings.php:214 free/admin/settings.php:523
+#: free/functions/common.php:1667
 msgid "Bad"
 msgstr "Schlecht"
 
@@ -1403,7 +1400,7 @@ msgstr "Erster Scan"
 msgid "Here’s how it’s going to work"
 msgstr "Und so wird es funktionieren"
 
-#: free/admin/settings.php:471 free/admin/settings.php:645
+#: free/admin/settings.php:471 free/admin/settings.php:652
 msgid "Scan results"
 msgstr "Scan-Ergebnisse"
 
@@ -1411,11 +1408,11 @@ msgstr "Scan-Ergebnisse"
 msgid "How does it work?"
 msgstr "Wie funktioniert das?"
 
-#: free/admin/settings.php:522
+#: free/admin/settings.php:529
 msgid "New Scan"
 msgstr "Neuer Scan"
 
-#: free/admin/settings.php:534
+#: free/admin/settings.php:541
 #, php-format
 msgid ""
 "Wow! My website just got an %s grade for security using @SecuPress, what "
@@ -1424,23 +1421,23 @@ msgstr ""
 "Beeindruckend! Meine Website hat gerade eine %s Note für die Sicherheit mit "
 "@SecuPress erhalten, was ist mit deiner?"
 
-#: free/admin/settings.php:544
+#: free/admin/settings.php:551
 msgid "Tweet this"
 msgstr "Auf Twitter teilen"
 
-#: free/admin/settings.php:556
+#: free/admin/settings.php:563
 msgid "Your last scans"
 msgstr "Deine letzten Scans"
 
-#: free/admin/settings.php:564
+#: free/admin/settings.php:571
 msgid "You have no other reports for now."
 msgstr "Du hast vorerst keine anderen Berichte."
 
-#: free/admin/settings.php:575
+#: free/admin/settings.php:582
 msgid "Schedule your security analysis"
 msgstr "Plane deine Sicherheitsanalyse"
 
-#: free/admin/settings.php:577
+#: free/admin/settings.php:584
 msgid ""
 "Stay updated on the security of your website. With our automatic scans, "
 "there is no need to log in to your WordPress admin to run a scan."
@@ -1449,73 +1446,73 @@ msgstr ""
 "automatischen Scans brauchst du dich nicht mehr in deinem WordPress-Backend "
 "anmelden, um Scans auszuführen."
 
-#: free/admin/settings.php:581 free/admin/settings.php:583
+#: free/admin/settings.php:588 free/admin/settings.php:590
 msgctxt "Schedule date"
 msgid "Y-m-d \\a\\t h:ia"
 msgstr "Y-m-d \a\\t h:ia"
 
-#: free/admin/settings.php:588 free/admin/settings.php:603
+#: free/admin/settings.php:595 free/admin/settings.php:610
 #, php-format
 msgid "Last automatic scan: %s"
 msgstr "Letzter automatischer Scan: %s"
 
-#: free/admin/settings.php:592 free/admin/settings.php:607
+#: free/admin/settings.php:599 free/admin/settings.php:614
 #, php-format
 msgid "Next automatic scan: %s"
 msgstr "Nächster automatischer Scan: %s"
 
-#: free/admin/settings.php:596 free/admin/settings.php:611
+#: free/admin/settings.php:603 free/admin/settings.php:618
 msgid "Schedule your next analysis"
 msgstr "Plane deine nächste Analyse"
 
-#: free/admin/settings.php:613
+#: free/admin/settings.php:620
 msgid "Available in the PRO version"
 msgstr "In der Pro-Version verfügbar"
 
-#: free/admin/settings.php:626
+#: free/admin/settings.php:633
 msgid "Latest scans"
 msgstr "Letzte Scans"
 
-#: free/admin/settings.php:627
+#: free/admin/settings.php:634
 msgid "View your previous scans"
 msgstr "Deine vorherigen Scans ansehen"
 
-#: free/admin/settings.php:668
+#: free/admin/settings.php:675
 msgid "Click to launch first scan"
 msgstr "Klicke um einen ersten Scan zu starten"
 
-#: free/admin/settings.php:702
+#: free/admin/settings.php:709
 msgid "Security Report"
 msgstr "Sicherheits-Bericht"
 
-#: free/admin/settings.php:703 free/admin/settings.php:768
+#: free/admin/settings.php:710 free/admin/settings.php:775
 msgid "Auto-Fix"
 msgstr "Automatische Behebung"
 
-#: free/admin/settings.php:704 free/admin/settings.php:779
+#: free/admin/settings.php:711 free/admin/settings.php:786
 msgid "Manual Operations"
 msgstr "Manuelle Eingriffe"
 
-#: free/admin/settings.php:705 free/admin/settings.php:790
+#: free/admin/settings.php:712 free/admin/settings.php:797
 msgid "Resolution Report"
 msgstr "Lösungsbericht"
 
-#: free/admin/settings.php:757
+#: free/admin/settings.php:764
 #: pro/classes/admin/class-secupress-pro-admin-scan-report-pdf.php:22
 msgid "Site Health"
 msgstr "Website-Zustand"
 
-#: free/admin/settings.php:759
+#: free/admin/settings.php:766
 msgid "Start to check all security items with the Scan your website button."
 msgstr ""
 "Beginne mit dem Button Scanne deine Website alle Sicherheitselemente zu "
 "prüfen."
 
-#: free/admin/settings.php:770
+#: free/admin/settings.php:777
 msgid "Launch the auto-fix on selected issues."
 msgstr "Starte die automatische Behebung der ausgewählten Probleme."
 
-#: free/admin/settings.php:781
+#: free/admin/settings.php:788
 msgid ""
 "Go further and take a look at the items you have to fix with specific "
 "operations."
@@ -1523,26 +1520,26 @@ msgstr ""
 "Geh weiter und wirf einen Blick auf die Elemente, die du mit bestimmten "
 "Eingriffen beheben musst."
 
-#: free/admin/settings.php:792
+#: free/admin/settings.php:799
 msgid "Get the new site health report for your website."
 msgstr "Hole den neuen Website-Zustandsbericht für deine Website."
 
-#: free/admin/settings.php:804
+#: free/admin/settings.php:811
 msgid "I’ve got it!"
 msgstr "Ich habe es!"
 
-#: free/admin/settings.php:880
+#: free/admin/settings.php:887
 msgid "Do you like this plugin?"
 msgstr "Magst du dieses Plugin?"
 
-#: free/admin/settings.php:882
+#: free/admin/settings.php:889
 #, php-format
 msgid "Please take a few seconds to rate us on %1$sWordPress.org%2$s"
 msgstr ""
 "Bitte nimm dir ein paar Sekunden Zeit, um uns auf %1$sWordPress.org%2$s zu "
 "bewerten"
 
-#: free/admin/settings.php:891
+#: free/admin/settings.php:898
 msgctxt "hidden text"
 msgid "Give us five stars"
 msgstr "Gibt uns fünf Sterne"
@@ -2755,13 +2752,13 @@ msgstr[1] ""
 "aktualisiert: %2$s."
 
 #: free/classes/scanners/class-secupress-scan-bad-old-plugins.php:90
-#: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:93
+#: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:94
 #, php-format
 msgid "You should delete the plugin %s."
 msgstr "Du solltest das Plugin %s löschen."
 
 #: free/classes/scanners/class-secupress-scan-bad-old-plugins.php:91
-#: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:94
+#: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:95
 #: free/classes/scanners/class-secupress-scan-inactive-plugins-themes.php:74
 msgid "Sorry, this plugin could not be deleted."
 msgid_plural "Sorry, those plugins could not be deleted."
@@ -2769,7 +2766,7 @@ msgstr[0] "Sorry, dieses Plugin konnte nicht gelöscht werden."
 msgstr[1] "Sorry, diese Plugins konnten nicht gelöscht werden."
 
 #: free/classes/scanners/class-secupress-scan-bad-old-plugins.php:92
-#: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:95
+#: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:96
 #, php-format
 msgid "The following plugin should be deactivated if you don’t need it: %s."
 msgid_plural ""
@@ -2782,7 +2779,7 @@ msgstr[1] ""
 "benötigst %s."
 
 #: free/classes/scanners/class-secupress-scan-bad-old-plugins.php:93
-#: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:96
+#: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:97
 msgid "Sorry, this plugin could not be deactivated."
 msgid_plural "Sorry, those plugins could not be deactivated."
 msgstr[0] "Sorry, dieses Plugin konnte nicht deaktiviert werden."
@@ -3166,7 +3163,15 @@ msgstr "Alle Plugins, die bekanntermaßen anfällig sind, wurden gelöscht."
 msgid "All plugins known to be vulnerable have been deactivated."
 msgstr "Alle Plugins, die bekanntermaßen anfällig sind, wurden deaktiviert."
 
-#: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:91
+#: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:89
+msgid ""
+"Your installation may contain vulnerable plugins. The PRO version will be "
+"more accurate."
+msgstr ""
+"Deine Installation kann verwundbare Plugins enthalten. Die PRO-Version wird "
+"genauer sein."
+
+#: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:92
 #, php-format
 msgid "<strong>%1$d plugin</strong> is known to be vulnerable: %2$s."
 msgid_plural "<strong>%1$d plugins</strong> are known to be vulnerable: %2$s."
@@ -3174,14 +3179,6 @@ msgstr[0] ""
 "<strong>%1$d Es</strong> ist bekannt, dass das Plugin verwundbar ist: %2$s."
 msgstr[1] ""
 "<strong>%1$d Es</strong> ist bekannt, dass Plugins verwundbar sind: %2$s."
-
-#: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:97
-msgid ""
-"Your installation may contain vulnerable plugins. The PRO version will be "
-"more accurate."
-msgstr ""
-"Deine Installation kann verwundbare Plugins enthalten. Die PRO-Version wird "
-"genauer sein."
 
 #: free/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:127
 msgid "https://docs.secupress.me/article/121-vulnerable-plugins-check"
@@ -3376,13 +3373,13 @@ msgid "Checked tables will be renamed:"
 msgstr "Die ausgewählten Tabellen werden umbenannt:"
 
 #: free/classes/scanners/class-secupress-scan-db-prefix.php:329
-#: pro/admin/settings.php:520
+#: pro/admin/settings.php:536
 msgid "Unknown tables"
 msgstr "Unbekannte Tabellen"
 
 #: free/classes/scanners/class-secupress-scan-db-prefix.php:336
 #: free/classes/settings/class-secupress-settings.php:940
-#: pro/admin/settings.php:546
+#: pro/admin/settings.php:562
 msgid "WordPress tables (mandatory)"
 msgstr "WordPress-Tabellen (obligatorisch)"
 
@@ -3783,11 +3780,11 @@ msgstr "Deine Webseite verwendet kein HTTPS/SSL. Fehler: %s"
 
 #: free/classes/scanners/class-secupress-scan-https.php:151
 msgid ""
-"Your website seems to run under maintenance mode, rescan this later when you "
-"set it off."
+"Your website seems to run under maintenance mode, relaunch the HTTPS scanner "
+"later when you set it off."
 msgstr ""
-"Deine Webseite scheint im Wartungsmodus zu laufen, scannen sie später nach "
-"einem Neustart erneut."
+"Deine Webseite scheint im Wartungsmodus zu laufen. Starten Sie den HTTPS-"
+"Scanner später neu, wenn Sie ihn ausschalten."
 
 #: free/classes/scanners/class-secupress-scan-https.php:153
 msgid ""
@@ -5260,12 +5257,12 @@ msgid "Save All Changes"
 msgstr "Alle Änderungen speichern"
 
 #: free/classes/settings/class-secupress-settings.php:1580
-#: pro/admin/settings.php:233 pro/admin/settings.php:451
+#: pro/admin/settings.php:249 pro/admin/settings.php:467
 msgid "Hacked Website?"
 msgstr "Gehackte Website?"
 
 #: free/classes/settings/class-secupress-settings.php:1583
-#: pro/admin/settings.php:233 pro/admin/settings.php:451
+#: pro/admin/settings.php:249 pro/admin/settings.php:467
 msgid ""
 "Well, this is not a good day for you, we will try to make you smile while "
 "we’re working on it!"
@@ -5275,7 +5272,7 @@ msgstr ""
 
 #: free/classes/settings/class-secupress-settings.php:1586
 #: free/classes/settings/class-secupress-settings.php:1600
-#: pro/admin/settings.php:233 pro/admin/settings.php:451
+#: pro/admin/settings.php:249 pro/admin/settings.php:467
 msgid "Ask an Expert"
 msgstr "Frage einen Experten"
 
@@ -5329,7 +5326,7 @@ msgstr "Der Link zum Entsperren ist abgelaufen."
 
 #: free/common.php:124 free/common.php:125
 #: free/modules/users-login/plugins/blacklist-logins.php:46
-#: free/modules/users-login/plugins/stop-user-enumeration.php:86
+#: free/modules/users-login/plugins/stop-user-enumeration.php:92
 #: free/modules/wordpress-core/plugins/wp-config-constant-repair.php:44
 #: pro/admin/ajax-post-callbacks.php:22
 #: pro/modules/users-login/plugins/sessions-control.php:359
@@ -5468,72 +5465,76 @@ msgid_plural "Your grade is %1$s with %2$d good scanned items."
 msgstr[0] "Deine Note ist %1$s mit %2$d gut gescanntes Element."
 msgstr[1] "Deine Note ist %1$s mit %2$d gut gescannten Elementen."
 
-#: free/functions/common.php:450
+#: free/functions/common.php:451
 #, php-format
 msgid "Hidden by %s."
 msgstr "Versteckt von %s."
 
-#: free/functions/common.php:513
+#: free/functions/common.php:514
 msgid "You are not allowed to access the requested page."
 msgstr ""
 "Du hast nicht die Berechtigung, auf die angeforderte Seite zuzugreifen."
 
-#: free/functions/common.php:518
+#: free/functions/common.php:519
 msgid "Logged Details:"
 msgstr "Protokollierte Details:"
 
-#: free/functions/common.php:520
+#: free/functions/common.php:521
 #, php-format
 msgid "Your IP: %s"
 msgstr "Deine IP: %s"
 
-#: free/functions/common.php:521
+#: free/functions/common.php:522
 #, php-format
 msgid "Time: %s"
 msgstr "Zeit: %s"
 
-#: free/functions/common.php:521
+#: free/functions/common.php:522
 msgid "F j, Y g:i a"
 msgstr "F j, Y g:i a"
 
-#: free/functions/common.php:522
+#: free/functions/common.php:523
 #, php-format
 msgid "Reason: %s"
 msgstr "Grund: %s"
 
-#: free/functions/common.php:523
+#: free/functions/common.php:524
 #, php-format
 msgid "Support ID: %s"
 msgstr "Support-ID: %s"
 
-#: free/functions/common.php:1621
+#: free/functions/common.php:1624
 msgctxt "User role"
 msgid "Administrator"
 msgstr "Administrator"
 
-#: free/functions/common.php:1622
+#: free/functions/common.php:1625
 msgctxt "User role"
 msgid "Editor"
 msgstr "Editor"
 
-#: free/functions/common.php:1623
+#: free/functions/common.php:1626
 msgctxt "User role"
 msgid "Author"
 msgstr "Autor"
 
-#: free/functions/common.php:1624
+#: free/functions/common.php:1627
 msgctxt "User role"
 msgid "Contributor"
 msgstr "Mitarbeiter"
 
-#: free/functions/common.php:1625
+#: free/functions/common.php:1628
 msgctxt "User role"
 msgid "Subscriber"
 msgstr "Abonnent"
 
-#: free/functions/common.php:1669
+#: free/functions/common.php:1672
 msgid "New"
 msgstr "Neu"
+
+#: free/functions/common.php:1700
+msgid "Fix done."
+msgstr "Fix fertig."
 
 #: free/functions/deprecated.php:51
 #, php-format
@@ -6022,7 +6023,7 @@ msgstr "Mehr Sicherheit bei unseren Partnern."
 #: free/functions/modules.php:189 free/functions/modules.php:193
 #: free/functions/modules.php:234
 #: free/modules/schedules/settings/schedules-backups.php:6
-#: pro/admin/settings.php:481
+#: pro/admin/settings.php:497
 msgid "Backups"
 msgstr "Sicherungen"
 
@@ -8115,24 +8116,24 @@ msgstr ""
 "Deine %1$s-Datei ist nicht schreibbar. Bitte ersetzte die vorherigen Regeln "
 "mit %2$s aus der Tag-Hierarchie %3$s mit den folgenden: %4$s"
 
-#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:8
-msgid "STOP"
-msgstr "STOPP"
+#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:14
+msgid "Warning - Deceptive content"
+msgstr "Warnung – irreführender Inhalt"
 
-#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:16
+#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:69
 #, php-format
 msgid ""
-"The aim of this page is to catch robots that don’t respect the rules set in "
-"the %1$s file. <strong>Don’t %2$s or you will be banned from this site.</"
-"strong>"
+"The purpose of this page is to detect robots that do not adhere to the rules "
+"outlined in the %1$s file.<br><strong>%2$s, or you will be banned from this "
+"site.</strong>"
 msgstr ""
-"Das Ziel dieser Seite ist es, Roboter zu erwischen, die die in der %1$s "
-"Datei festgelegten Regeln nicht einhalten. <strong>Tun sie es nicht %2$s , "
-"sonst werden sie von dieser Website ausgeschlossen.</strong>"
+"Das Ziel dieser Seite besteht darin, Roboter zu erkennen, die die in der "
+"Datei %1$s festgelegten Regeln nicht befolgen. <strong>Tu es nicht %2$s, "
+"sonst wirst du von dieser Website ausgeschlossen.</strong>"
 
-#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:18
-msgid "click this link"
-msgstr "diesen Link anklicken"
+#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:71
+msgid "DO NOT CLICK THIS LINK"
+msgstr "KLICKEN SIE NICHT AUF DIESEN LINK"
 
 #: free/modules/sensitive-data/plugins/xmlrpc.php:30
 #: free/modules/sensitive-data/plugins/xmlrpc.php:130
@@ -8466,7 +8467,7 @@ msgstr "Benutzername: %s"
 msgid "Sorry, that username is not allowed."
 msgstr "Entschuldigung, dieser Benutzername ist nicht erlaubt."
 
-#: free/modules/users-login/plugins/limitloginattempts.php:77
+#: free/modules/users-login/plugins/limitloginattempts.php:129
 #, php-format
 msgid "Login failed, <strong>%d</strong> attempt left."
 msgid_plural "Login failed, <strong>%d</strong> attempts left."
@@ -9713,25 +9714,36 @@ msgstr "Lade&hellip;"
 msgid "This version of WordPress has not been scanned yet."
 msgstr "Diese Version von WordPress wurde noch nicht gescannt."
 
-#: pro/admin/settings.php:210
+#: pro/admin/settings.php:211
 msgid "The followings are not files from WordPress core"
 msgstr "Die folgenden Dateien sind keine Dateien aus dem WordPress-Kern"
 
-#: pro/admin/settings.php:212 pro/admin/settings.php:318
-#: pro/admin/settings.php:378 pro/admin/settings.php:417
-#: pro/admin/settings.php:438 pro/modules/file-system/tools.php:143
+#: pro/admin/settings.php:213 pro/admin/settings.php:334
+#: pro/admin/settings.php:394 pro/admin/settings.php:433
+#: pro/admin/settings.php:454 pro/modules/file-system/tools.php:143
 msgid "Possible malware found"
 msgstr "Mögliche Malware gefunden"
 
-#: pro/admin/settings.php:216 pro/admin/settings.php:421
+#: pro/admin/settings.php:217 pro/admin/settings.php:437
 msgid "Toggle all"
 msgstr "Aktiviere alle"
 
-#: pro/admin/settings.php:232 pro/admin/settings.php:450
+#: pro/admin/settings.php:220 pro/admin/settings.php:238
+#: pro/admin/settings.php:271 pro/admin/settings.php:288
+#: pro/admin/settings.php:340 pro/admin/settings.php:348
+#: pro/admin/settings.php:400 pro/admin/settings.php:408
+msgid "(Un)Select All"
+msgstr "(Un) Alles auswählen"
+
+#: pro/admin/settings.php:245 pro/admin/settings.php:354
+msgid "Delete selected files"
+msgstr "Ausgewählte Datei löschen"
+
+#: pro/admin/settings.php:248 pro/admin/settings.php:466
 msgid "What to do now?"
 msgstr "Was soll jetzt getan werden?"
 
-#: pro/admin/settings.php:232
+#: pro/admin/settings.php:248
 msgid ""
 "Check each file content using FTP to determine if it has to be cleaned, "
 "deleted or is a false positive."
@@ -9740,52 +9752,42 @@ msgstr ""
 "gelöscht werden muss oder ob es sich um ein falsch positives Ergebnis "
 "handelt."
 
-#: pro/admin/settings.php:250
+#: pro/admin/settings.php:266
 msgid "The followings are missing from WordPress core files"
 msgstr "Folgendes fehlt in WordPress-Kerndateien"
 
-#: pro/admin/settings.php:255 pro/admin/settings.php:272
-#: pro/admin/settings.php:324 pro/admin/settings.php:332
-#: pro/admin/settings.php:384 pro/admin/settings.php:392
-msgid "(Un)Select All"
-msgstr "(Un) Alles auswählen"
-
-#: pro/admin/settings.php:278 pro/admin/settings.php:398
+#: pro/admin/settings.php:294 pro/admin/settings.php:414
 msgid "Recover selected files"
 msgstr "Ausgewählte Dateien wiederherstellen"
 
-#: pro/admin/settings.php:315
+#: pro/admin/settings.php:331
 msgid "The followings files are old WordPress core ones"
 msgstr ""
 "Bei den folgenden Dateien handelt es sich um alte WordPress-Kerndateien"
 
-#: pro/admin/settings.php:338
-msgid "Delete selected files"
-msgstr "Ausgewählte Datei löschen"
-
-#: pro/admin/settings.php:363
+#: pro/admin/settings.php:379
 msgid "See differences"
 msgstr "Unterschiede anzeigen"
 
-#: pro/admin/settings.php:375
+#: pro/admin/settings.php:391
 msgid "The followings are modified WordPress core files"
 msgstr "Im Folgenden handelt es sich um modifizierte WordPress-Core-Dateien"
 
-#: pro/admin/settings.php:415
+#: pro/admin/settings.php:431
 msgid "The followings are Malware Database Injections"
 msgstr "Im Folgenden sind Malware-Datenbank-Injektionen aufgeführt"
 
-#: pro/admin/settings.php:436
+#: pro/admin/settings.php:452
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: pro/admin/settings.php:440 pro/modules/file-system/tools.php:145
+#: pro/admin/settings.php:456 pro/modules/file-system/tools.php:145
 msgid "Found Signature: "
 msgid_plural "Found Signatures: "
 msgstr[0] "Gefundene Signatur: "
 msgstr[1] "Gefundene Signaturen: "
 
-#: pro/admin/settings.php:450
+#: pro/admin/settings.php:466
 msgid ""
 "Check each post content to determine if it has to be cleaned, deleted or is "
 "a false positive."
@@ -9794,15 +9796,15 @@ msgstr ""
 "gelöscht werden muss oder ob es sich um ein falsch positives Ergebnis "
 "handelt."
 
-#: pro/admin/settings.php:457
+#: pro/admin/settings.php:473
 msgid "Nothing found, well done."
 msgstr "Nichts gefunden, gut gemacht."
 
-#: pro/admin/settings.php:474
+#: pro/admin/settings.php:490
 msgid "No Backups found."
 msgstr "Keine Backups gefunden."
 
-#: pro/admin/settings.php:478 pro/modules/backups/callbacks.php:89
+#: pro/admin/settings.php:494 pro/modules/backups/callbacks.php:89
 #: pro/modules/backups/callbacks.php:132 pro/modules/backups/callbacks.php:221
 #, php-format
 msgid "%s available Backup"
@@ -9810,89 +9812,89 @@ msgid_plural "%s available Backups"
 msgstr[0] "%s verfügbar Backup"
 msgstr[1] "%s verfügbare Backups"
 
-#: pro/admin/settings.php:491
+#: pro/admin/settings.php:507
 msgid "Delete all Backups"
 msgstr "Alle Backups löschen"
 
-#: pro/admin/settings.php:518
+#: pro/admin/settings.php:534
 msgid "DataBase Tables"
 msgstr "Datenbank-Tabellen"
 
-#: pro/admin/settings.php:542 pro/admin/settings.php:554
+#: pro/admin/settings.php:558 pro/admin/settings.php:570
 msgctxt "database table"
 msgid "None"
 msgstr "Nichts"
 
-#: pro/admin/settings.php:560 pro/admin/settings.php:565
+#: pro/admin/settings.php:576 pro/admin/settings.php:581
 msgid "Backup my Database"
 msgstr "Meine Datenbank sichern"
 
-#: pro/admin/settings.php:591
+#: pro/admin/settings.php:607
 msgid "Do not backup the following files and folders:"
 msgstr "Sichere nicht die folgenden Dateien und Ordner:"
 
-#: pro/admin/settings.php:595
+#: pro/admin/settings.php:611
 msgid "One file or folder per line."
 msgstr "Eine Datei oder ein Ordner pro Zeile."
 
-#: pro/admin/settings.php:600 pro/admin/settings.php:605
+#: pro/admin/settings.php:616 pro/admin/settings.php:621
 msgid "Backup my Files"
 msgstr "Meine Dateien sichern"
 
-#: pro/admin/settings.php:629 pro/admin/settings.php:698
-#: pro/admin/settings.php:750
+#: pro/admin/settings.php:645 pro/admin/settings.php:714
+#: pro/admin/settings.php:766
 msgid "Nothing’s scheduled yet."
 msgstr "Es ist noch nichts geplant."
 
-#: pro/admin/settings.php:634 pro/admin/settings.php:703
-#: pro/admin/settings.php:755
+#: pro/admin/settings.php:650 pro/admin/settings.php:719
+#: pro/admin/settings.php:771
 msgctxt "Schedule date"
 msgid "l, F jS, Y \\a\\t h:ia"
 msgstr "l, F jS, Y \\a\\t h:ia"
 
-#: pro/admin/settings.php:646
+#: pro/admin/settings.php:662
 msgid "the database"
 msgstr "Die Datenbank"
 
-#: pro/admin/settings.php:649
+#: pro/admin/settings.php:665
 msgid "the files"
 msgstr "Die Dateien"
 
-#: pro/admin/settings.php:661
+#: pro/admin/settings.php:677
 #, php-format
 msgid "Next backup will occur %1$s and will backup %2$s."
 msgstr "Die nächste Sicherung erfolgt %1$s und sichert %2$s."
 
-#: pro/admin/settings.php:671 pro/admin/settings.php:723
-#: pro/admin/settings.php:775
+#: pro/admin/settings.php:687 pro/admin/settings.php:739
+#: pro/admin/settings.php:791
 #, php-format
 msgid "This task will %1$s, and once finished you will be notified at: %2$s."
 msgstr ""
 "Dieser Vorgang wird %1$s, und sobald du fertig bist, wirst du "
 "benachrichtigt: %2$s."
 
-#: pro/admin/settings.php:672 pro/admin/settings.php:679
-#: pro/admin/settings.php:724 pro/admin/settings.php:731
-#: pro/admin/settings.php:776 pro/admin/settings.php:783
+#: pro/admin/settings.php:688 pro/admin/settings.php:695
+#: pro/admin/settings.php:740 pro/admin/settings.php:747
+#: pro/admin/settings.php:792 pro/admin/settings.php:799
 #, php-format
 msgid "repeat every %d day"
 msgid_plural "repeat every %d days"
 msgstr[0] "jeden %d Tag wiederholen"
 msgstr[1] "alle %d Tage wiederholen"
 
-#: pro/admin/settings.php:678 pro/admin/settings.php:730
-#: pro/admin/settings.php:782
+#: pro/admin/settings.php:694 pro/admin/settings.php:746
+#: pro/admin/settings.php:798
 #, php-format
 msgid "This task will %s."
 msgstr "Diese Aufgabe wird %s."
 
-#: pro/admin/settings.php:714 pro/admin/settings.php:766
+#: pro/admin/settings.php:730 pro/admin/settings.php:782
 #, php-format
 msgid "Next scan will occur %s."
 msgstr "Der nächste Scan wird %s durchgeführt."
 
 #: pro/classes/admin/class-secupress-pro-admin-edd-sl-plugin-updater.php:216
-#: pro/classes/vendors/edd-software-licensing/SecuPress_EDD_SL_Plugin_Updater.php:201
+#: pro/classes/vendors/edd-software-licensing/SecuPress_EDD_SL_Plugin_Updater.php:202
 #, php-format
 msgid ""
 "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
@@ -9901,7 +9903,7 @@ msgstr ""
 "ansehen%4$s."
 
 #: pro/classes/admin/class-secupress-pro-admin-edd-sl-plugin-updater.php:224
-#: pro/classes/vendors/edd-software-licensing/SecuPress_EDD_SL_Plugin_Updater.php:209
+#: pro/classes/vendors/edd-software-licensing/SecuPress_EDD_SL_Plugin_Updater.php:210
 #, php-format
 msgid ""
 "There is a new version of %1$s available. %2$sView version %3$s details%4$s "
@@ -10024,7 +10026,7 @@ msgctxt "pdf report date"
 msgid "M jS, Y \\a\\t h:i:sa"
 msgstr "M jS, Y \\a\\t h:i:sa"
 
-#: pro/classes/vendors/edd-software-licensing/SecuPress_EDD_SL_Plugin_Updater.php:396
+#: pro/classes/vendors/edd-software-licensing/SecuPress_EDD_SL_Plugin_Updater.php:397
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 "Du hast keine Berechtigung, um Aktualisierungen für Erweiterungen "
@@ -10262,7 +10264,7 @@ msgctxt "verb"
 msgid "Download"
 msgstr "Download"
 
-#: pro/modules/file-system/callbacks.php:143
+#: pro/modules/file-system/callbacks.php:141
 msgid ""
 "The differences can’t be displayed, the whole file will be displayed instead."
 msgstr ""
@@ -10277,11 +10279,11 @@ msgstr "Die Dateigröße liegt über dem Grenzwert von %s MB."
 #: pro/modules/file-system/tools.php:94
 #, php-format
 msgid ""
-"@include</code> Your site should also be infected. Check it or ask an "
-"expert, file: <code>%s"
+"include</code> Your site should also be infected. Check it or ask an expert, "
+"file: <code>%s"
 msgstr ""
-"@include</code> Deine Webseite sollte ebenfalls infiziert sein. Prüfe es "
-"oder frage einen Experten, Datei:<code>%s"
+"include</code> Deine Webseite sollte ebenfalls infiziert sein. Prüfe es oder "
+"frage einen Experten, Datei:<code>%s"
 
 #: pro/modules/file-system/tools.php:137
 #, php-format
@@ -11014,3 +11016,9 @@ msgstr "SecuPress Pro — WordPress-Sicherheit"
 msgid "More than a plugin, the guarantee of a protected website by experts."
 msgstr ""
 "Mehr als ein Plugin, die Garantie einer geschützten Website durch Experten."
+
+#~ msgid "STOP"
+#~ msgstr "STOPP"
+
+#~ msgid "click this link"
+#~ msgstr "diesen Link anklicken"

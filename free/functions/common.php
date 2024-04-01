@@ -1216,17 +1216,19 @@ function secupress_is_affected_role( $module, $submodule, $user ) {
 /**
  * This will be used with the filter hook 'nonce_user_logged_out' to create nonces for disconnected users.
  *
+ * @since 2.2.5.2 hash( 'crc32b' )
+ * @author Julio Potier
+ * 
  * @since 1.0
- *
+ * @author Grégory Viguier
+ * 
  * @param (int) $uid A userID.
+ * @param (string) $action The action.
  *
  * @return (int)
  */
-function secupress_modify_userid_for_nonces( $uid ) {
-	if ( $uid ) {
-		return $uid;
-	}
-	return isset( $_GET['userid'] ) ? (int) $_GET['userid'] : 0;
+function secupress_modify_userid_for_nonces( $uid = 0, $action = '' ) {
+	return hash( 'crc32b', $uid . $action . secupress_get_ip() );
 }
 
 

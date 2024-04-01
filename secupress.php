@@ -1,13 +1,11 @@
 <?php
 /**
  * Plugin Name: SecuPress Free — WordPress Security
- * 
-
  * Plugin URI: https://secupress.me
  * Description: More than a plugin, the guarantee of a protected website by experts.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 2.2.5.1
+ * Version: 2.2.5.2
  * Code Name: Python (Mark XX)
  * Network: true
  * Contributors: SecuPress, juliobox, GregLone

@@ -9,11 +9,11 @@
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
-
 add_filter( 'robots_txt', 'secupress_blackhole_robots_txt' );
 /**
  * Add forbidden URI in `robots.txt` file.
  *
+ * @author Grégory Viguier
  * @since 1.0
  *
  * @param (string) $output File content.
@@ -41,7 +41,11 @@ add_filter( 'template_include', 'secupress_blackhole_please_click_me', 1 );
 /**
  * Use a custom template for our trap.
  *
+ * @since 2.2.5.2 Manage the ban from here with a nonce now
+ * @author Julio Potier
+ *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $template Template path.
  *
@@ -55,6 +59,28 @@ function secupress_blackhole_please_click_me( $template ) {
 	$url     = trailingslashit( secupress_get_current_url() );
 	$dirname = secupress_get_hashed_folder_name( 'blackhole' );
 
+	if ( isset( $_GET['token'] ) && wp_verify_nonce( $_GET['token'], 'ban_me_please-' . date( 'ymdhi' ) ) ) {
+		$ip      = secupress_get_ip();
+		$ban_ips = get_site_option( SECUPRESS_BAN_IP );
+
+		if ( ! is_array( $ban_ips ) ) {
+			$ban_ips = array();
+		}
+
+		$ban_ips[ $ip ] = time() + MONTH_IN_SECONDS;
+
+		update_site_option( SECUPRESS_BAN_IP, $ban_ips );
+
+		/* This hook is documented in /inc/functions/admin.php */
+		do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
+
+		secupress_log_attack( 'bad_robots' );
+
+		wp_die( 'Something went wrong.' ); // Do not use secupress_die() here.
+	}
+
+	add_filter( 'nonce_user_logged_out', 'secupress_modify_userid_for_nonces', 10, 2 );
+
 	if ( substr( $url, - strlen( $dirname ) ) === $dirname ) {
 		return dirname( __FILE__ ) . '/inc/php/blackhole/warning-template.php';
 	}
@@ -62,41 +88,20 @@ function secupress_blackhole_please_click_me( $template ) {
 	return $template;
 }
 
-
-add_action( 'admin_post_nopriv_secupress-ban-me-please', 'secupress_blackhole_ban_ip' );
 /**
- * Ban an IP address and die.
- *
+ * @since 2.2.5.2 Deprecated
  * @since 2.0 use REMOTE_ADDR + do not print anything
- * @author Julio Potier
  * @since 1.0
  */
 function secupress_blackhole_ban_ip() {
-	if ( secupress_blackhole_is_whitelisted() ) {
-		return;
-	}
-
-	$ip      = secupress_get_ip( 'REMOTE_ADDR' );
-	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
-
-	if ( ! is_array( $ban_ips ) ) {
-		$ban_ips = array();
-	}
-
-	$ban_ips[ $ip ] = time() + MONTH_IN_SECONDS;
-
-	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
-
-	/* This hook is documented in /inc/functions/admin.php */
-	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
-
-	die();
+	_deprecated_function( __FUNCTION__, '2.2.5.2' );
 }
 
 
 /**
  * Tell if the current user is whitelisted.
  *
+ * @author Grégory Viguier
  * @since 1.0
  *
  * @return (bool) True if whitelisted, false otherwize.

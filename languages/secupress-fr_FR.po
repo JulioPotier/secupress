@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2023-12-21 13:27+0100\n"
-"PO-Revision-Date: 2023-12-21 18:25+0100\n"
+"POT-Creation-Date: 2024-03-31 23:27+0200\n"
+"PO-Revision-Date: 2024-03-31 23:44+0200\n"
 "Last-Translator: Julio Potier <julio@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4.1\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: _x:1,2c;__;_e;_ex:1,2c;_n:1,2;_nx:1,2;esc_html__;"
 "esc_html_e;esc_attr__;esc_attr_e;_n_noop:1,2;_nx_noop:4c,1,2\n"
@@ -1087,13 +1087,13 @@ msgid "Not fixed"
 msgstr "Non corrigé"
 
 #: free/admin/scanner-step-4.php:214 free/admin/settings.php:147
-#: free/admin/settings.php:226 free/functions/common.php:1668
+#: free/admin/settings.php:226 free/functions/common.php:1670
 #: pro/classes/vendors/edd-software-licensing/SecuPress_EDD_SL_Plugin_Updater.php:397
 msgid "Error"
 msgstr "Erreur"
 
 #: free/admin/scanner-step-4.php:219 free/admin/settings.php:517
-#: free/functions/common.php:1667
+#: free/functions/common.php:1669
 msgid "Pending"
 msgstr "En attente"
 
@@ -1288,7 +1288,7 @@ msgstr ""
 "devrez peut-être vous reconnecter."
 
 #: free/admin/settings.php:212 free/admin/settings.php:511
-#: free/functions/common.php:1666
+#: free/functions/common.php:1668
 msgid "Good"
 msgstr "Bon"
 
@@ -1297,7 +1297,7 @@ msgid "Warning"
 msgstr "En attente"
 
 #: free/admin/settings.php:214 free/admin/settings.php:523
-#: free/functions/common.php:1665
+#: free/functions/common.php:1667
 msgid "Bad"
 msgstr "Mauvais"
 
@@ -5518,36 +5518,36 @@ msgstr "Raison : %s"
 msgid "Support ID: %s"
 msgstr "Support ID : %s"
 
-#: free/functions/common.php:1622
+#: free/functions/common.php:1624
 msgctxt "User role"
 msgid "Administrator"
 msgstr "Administrateur"
 
-#: free/functions/common.php:1623
+#: free/functions/common.php:1625
 msgctxt "User role"
 msgid "Editor"
 msgstr "Éditeur"
 
-#: free/functions/common.php:1624
+#: free/functions/common.php:1626
 msgctxt "User role"
 msgid "Author"
 msgstr "Auteur"
 
-#: free/functions/common.php:1625
+#: free/functions/common.php:1627
 msgctxt "User role"
 msgid "Contributor"
 msgstr "Contributeur"
 
-#: free/functions/common.php:1626
+#: free/functions/common.php:1628
 msgctxt "User role"
 msgid "Subscriber"
 msgstr "Abonné"
 
-#: free/functions/common.php:1670
+#: free/functions/common.php:1672
 msgid "New"
 msgstr "Nouveau"
 
-#: free/functions/common.php:1698
+#: free/functions/common.php:1700
 msgid "Fix done."
 msgstr "Correction effectuée."
 
@@ -8134,24 +8134,24 @@ msgstr ""
 "précédentes par %2$s depuis la hiérarchie des balises %3$s par les "
 "suivantes : %4$s"
 
-#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:8
-msgid "STOP"
-msgstr "STOP"
+#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:13
+msgid "Warning - Deceptive content"
+msgstr "Attention — Contenu trompeur"
 
-#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:16
+#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:68
 #, php-format
 msgid ""
-"The aim of this page is to catch robots that don’t respect the rules set in "
-"the %1$s file. <strong>Don’t %2$s or you will be banned from this site.</"
-"strong>"
+"The purpose of this page is to detect robots that do not adhere to the rules "
+"outlined in the %1$s file.<br><strong>%2$s, or you will be banned from this "
+"site.</strong>"
 msgstr ""
-"Le but de cette page est d’attraper les robots qui ne respectent pas les "
-"règles du fichier %1$s. <strong>Ne %2$s ou votre visite sera interdite sur "
+"Le but de cette page est de détecter les robots qui ne respectent pas les "
+"règles du fichier %1$s.<br><strong>%2$s ou votre visite sera interdite sur "
 "ce site.</strong>"
 
-#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:18
-msgid "click this link"
-msgstr "cliquez pas sur ce lien"
+#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:70
+msgid "DO NOT CLICK THIS LINK"
+msgstr "NE CLIQUEZ PAS SUR CE LIEN"
 
 #: free/modules/sensitive-data/plugins/xmlrpc.php:30
 #: free/modules/sensitive-data/plugins/xmlrpc.php:130
@@ -11004,6 +11004,12 @@ msgstr "SecuPress Pro — Sécurité WordPress"
 msgid "More than a plugin, the guarantee of a protected website by experts."
 msgstr ""
 "Plus qu’une extension, la garantie d’un site Web protégé par des experts."
+
+#~ msgid "STOP"
+#~ msgstr "STOP"
+
+#~ msgid "click this link"
+#~ msgstr "cliquez pas sur ce lien"
 
 #~ msgid "Waiting"
 #~ msgstr "En attente"

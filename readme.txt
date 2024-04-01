@@ -2,9 +2,9 @@
 Contributors: SecuPress, juliobox, GregLone, Superment
 Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.9
-Tested up to: 6.4.2
+Tested up to: 6.4.3
 Requires PHP: 5.6
-Stable tag: 2.2.5.1
+Stable tag: 2.2.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -126,7 +126,7 @@ SecuPress will keep a log of important security activities and 404 pages trigger
 
 == Installation ==
 
-*It's important to delete all other security plugins before activating SecuPress.*
+*It's recommended to delete all other security plugins before activating SecuPress.*
 
 1. Upload the plugin files to the `/wp-content/plugins/secupress` directory, or install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the 'Plugins' screen in WordPress.
@@ -137,13 +137,11 @@ SecuPress will keep a log of important security activities and 404 pages trigger
 
 = What does SecuPress do, exactly? =
 
-SecuPress is a plugin for WordPress sites which enables better security without sacrificing usability. It’s easy to use for you and hard to hack for pirates. First, SecuPress will scan your site, looking for vulnerabilities and provide a report detailing how to harden your WordPress. possible security improvements. The majority of recommendations are easy to implement by checking a box; very few will require a manual setup.
+SecuPress is a WordPress plugin that enhances security without compromising usability or performance. It's user-friendly for you and resilient against hacking attempts. Initially, SecuPress scans your site to identify vulnerabilities and provides a report with suggestions for strengthening your WordPress security. Most recommendations can be easily implemented by checking a box, with only a few requiring manual setup.
 
-= What makes SecuPress better than any other security plugin? =
+= What sets SecuPress apart from other security plugins? =
 
-SecuPress protects your website on multiple fronts: anti spam, double authentication. The best feature for users remains how easy to use this plugin is. You don’t need to be an experienced technician to use and secure your WordPress like an expert!
-
-Our security alarms hosted on our servers supply daily data about the most recent vulnerable plugins and themes. This allows you to always be aware and safe.
+SecuPress safeguards your website from various threats, with its standout feature being its user-friendliness. You don't have to be a seasoned technician to effectively use and secure your WordPress site like a pro!
 
 = Is SecuPress compatible with multisites installation? =
 
@@ -151,7 +149,7 @@ Yes, SecuPress can be activated for all your sub-sites, just activate it from yo
 
 = Is SecuPress compatible with all web hosters? =
 
-Yes, SecuPress is compatible with all web hosters like o2switch, OVH, Siteground, BlueHost, PlanetHoster, WP Engine or GoDaddy? If you encounter an issue, do not hesitate to contact our support team.
+Yes, SecuPress is compatible with all web hosters like o2switch, Hosterra, 1and1, OVH, Siteground, BlueHost, PlanetHoster, WP Engine or GoDaddy? If you encounter an issue, do not hesitate to contact our support team.
 
 = Is SecuPress compatible with all caching plugins like WP Rocket, WP Fastest Cache, W3 Total Cache, WP Super Cache? =
 
@@ -165,9 +163,9 @@ Yes, SecuPress is compatible with all multilingual WordPress plugins. If you hav
 
 Yes, SecuPress is compatible with all server engines. If you encounter an issue, do not hesitate to contact our support team.
 
-= Is SecuPress compatible with other security plugins like WordFence, iThemes Security, Bullet Proof Security? =
+= Is SecuPress compatible with other security plugins like WordFence, Solid Security, Sucuri Security, Bullet Proof Security? =
 
-The answer is no. SecuPress is not compatible with another security plugin. Just like two caching plugins do not make your website faster, two security plugins do not make your WordPress more secure. Security rules tend to be overwritten or conflict with other rules if two security plugins are installed. This can cause errors on your website and is not recommended.
+The answer is yes and no. A security plugin should work alone. Just like two caching plugins do not make your website faster, two security plugins do not make your WordPress more secure. Security rules tend to be overwritten or conflict with other rules if two security plugins are installed. This can cause errors on your website and is not recommended. So, you can try, but we do not recommend it.
 
 
 == Screenshots ==
@@ -183,25 +181,12 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 2.2.5.1 =
+= 2.2.5.2 =
 
-* 21 Dec 2023
-* Security Fix: TOCTOU in Limit Login Attempts (Thanks to Konan Nagashima)
-* Improvement#963: Add context for secupress_die()
-* Improvement: Add DE translations (Thanks to Klaus Bei)
-* Improvement: Status "bad" into "warning" on bad plugins scanner results in free version
-* Fix#1036: Remove REST API calls made using query parameters (Thanks to JB Audras) + usage of rawurldecode() (Thanks to Aether Black)
-* Fix#1035: Malware scan file too big
-* Fix#1034: Matomo was blocked
-* Fix#1033: Bad referer default list, "cialis"
-* Fix#1032: Uncaught TypeError: Cannot read properties of null (reading 'querySelectorAll')
-* Fix#1030: Plugins&Themes settings on MS does not save correctly
-* Fix#1021: PHP Deprecated: filter_var() null in parameter 3
-* Fix#1015: Better output secupress_pro_sessions_control_users_column_content()
-* Fix#1010: Uncaught TypeError: strpos(): Argument 1 must be of type string, array given
-* Fix#1001: Move secupress_format_message()
-* Fix#962: Ranged IPs can prevent ip detection to block
+* 01 April 2024
+* Security Fix: CSRF in "Blackhole" module, criticity: very low (Thanks to Wordfence Security Team for the report)
+* Fix#1039 false positive on "include in wp-config" in malware scanner
 * Update Malware Database
-* Update global i18n
+* Update i18n
 
 == Upgrade Notice ==
