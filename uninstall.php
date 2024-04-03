@@ -24,7 +24,7 @@ if ( is_array( $settings ) && ! empty( $settings['consumer_email'] ) && ! empty(
 		if ( ! function_exists( 'secupress_add_own_ua' ) ) {
 			/** This filter is documented in wp-includes/class-http.php. */
 			$user_agent      = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) );
-			$version         = '2.2.4';
+			$version         = '2.2.5.3';
 			$args['headers'] = array(
 				'X-SECUPRESS' => sprintf( '%s;SecuPress|%s|%s|;', $user_agent, $version, esc_url( home_url() ) ),
 			);
