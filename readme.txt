@@ -181,12 +181,10 @@ The answer is yes and no. A security plugin should work alone. Just like two cac
 
 == Changelog ==
 
-= 2.2.5.2 =
+= 2.2.5.3 =
 
-* 01 April 2024
-* Security Fix: CSRF in "Blackhole" module, criticity: very low (Thanks to Wordfence Security Team for the report)
-* Fix#1039 false positive on "include in wp-config" in malware scanner
+* 03 April 2024
+* Fix v2.2.5.2 Blackhole nonce blocking some front requests
 * Update Malware Database
-* Update i18n
 
 == Upgrade Notice ==
