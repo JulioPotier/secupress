@@ -79,9 +79,9 @@ function secupress_blackhole_please_click_me( $template ) {
 		wp_die( 'Something went wrong.' ); // Do not use secupress_die() here.
 	}
 
+	add_filter( 'nonce_user_logged_out', 'secupress_modify_userid_for_nonces', 10, 2 );
 
 	if ( substr( $url, - strlen( $dirname ) ) === $dirname ) {
-		add_filter( 'nonce_user_logged_out', 'secupress_modify_userid_for_nonces', 10, 2 );
 		return dirname( __FILE__ ) . '/inc/php/blackhole/warning-template.php';
 	}
 
