@@ -60,7 +60,7 @@ function secupress_bad_file_extensions_get_forbidden_extensions() {
 	 *
 	 * @param (array) $all_exts The file extensions.
 	 */
-	$out = apply_filters( 'secupress.plugin.bad_file_extensions.forbidden_extenstions', $exts );
+	$out = apply_filters( 'secupress.plugin.bad_file_extensions.forbidden_extensions', $exts );
 	$out = array_filter( $out );
 	return $out ? $out : $exts;
 }
