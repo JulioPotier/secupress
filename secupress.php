@@ -67,7 +67,7 @@ if ( defined( 'SECUPRESS_API_EMAIL' ) && defined( 'SECUPRESS_API_KEY' ) && ! def
 
 /**
  * Requires hotfixes first because it's hot.
- */ 
+ */
 require_once( SECUPRESS_INC_PATH . 'functions/hotfixes.php' );
 
 /**
@@ -75,6 +75,15 @@ require_once( SECUPRESS_INC_PATH . 'functions/hotfixes.php' );
  */
 require_once( SECUPRESS_INC_PATH . 'activation.php' );
 
+/**
+ * FIX: _load_textdomain_just_in_time
+ * Load translations while `init` hook., $args:array|object|null )
+ */
+function secupress_textdomain_just_in_time() {
+	// Load translations.
+	secupress_load_plugin_textdomain_translations();
+}
+add_action( 'init', 'secupress_textdomain_just_in_time', 0 );
 
 add_action( 'plugins_loaded', 'secupress_init', 0 );
 /**
@@ -87,9 +96,6 @@ function secupress_init() {
 	if ( defined( 'DOING_AUTOSAVE' ) ) {
 		return;
 	}
-
-	// Load translations.
-	secupress_load_plugin_textdomain_translations();
 
 	// Functions.
 	secupress_load_functions();
