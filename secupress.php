@@ -77,7 +77,7 @@ require_once( SECUPRESS_INC_PATH . 'activation.php' );
 
 /**
  * FIX: _load_textdomain_just_in_time
- * Load translations while `init` hook., $args:array|object|null )
+ * Load translations while `init` hook.
  */
 function secupress_textdomain_just_in_time() {
 	// Load translations.
