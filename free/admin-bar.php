@@ -107,7 +107,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 			$wp_admin_bar->add_menu( array(
 				'parent' => 'secupress-modules-' . $module_slug,
 				'id'     => 'secupress-submodules-' . $submodule_slug,
-				'title'  => str_replace( '*', '', '&rsaquo; ' . $submodule ),
+				'title'  => str_replace( [ '*', '&rsaquo; >' ], [ '', '&nbsp;&raquo; ' ], '&rsaquo; ' . $submodule ),
 				'href'   => esc_url( secupress_admin_url( 'modules', $module_slug . '#' . $submodule_slug ) ),
 				'meta'   => [ 'class' => false === strpos( $submodule, '*' ) || secupress_is_pro() ? '' : 'secupress-pro-notice' ],
 			) );

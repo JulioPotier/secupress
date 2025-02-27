@@ -55,7 +55,7 @@ body #wpbody label.secupress-setting-row-title {
 
 .secupress-setting-row[class*=" depends-"] {
     border-left: 2px solid #000;
-    background: #37444c;
+    background-color: #37444c;
 }
 
 #wpbody .secupress-pro-row label.secupress-setting-row-title {

@@ -1,5 +1,8 @@
 @charset "UTF-8";
 
+.secupress-notice.has-plugin-title {
+	margin-bottom: 33px !important;
+}
 .secupress-notice.secupress-flex {
 	position: relative;
 	padding: 10px 20px;
@@ -30,7 +33,6 @@
 }
 .secupress-notice .secupress-text-medium + p {
 	margin-top: -10px;
-	margin-bottom: 25px;
 }
 .secupress-notice.mini p {
 	margin: .5em 0;
@@ -38,6 +40,15 @@
 .secupress-notice.mini  .secupress-text-medium + p {
 	margin-top: -5px;
 	margin-bottom: 15px;
+}
+.secupress-notice label.plugin-title {
+	background: rgba(0, 0, 0, 0.3);
+	color: #fff;
+	padding: 2px 10px;
+	position: absolute;
+	top: 100%;
+	border-top: 2px solid rgba(0, 0, 0, 0.1);
+	border-radius: 0px 0px 2px 2px;
 }
 .secupress-lb-logo {
 	line-height: 0;
@@ -107,6 +118,9 @@
 	width: 20px;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+}
+.secupress-notice .dashicons {
+	text-decoration: none;
 }
 .secupress-compat-notice .notice-dismiss:hover:before,
 .notice-dismiss:active:before,

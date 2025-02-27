@@ -43,7 +43,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 					<?php
 				} else {
 					?>
-					<p class="secupress-text-medium secupress-mb0"><?php printf( __( 'Nothing fixed yet, %d left.', 'secupress' ), count( $scanned_items ) ); ?></p>
+					<p class="secupress-text-medium secupress-mb0"><?php printf( _x( 'Nothing fixed yet, %d left.', 'always plural form', 'secupress' ), count( $scanned_items ) ); ?></p>
 					<?php
 				}
 				if ( secupress_get_module_option( 'advanced-settings_grade-system', true, 'welcome' ) ) {
@@ -201,7 +201,6 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 						$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
 						$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
 
-						// To-check: are all status here? ////.
 						switch ( $scan_status ) {
 
 							case 'bad' :

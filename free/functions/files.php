@@ -4,9 +4,9 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 /**
  * Get WP Direct filesystem object.
  *
- * @author Grégory Viguier
  * @since 1.3 Don't use the global Filesystem anymore, to make sure to use "direct" (some things don't work over "ftp").
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return `$wp_filesystem` object.
  */
@@ -38,6 +38,7 @@ function secupress_get_filesystem() {
  * Remove a single file or a folder recursively.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $dir              File/Directory to delete.
  * @param (array)  $dirs_to_preserve Dirs that should not be deleted. Default: array().
@@ -114,7 +115,9 @@ function secupress_mkdir( $dir ) {
  * Recursive directory creation based on full path.
  *
  * @since 1.0
- * @source wp_mkdir_p() in `/wp-includes/functions.php`.
+ * @author Grégory Viguier
+ * 
+ * @see wp_mkdir_p() in `/wp-includes/functions.php`.
  *
  * @param (string) $target A folder path.
  *
@@ -156,7 +159,8 @@ function secupress_mkdir_p( $target ) {
  * If the file does not exist, tell if the home folder is writable.
  *
  * @since 1.0
- *
+ * @author Grégory Viguier
+ * 
  * @param (string) $file File name.
  *
  * @return (bool)
@@ -293,7 +297,6 @@ function secupress_comment_constant( $constant, $wpconfig_filepath = false, $mar
 	if ( preg_match( "@^[\t ]*define\s*\(\s*(?:'{$constant}'|\"{$constant}\")\s*,(?:.*);.*\s*$@mU", $file_content ) ) {
 		return secupress_replace_content( $wpconfig_filepath, "@^[\t ]*define\s*\(\s*(?:'{$constant}'|\"{$constant}\")\s*,(?:.*);.*\s*$@mU", '/** Commented by SecuPress. */ /** $0 */' );
 	}
-
 	// Nothing has been replaced because there is nothing to replace, aka, these are WordPress default values, still overridable
 	// ps: if these constants are set elsewhere… well, my bad :)
 	return true;
@@ -351,7 +354,7 @@ function secupress_uncomment_constant( $constant, $wpconfig_filepath = false, $m
  * Get plugins dir path.
  *
  * @since 1.0
- *
+ * @author Grégory Viguier
  * @return (string)
  */
 function secupress_get_plugins_path() {
@@ -388,6 +391,7 @@ function secupress_get_themes_path() {
  * Tell if a plugin is symlinked.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $plugin_file Plugin main file path, relative to the plugins folder.
  *
@@ -405,6 +409,7 @@ function secupress_is_plugin_symlinked( $plugin_file ) {
  * Tell if a theme is symlinked.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $theme_slug Theme dir name.
  *
@@ -421,7 +426,10 @@ function secupress_is_theme_symlinked( $theme_slug ) {
 /**
  * File creation based on WordPress Filesystem.
  *
+ * @since 2.2.6 $file_content is now an array + clearstatcache() usage
+ * @author Julio Potier
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $file The path of file.
  * @param (string) $new_content The content that will be added to the file.
@@ -432,8 +440,6 @@ function secupress_is_theme_symlinked( $theme_slug ) {
  * @return (bool)
  */
 function secupress_put_contents( $file, $new_content = '', $args = array() ) {
-	static $file_content = '';
-
 	$args = wp_parse_args( $args, array(
 		'marker'   => '',
 		'put'      => 'prepend',
@@ -447,13 +453,11 @@ function secupress_put_contents( $file, $new_content = '', $args = array() ) {
 	// Get the whole content of file and remove old marker content.
 	if ( file_exists( $file ) ) {
 		$pattern      = '/' . $comment_char . ' BEGIN SecuPress ' . $args['marker'] . '(.*)' . $comment_char . ' END SecuPress\s*?/isU';
-		if ( ! $file_content ) {
-			$file_content = file_get_contents( $file );
-		}
+		$file_content[ $file ] = file_get_contents( $file );
 		if ( $args['keep_old'] ) {
-			preg_match( $pattern, $file_content, $keep_old );
+			preg_match( $pattern, $file_content[ $file ], $keep_old );
 		}
-		$file_content = preg_replace( $pattern, '', $file_content );
+		$file_content[ $file ] = preg_replace( $pattern, '', $file_content[ $file ] );
 	}
 
 	if ( ! empty( $new_content ) ) {
@@ -465,32 +469,38 @@ function secupress_put_contents( $file, $new_content = '', $args = array() ) {
 		$content .= trim( $new_content ) . PHP_EOL;
 		$content .= $comment_char . ' END SecuPress' . PHP_EOL . PHP_EOL;
 
-		if ( '' !== $args['text'] && strpos( $file_content, $args['text'] ) !== false ) {
+		if ( '' !== $args['text'] && strpos( $file_content[ $file ], $args['text'] ) !== false ) {
 			if ( 'append' === $args['put'] ) {
-				$content = str_replace( $args['text'], $args['text'] . PHP_EOL . $content, $file_content );
+				$content = str_replace( $args['text'], $args['text'] . PHP_EOL . $content, $file_content[ $file ] );
 			} elseif ( 'prepend' === $args['put'] ) {
-				$content = str_replace( $args['text'], $content . PHP_EOL . $args['text'], $file_content );
+				$content = str_replace( $args['text'], $content . PHP_EOL . $args['text'], $file_content[ $file ] );
 			}
 		} else {
 			if ( 'append' === $args['put'] ) {
-				$content = $file_content . PHP_EOL . $content;
+				$content = $file_content[ $file ] . PHP_EOL . $content;
 			} elseif ( 'prepend' === $args['put'] ) {
-				$content = $content . $file_content;
+				$content = $content . $file_content[ $file ];
 			}
 		}
 
-		$file_content = $content;
+		$file_content[ $file ] = $content;
 	}
 
-	return $filesystem->put_contents( $file, $file_content, FS_CHMOD_FILE );
+	$return = $filesystem->put_contents( $file, $file_content[ $file ], FS_CHMOD_FILE );
+	clearstatcache( true, $file );
+
+	return $return;
 }
 
 
 /**
  * File creation based on WordPress Filesystem.
  *
- * @since 1.0
+ * @since 2.2.6 clearstatcache() usage
+ * @author Julio potier
  * @since 1.3 Use a sandbox for the `wp-config.php` file.
+ * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $file        The path of file will be created.
  * @param (string) $old_content The content to be replaced from the file (preg_replace).
@@ -522,7 +532,10 @@ function secupress_replace_content( $file, $old_content, $new_content, $skip_san
 		return false;
 	}
 
-	return $filesystem->put_contents( $file, $new_content, FS_CHMOD_FILE );
+	$return = $filesystem->put_contents( $file, $new_content, FS_CHMOD_FILE );
+	clearstatcache( true, $file );
+
+	return $return;
 }
 
 
@@ -531,10 +544,11 @@ function secupress_replace_content( $file, $old_content, $new_content, $skip_san
  * Create a folder containing a `index.php` file with the provided content.
  * Then, make a request to the `index.php` file to test if a server error is triggered.
  *
- * @since 2.0 Add secupress.use_sandbox filter
- * @since 1.3
- * @author Grégory Viguier
  * @author Julio Potier
+ * @since 2.0 Add secupress.use_sandbox filter
+ *
+ * @author Grégory Viguier
+ * @since 1.3
  *
  * @param (string) $content The content to put in the `wp-config.php` file.
  *
@@ -611,6 +625,9 @@ function secupress_wpconfig_success_in_sandbox( $content ) {
  * From WP Core `async_upgrade()` but using `Automatic_Upgrader_Skin` instead of `Language_Pack_Upgrader_Skin` to have a silent upgrade.
  *
  * @since 1.0
+ * @author Grégory Viguier
+ * 
+ * @return (void)
  */
 function secupress_async_upgrades() {
 	// Nothing to do?
@@ -650,11 +667,14 @@ function secupress_async_upgrades() {
 
 
 /**
- * Create a MU-PLUGIN.
+ * Creates a MU-PLUGIN.
  *
+ * @since 2.2.6 New filename pattern
+ * @author Julio Potier
  * @since 1.0
+ * @author Grégory Viguier
  *
- * @param (string) $filename_part The file name part in `_secupress_{$filename_part}.php`.
+ * @param (string) $filename_part The file name part in `(secupress_{$filename_part}).php`.
  * @param (string) $contents      The file content.
  *
  * @return (bool) True on success.
@@ -662,8 +682,12 @@ function secupress_async_upgrades() {
 function secupress_create_mu_plugin( $filename_part, $contents ) {
 
 	$filesystem = secupress_get_filesystem();
-	$filename   = WPMU_PLUGIN_DIR . "/_secupress_{$filename_part}.php";
+	$oldfile    = WPMU_PLUGIN_DIR . "/_secupress_{$filename_part}.php";
+	$filename   = WPMU_PLUGIN_DIR . "/(secupress_{$filename_part}).php";
 
+	if ( file_exists( $oldfile ) ) {
+		$filesystem->delete( $filename );
+	}
 	if ( file_exists( $filename ) ) {
 		$filesystem->delete( $filename );
 	}
@@ -674,7 +698,106 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
 		return false;
 	}
 
-	return $filesystem->put_contents( $filename, $contents );
+	$done = $filesystem->put_contents( $filename, $contents );
+	if ( defined( 'SECUPRESS_INSTALLED_MUPLUGINS' ) ) {
+		$mus  = get_option( SECUPRESS_INSTALLED_MUPLUGINS, [] );
+		if ( $done && $mus ) {
+			$mus[ basename( $filename ) ] = get_plugin_data( $filename );
+			update_option( SECUPRESS_INSTALLED_MUPLUGINS, $mus );
+		}
+	}
+}
+
+/**
+ * Creates a DROPIN-PLUGIN.
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ *
+ * @param (string) $filename_part The file name part in `(secupress_{$filename_part}).php`.
+ * @param (string) $contents      The file content.
+ *
+ * @return (bool) True on success.
+ */
+function secupress_create_dropin_plugin( $filename, $contents ) {
+
+	$filesystem = secupress_get_filesystem();
+	$filename   = WP_CONTENT_DIR . "/{$filename}.php";
+
+	if ( file_exists( $filename ) ) {
+		$filesystem->delete( $filename );
+	}
+	if ( ! file_exists( WP_CONTENT_DIR ) ) {
+		$filesystem->mkdir( WP_CONTENT_DIR );
+	}
+	if ( file_exists( $filename ) || ! file_exists( WP_CONTENT_DIR ) ) {
+		return false;
+	}
+
+	$filesystem->put_contents( $filename, $contents );
+}
+
+
+/**
+ * Delete a MU-PLUGIN.
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ *
+ * @param (string) $filename The filename or file part in `(secupress_{$filename}).php`.
+ *
+ * @return (bool) True on success.
+ */
+function secupress_delete_mu_plugin( $filename ) {
+	if ( ! $filename ) {
+		return;
+	}
+	$filesystem = secupress_get_filesystem();
+	$filename   = basename( $filename );
+	$filename   = str_replace( [ WPMU_PLUGIN_DIR, '_secupress-', '_secupress_', '(secupress_', ').php', '.php' ], '', $filename );
+
+	$oldfile    = WPMU_PLUGIN_DIR . "/_secupress-{$filename}.php";
+	if ( file_exists( $oldfile ) ) {
+		$filesystem->delete( $oldfile );
+	}
+
+	$filename   = str_replace( '-', '_', $filename );
+	$filename   = WPMU_PLUGIN_DIR . "/(secupress_{$filename}).php";
+	if ( file_exists( $filename ) ) {
+		$filesystem->delete( $filename );
+	}
+
+	if ( ! defined( 'SECUPRESS_INSTALLED_MUPLUGINS' ) ) {
+		return;
+	}
+
+	$mus = get_option( SECUPRESS_INSTALLED_MUPLUGINS, [] );
+	if ( empty( $mus ) ) {
+		return;
+	}
+
+	unset( $mus[ basename( $filename ) ] );
+	update_option( SECUPRESS_INSTALLED_MUPLUGINS, $mus );
+}
+
+/**
+ * Deletes a DROPIN-PLUGIN.
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ *
+ * @param (string) $filename The filename or file part in `(secupress_{$filename}).php`.
+ *
+ * @return (bool) True on success.
+ */
+function secupress_delete_dropin_plugin( $filename ) {
+
+	$filesystem = secupress_get_filesystem();
+	$filename   = WPMU_PLUGIN_DIR . "/{$filename}.php";
+	$dropins    = _get_dropins();
+	if ( isset( $dropins[ basename( $filename ) ] ) && file_exists( $filename ) ) {
+		$filesystem->delete( $filename );
+	}
 }
 
 
@@ -684,6 +807,7 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
  * Example: foo/bar/
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $slug A path.
  *
@@ -696,9 +820,10 @@ function secupress_trailingslash_only( $slug ) {
 
 /**
  * A better `get_home_path()`, without the bugs on old versions.
- * https://core.trac.wordpress.org/ticket/25767
+ * @see https://core.trac.wordpress.org/ticket/25767
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (string) The home path.
  */
@@ -724,6 +849,7 @@ function secupress_get_home_path() {
  * Is WP a MultiSite and a subfolder install?
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (bool).
  */
@@ -751,6 +877,8 @@ function secupress_is_subfolder_install() {
  * Has WP its own directory?
  *
  * @since 1.0
+ * @author Grégory Viguier
+ * 
  * @see http://codex.wordpress.org/Giving_WordPress_Its_Own_Directory
  *
  * @return (string) The directory containing WP.
@@ -787,6 +915,7 @@ function secupress_get_wp_directory() {
  * The main concern is about directories.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (array) An array containing the following keys:
  *         'base'      => Rewrite base, or "home directory".
@@ -898,4 +1027,151 @@ function secupress_get_rewrite_bases() {
 	}
 
 	return ( $bases = false );
+}
+
+/**
+ * Return the files paths
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ * 
+ * @return (array)
+ */
+function secupress_get_data_file_paths() {
+	return [
+		// Free
+		'SECUPRESS_INC_PATH'     => [ 'bad_user_agents', 'bad_url_contents', 'bad_host_contents', 'bad_request_keys', 'disallowed_logins_list' ],
+		// Pro
+		'SECUPRESS_PRO_INC_PATH' => [ 'bad_referer_contents', 'bad_email_domains', 'good_email_domains', 'allowed_seo_domains', 'malware_keywords_db', 'malware_keywords', 'tag_attr', 'ai_bots', 'locations-en', 'IPv4', 'IPv6' ]
+	];
+}
+/**
+ * Return the file path of a desited data file or false is not exists
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ * 
+ * @param  (string) $slug
+ * 
+ * @return (string|bool)
+ */
+function secupress_get_data_file_path( $slug ) {
+	$paths = secupress_get_data_file_paths();
+	$slug  = sanitize_key( $slug );
+	if ( in_array( $slug, $paths['SECUPRESS_INC_PATH'] ) && file_exists( SECUPRESS_INC_PATH . 'data/' . $slug . '.data' ) ) {
+		return SECUPRESS_INC_PATH . 'data/' . $slug . '.data';
+	} elseif ( in_array( $slug, $paths['SECUPRESS_PRO_INC_PATH'] ) && file_exists( SECUPRESS_PRO_INC_PATH . 'data/' . $slug . '.data' ) ) {
+		return SECUPRESS_PRO_INC_PATH . 'data/' . $slug . '.data';
+	}
+	return false;
+}
+
+/**
+ * Downloads a URL to a local temporary file using the WordPress HTTP API.
+ * Please note that the calling function must delete or move the file.
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ * 
+ * @param (string) $format zip (3MB) or json (40MB)
+ * 
+ * @see download_url()
+ * 
+ * @return (string|WP_Error) $tmpfname
+ **/
+function secupress_download_from_api( $format ) {
+	// WARNING: The file is not automatically deleted, the script must delete or move the file.
+	if ( ! function_exists( 'wp_tempnam' ) ) {
+		include_once( ABSPATH . '/wp-admin/includes/file.php' );
+	}
+
+	$url          = SECUPRESS_API_MAIN . 'data/v2/?format=' . $format;
+	$tmpfname     = wp_tempnam( 'secupress-pro-data.' . $format );
+	if ( ! $tmpfname ) {
+		return new WP_Error( 'http_no_file', __( 'Could not create temporary file.' ) );
+	}
+
+	$response     = wp_safe_remote_get(
+		$url,
+		[
+			'timeout'  => 300,
+			'stream'   => true,
+			'filename' => $tmpfname,
+			'headers'  => secupress_get_basic_auth_headers(),
+		]
+	);
+
+	if ( is_wp_error( $response ) ) {
+		unlink( $tmpfname );
+		return $response;
+	}
+
+	$response_code = wp_remote_retrieve_response_code( $response );
+
+	if ( 200 !== $response_code ) {
+		$data = array(
+			'code' => $response_code,
+		);
+
+		// Retrieve a sample of the response body for debugging purposes.
+		$tmpf = fopen( $tmpfname, 'rb' );
+
+		if ( $tmpf ) {
+			/**
+			 * Filters the maximum error response body size in `download_url()`.
+			 *
+			 * @since 5.1.0
+			 *
+			 * @see download_url()
+			 *
+			 * @param int $size The maximum error response body size. Default 1 KB.
+			 */
+			$response_size = apply_filters( 'download_url_error_max_body_size', KB_IN_BYTES );
+
+			$data['body'] = fread( $tmpf, $response_size );
+			fclose( $tmpf );
+		}
+
+		unlink( $tmpfname );
+		return new WP_Error( 'http_' . (int) $response_code, trim( wp_remote_retrieve_response_message( $response ) ), $data );
+	}
+
+	$content_disposition = wp_remote_retrieve_header( $response, 'Content-Disposition' );
+
+	if ( $content_disposition ) {
+		$content_disposition = strtolower( $content_disposition );
+
+		if ( str_starts_with( $content_disposition, 'attachment; filename=' ) ) {
+			$tmpfname_disposition = sanitize_file_name( substr( $content_disposition, 21 ) );
+		} else {
+			$tmpfname_disposition = '';
+		}
+
+		// Potential file name must be valid string.
+		if ( $tmpfname_disposition && is_string( $tmpfname_disposition )
+			&& ( 0 === validate_file( $tmpfname_disposition ) )
+		) {
+			$tmpfname_disposition = dirname( $tmpfname ) . '/' . $tmpfname_disposition;
+
+			if ( rename( $tmpfname, $tmpfname_disposition ) ) {
+				$tmpfname = $tmpfname_disposition;
+			}
+
+			if ( ( $tmpfname !== $tmpfname_disposition ) && file_exists( $tmpfname_disposition ) ) {
+				unlink( $tmpfname_disposition );
+			}
+		}
+	}
+
+	$content_md5 = wp_remote_retrieve_header( $response, 'Content-MD5' );
+	if ( $content_md5 ) {
+		$md5_check = verify_file_md5( $tmpfname, $content_md5 );
+
+		if ( is_wp_error( $md5_check ) ) {
+			unlink( $tmpfname );
+			return $md5_check;
+		}
+	}
+
+	return $tmpfname;
 }

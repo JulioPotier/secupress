@@ -2,55 +2,37 @@
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
- * Get the blacklisted usernames.
+ * Get the Disallowed usernames.
  *
+ * @author Julio Potier
+ * @since 2.2.6
+ * @author Grégory Viguier
  * @since 1.0
  *
  * @return (array)
  */
 function secupress_get_blacklisted_usernames() {
-	// Blacklisted usernames.
-	$list = array(
-		'a', 'about', 'access', 'account', 'accounts', 'ad', 'address', 'adm', 'administrator', 'administration', 'adult', 'advertising', 'affiliate', 'affiliates', 'ajax', 'analytics', 'android', 'anon', 'anonymous', 'api', 'app', 'apps', 'archive', 'atom', 'auth', 'authentication', 'avatar',
-		'b', 'backup', 'banner', 'banners', 'bin', 'billing', 'blog', 'blogs', 'board', 'bot', 'bots', 'business',
-		'c', 'chat', 'cache', 'cadastro', 'calendar', 'campaign', 'careers', 'cdn', 'cgi', 'client', 'cliente', 'code', 'comercial', 'compare', 'config', 'connect', 'contact', 'contest', 'create', 'code', 'compras', 'css',
-		'd', 'dashboard', 'data', 'db', 'design', 'delete', 'demo', 'design', 'designer', 'dev', 'devel', 'dir', 'directory', 'doc', 'documentation', 'docs', 'domain', 'download', 'downloads',
-		'e', 'edit', 'editor', 'email', 'ecommerce',
-		'f', 'forum', 'forums', 'faq', 'favorite', 'feed', 'feedback', 'flog', 'follow', 'file', 'files', 'free', 'ftp',
-		'g', 'gadget', 'gadgets', 'games', 'guest', 'group', 'groups',
-		'h', 'help', 'home', 'homepage', 'host', 'hosting', 'hostname', 'htm', 'html', 'http', 'httpd', 'https', 'hpg',
-		'i', 'info', 'information', 'image', 'img', 'images', 'imap', 'index', 'invite', 'intranet', 'indice', 'invite', 'ipad', 'iphone', 'irc',
-		'j', 'java', 'javascript', 'job', 'jobs', 'js',
-		'k', 'knowledgebase', 'kb',
-		'l', 'log', 'login', 'logs', 'logout', 'list', 'lists',
-		'm', 'mail', 'mail1', 'mail2', 'mail3', 'mail4', 'mail5', 'mailer', 'mailing', 'main', 'mx', 'manager', 'marketing', 'master', 'me', 'media', 'message', 'microblog', 'microblogs', 'mine', 'mp3', 'msg', 'msn', 'mysql', 'messenger', 'mob', 'mobile', 'movie', 'movies', 'music', 'musicas', 'my',
-		'n', 'name', 'named', 'net', 'network', 'new', 'news', 'newsletter', 'nick', 'nickname', 'notes', 'noticias', 'ns', 'ns1', 'ns2', 'ns3', 'ns4', 'ns5', 'ns6', 'ns7', 'ns8', 'ns9',
-		'o', 'old', 'online', 'operator', 'order', 'orders',
-		'p', 'page', 'pager', 'pages', 'panel', 'password', 'perl', 'pic', 'pics', 'photo', 'photos', 'photoalbum', 'php', 'plugin', 'plugins', 'pop', 'pop3', 'post', 'postmaster', 'postfix', 'posts', 'private', 'profile', 'project', 'projects', 'promo', 'pub', 'public', 'python',
-		'q', 'query',
-		'r', 'random', 'register', 'registration', 'root', 'ruby', 'rss',
-		's', 'sale', 'sales', 'sample', 'samples', 'script', 'scripts', 'secure', 'send', 'service', 's' . 'e' . 'x', 'shop', 'sql', 'signup', 'signin', 'search', 'security', 'settings', 'setting', 'setup', 'site', 'sites', 'sitemap', 'smtp', 'soporte', 'ssh', 'stage', 'staging', 'start', 'subscribe', 'subdomain', 'suporte', 'support', 'stat', 'static', 'stats', 'status', 'store', 'stores', 'system',
-		't', 'tablet', 'tablets', 'tech', 'telnet', 'test', 'test1', 'test2', 'test3', 'teste', 'tests', 'theme', 'themes', 'tmp', 'todo', 'task', 'tasks', 'tools', 'tv', 'talk',
-		'u', 'update', 'upload', 'url', 'user', 'username', 'usuario', 'usage',
-		'v', 'vendas', 'video', 'videos', 'visitor',
-		'w', 'win', 'ww', 'www', 'www1', 'www2', 'www3', 'www4', 'www5', 'www6', 'www7', 'www9', 'www9', 'wwww', 'wws', 'wwws', 'web', 'webmail', 'website', 'websites', 'webmaster', 'workshop',
-		'x', 'xxx', 'xpg',
-		'y', 'you',
-		'z', 'zzz',
-		'_', '.', '-', '@',
-		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-	);
+	// Disallowed usernames.
+	// usernames with "*" are basically from malwares where the joker "*" is a random number
+	$filename = SECUPRESS_INC_PATH . 'data/disallowed_logins_list.data';
+	$list     = [];
+	if ( file_exists( $filename ) ) {
+		$list = explode( ',', file_get_contents( $filename ) );
+	}
 	/**
-	 * Filter the list of blacklisted usernames.
+	 * Filter the list of Disallowed usernames.
 	 *
-	 * @since 2.0 renamed hook
-	 * @since 1.0
+	 * @since 2.0
 	 *
 	 * @param (array) $list List of usernames.
 	 */
 	$list = apply_filters( 'secupress.plugin.disallowed_logins_list', $list );
+	if ( has_filter( 'secupress.plugin.disallowed_logins_list' ) ) {
+   		_deprecated_hook( 'secupress.plugin.disallowed_logins_list', '2.2.6', 'secupress.plugins.disallowed_logins_list' );
+	}
+	$list = apply_filters( 'secupress.plugins.disallowed_logins_list', $list );
 
-	// Temporarily allow some blacklisted usernames.
+	// Temporarily allow some Disallowed usernames.
 	$allowed = (array) secupress_cache_data( 'allowed_usernames' );
 	if ( $allowed ) {
 		$list = array_diff( $list, $allowed );
@@ -71,9 +53,418 @@ function secupress_get_blacklisted_usernames() {
  * @return (array) $roles
  **/
 function secupress_get_forbidden_default_roles() {
+	$roles = [ 'administrator' => true ];
+	$roles = apply_filters( 'secupress.plugin.default_role.forbidden', $roles );
+	if ( has_filter( 'secupress.plugin.default_role.forbidden' ) ) {
+		_deprecated_hook( 'secupress.plugin.default_role.forbidden', '2.2.6', 'secupress.plugins.default_role.forbidden' );
+	}
 	/**
 	* Filter the forbidden roles
 	* @param (array) $roles, format 'role' => true
 	*/
-	return apply_filters( 'secupress.plugin.default_role.forbidden', [ 'administrator' => true ] );
+	$roles = apply_filters( 'secupress.plugins.default_role.forbidden', $roles );
+
+	return $roles;
+}
+
+
+/**
+ * Return the distance between 2 strings from 0 (same) to 1 (different)
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ *
+ * @param (string) $str1 The first string to compare
+ * @param (string) $str2 The second string to compare
+ *
+ * @return (float)
+ **/
+function secupress_levenshtein( $str1, $str2 ) {
+    $distance = levenshtein( $str1, $str2 );
+    $maxlen   = max( strlen( $str1 ), strlen( $str2 ) );
+    return 1 - ( $distance / $maxlen );
+}
+
+/**
+ * Detect if the user has a mobile session
+ *
+ * @author Julio Potier
+ * @since 2.2.6
+ * 
+ * @param (int)   $user_id
+ * @return (bool) True if the user_id has at least one mobile session
+ **/
+function secupress_user_has_mobile_session( $user_id ) {
+	$sessions_inst = WP_Session_Tokens::get_instance( $user_id );
+	$all_sessions  = $sessions_inst->get_all();
+	if ( empty( $all_sessions ) ) {
+		return false;
+	}
+	return (bool) count( array_filter( wp_list_pluck( $all_sessions, 'ua' ), 'secupress_is_mobile' ) );
+}
+
+/**
+ * Get the roles of a user.
+ * 
+ * @author Julio Potier
+ * @since 2.2.6
+ * 
+ * @param int $user_id The user ID.
+ * @return array The user roles.
+ */
+function secupress_get_user_roles( $user_id ) {
+	$user = get_user_by( 'ID', $user_id );
+
+	return isset( $user->roles ) ? $user->roles : [];
+}
+
+/**
+ * Get user IDs with active sessions.
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ *
+ * @return (array) User IDs with active sessions.
+ */
+function secupress_get_connected_user_ids() {
+	static $user_ids = [];
+	$user_ids = $user_ids ?? [];
+
+	if ( ! empty( $user_ids ) ) {
+		return $user_ids;
+	}
+
+	// Get all user IDs
+	$users = get_users( [
+		'meta_key'     => 'session_tokens',
+		'meta_compare' => 'EXISTS'
+	] );
+
+	foreach ($users as $user) {
+		$instance = WP_Session_Tokens::get_instance( $user->ID );
+		$sessions = $instance->get_all();
+		foreach ( $sessions as $session ) {
+			if ( $session['expiration'] > time() ) {
+				$user_ids[] = $user->ID;
+				break; // No need to check further tokens for this user
+			}
+		}
+	}
+
+	return $user_ids;
+}
+
+/**
+ * Check if a user is a fake user.
+ *
+ * @author Julio Potier
+ * @since 2.2.6
+ * 
+ * @param int $user_id The user ID.
+ * @return (string|bool) Descriptive word if the user is a fake user, false otherwise.
+ */
+function secupress_is_fake_user( $user_id ) {
+	$_user = new WP_User( $user_id );
+
+	if ( ! $_user->exists() ) {
+		return 'not_exists';
+	}
+
+	if ( 32 >= strlen( $_user->user_pass ) ) {
+		return 'wrong_passwordhash';
+	}
+
+	if ( '0000-00-00 00:00:00' === $_user->user_registered ) {
+		return 'no_date';
+	}
+
+	if ( empty( $_user->user_nicename ) ) {
+		return 'no_nicename';
+	}
+
+	$_meta = get_user_meta( $user_id, SECUPRESS_USER_PROTECTION, true );
+	if ( ! $_meta ) {
+		return 'no_metadata';
+	}
+
+	$modulo = secupress_get_option( 'secupress_user_protection_modulo' );
+	$seed   = secupress_get_option( 'secupress_user_protection_seed' );
+
+	if ( $_meta != ( $user_id * $seed ) % $modulo ) { // do not use !==, do not cast $_meta as int to do so.
+		return 'no_modulo';
+	}
+
+	if ( ! is_email( $_user->user_email ) ) {
+		return 'wrong_email_dom';
+	}
+
+	if ( secupress_is_submodule_active( 'users-login', 'same-email-domain' ) && secupress_email_domain_is_same( $_user->user_email ) ) {
+		return 'same_email';
+	}
+
+	if ( secupress_is_submodule_active( 'users-login', 'bad-email-domains' ) ) {
+		// special cache system here, this cost a lot and takes a long time to check.
+		if ( get_user_meta( $_user->ID, 'secupress-bad-mx-' . md5( $_user->user_email ), true ) ) {
+			return 'wrong_email_mx';
+		} else if ( secupress_pro_bad_email_domain_is_bad( $_user->user_email ) ) {
+			update_user_meta( $_user->ID, 'secupress-bad-mx-' . md5( $_user->user_email ), 1 );
+			return 'wrong_email_mx';
+		}
+	}
+
+	$admins = get_option( SECUPRESS_ADMIN_IDS );
+	if ( $admins && user_can( $_user, 'administrator' ) && ! in_array( $user_id, $admins ) ) {
+		return 'not_admin';
+	}
+
+	return false; // This is a correct user
+}
+
+/**
+ * Get the fake users
+ *
+ * @author Julio Potier
+ * @since 2.2.6
+ * 
+ * @return array The fake users.
+ */
+function secupress_get_fake_users() {
+	global $wpdb;
+	static $fake_users;
+
+	if ( isset( $fake_users ) ) {
+		return $fake_users;
+	}
+
+	$temp_users = [];
+	$fake_users = [];
+
+	if ( class_exists( 'SecuPress_User_Protection' ) ) {
+	    remove_action( 'pre_get_users', array( $GLOBALS['SecuPress_User_Protection'], 'filter_fake_users' ) );
+	}
+	// #1 Get fake users without metadata
+	$modulo = secupress_get_option( 'secupress_user_protection_modulo' );
+	$seed   = secupress_get_option( 'secupress_user_protection_seed' );
+
+	// #2 Get fake users with wrong metadata
+	$temp_users = $wpdb->prepare("
+		SELECT u.ID
+		FROM {$wpdb->users} AS u
+		LEFT JOIN {$wpdb->usermeta} AS um ON u.ID = um.user_id AND um.meta_key = %s
+		WHERE um.meta_key IS NULL OR um.meta_value != (u.ID * %d) %% %d;
+	", SECUPRESS_USER_PROTECTION, $seed, $modulo);
+	$temp_users = $wpdb->get_col( $temp_users );
+	$fake_users = array_merge( $temp_users, $fake_users );
+
+	// #3 Get fake users with a 0000-00-00 00:00:00 registered date
+	$temp_users = $wpdb->get_col(
+		"SELECT ID FROM {$wpdb->users} WHERE user_registered = '0000-00-00 00:00:00'",
+	);
+	$fake_users = array_merge( $temp_users, $fake_users );
+
+	// #4 Get fake users with a 32-character password length
+	$temp_users = $wpdb->get_col( "SELECT ID FROM {$wpdb->users} WHERE LENGTH(user_pass) <= 32" ); // md5 length, do not change
+	$fake_users = array_merge( $temp_users, $fake_users );
+
+	// #5 Get fake users with no nicename
+	$temp_users = $wpdb->get_col(
+		"SELECT ID FROM {$wpdb->users} WHERE LENGTH(user_nicename) = 0",
+	);
+	$fake_users = array_merge( $temp_users, $fake_users );
+
+	// #6 Get users with bad domains MX
+	if ( secupress_is_submodule_active( 'users-login', 'bad-email-domains' ) ) {
+		$domain_conditions = implode( '|', secupress_pro_bad_email_domain_get_bad_tld_for_email() );
+		$temp_users = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->users WHERE user_email REGEXP CONCAT('.(', %s, ')$')", $domain_conditions ) );
+		$fake_users = array_merge( $temp_users, $fake_users );
+	}
+
+	// #7 Get users with same domain name
+	if ( secupress_is_submodule_active( 'users-login', 'same-email-domain' ) ) {
+		$website_domain = secupress_get_current_url( 'domain' );
+		$temp_users     = $wpdb->get_col( $wpdb->prepare(
+			 "SELECT ID FROM {$wpdb->users} WHERE user_email LIKE %s", '%' . $wpdb->esc_like( $website_domain )
+			)
+		);
+		$fake_users = array_merge( $temp_users, $fake_users );
+	}
+
+	// #8 Get fake users with wrong email address
+	$temp_users = $wpdb->get_col(
+		"SELECT ID FROM {$wpdb->users} WHERE user_email NOT LIKE '%_@_%.__%'" // very basic but will works for the malwares, not for real case, do not use this for real verification.
+	);
+	$fake_users = array_merge( $temp_users, $fake_users );
+
+	// #9 Get admin users granted directly in DB (not in SECUPRESS_ADMIN_IDS option)
+	$_tmp_pends = secupress_get_pending_user_ids();
+	$temp_users = get_users( [ 'role' => 'administrator', 'exclude' => array_merge( $_tmp_pends, get_option( SECUPRESS_ADMIN_IDS ) ), 'number' => -1, 'fields' => 'ids' ] );
+	$fake_users = array_merge( $temp_users, $fake_users );
+
+	$fake_users = array_unique( $fake_users );
+	$fake_users = array_map( 'get_user_by', array_fill( 0, count( $fake_users ), 'ID' ), $fake_users );
+
+	if ( class_exists( 'SecuPress_User_Protection' ) ) {
+		add_action( 'pre_get_users', array( $GLOBALS['SecuPress_User_Protection'], 'filter_fake_users' ) );
+	}
+	return $fake_users;
+}
+
+/**
+ * Returns pending users (user_status=2) from custom query to prevent any filter
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ * 
+ * @return (array)
+ */
+function secupress_get_pending_user_ids() { // do not add this in the class, we need it outside in secupress_get_fake_users()
+	global $wpdb;
+	static $ids;
+
+	if ( isset( $ids ) ) {
+		return $ids;
+	}
+
+	$query = "SELECT ID FROM $wpdb->users WHERE user_status = 2";
+	$ids   = $wpdb->get_col( $query );
+
+	return $ids;
+}
+
+/**
+ * Returns true if the wp_users table contains any duplicated user_pass (which is 100% malicious)
+ *
+ * @author Julio Potier
+ * @since 2.2.6
+ * 
+ * @return (bool)
+ **/
+function secupress_users_contains_duplicated_hashes() {
+	global $wpdb;
+	static $res;
+
+	if ( isset( $res ) ) {
+		return $res;
+	}
+
+	$query = "SELECT CASE WHEN count(distinct user_pass) = count(id) THEN 'false' ELSE 'true' END FROM $wpdb->users";
+	$res   = $wpdb->get_var( $query ) === 'true';
+
+	return $res;
+}
+
+/**
+ * Returns administrators from custom query to prevent any filter
+ *
+ * @author Julio Potier
+ * @since 2.2.6
+ * 
+ * @return (array)
+ **/
+function secupress_get_admin_ids_by_capa() {
+	global $wpdb;
+	static $ids;
+
+	if ( isset( $ids ) ) {
+		return $ids;
+	}
+	$query = "SELECT ID FROM $wpdb->users u INNER JOIN $wpdb->usermeta um ON u.ID = um.user_id WHERE um.meta_key LIKE '{$wpdb->prefix}capabilities' AND ( um.meta_value LIKE '%\"administrator\"%' OR um.meta_value LIKE '%\'administrator\'%');";
+	$ids   = $wpdb->get_col( $query );
+
+	return $ids;
+}
+
+/**
+ * Check if the email has the same domain as this website
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ * 
+ * @param (string) $email
+ * @return (bool)
+ **/
+function secupress_email_domain_is_same( $email ) {
+	static $website_domain;
+
+	$domain  = substr( strrchr( $email, '@' ), 1 );
+
+	// Check if the user email domain matches the website domain
+	if ( ! isset( $website_domain ) ) {
+		$website_domain = secupress_get_current_url( 'domain' );
+	}
+	if ( strcasecmp( $domain, $website_domain ) === 0 ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Select an emoji set for the captcha module
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ * 
+ * @param (string) $set 'all' means return everything, 'random' means anything, or a key from $sets
+ * 
+ * @return (array) $sets
+ **/
+function secupress_get_emojiset( $set = 'random' ) {
+	$sets              = [];
+
+	$sets['numbers']   = [ '1️⃣' => __( 'One', 'secupress' ),   '2️⃣' => __( 'Two', 'secupress' ),    '3️⃣' => __( 'Three', 'secupress' ),  '4️⃣' => __( 'Four', 'secupress' ),    '5️⃣' => __( 'Five', 'secupress' )   ];
+	$sets['maths']     = [ '➕' => __( 'Plus', 'secupress' ),  '➖' => __( 'Minus', 'secupress' ),  '✖️' => __( 'Times', 'secupress' ),  '➗' => __( 'Divided', 'secupress' ), '🟰' => __( 'Equal', 'secupress' )  ];
+	$sets['game']      = [ '♠️' => __( 'Spade', 'secupress' ), '♣️' => __( 'Clover', 'secupress' ), '♥️' => __( 'Heart', 'secupress' ),  '♦️' => __( 'Diamond', 'secupress' ), '◼️' => __( 'Square', 'secupress' ) ];
+	$sets['animals']   = [ '🐶' => __( 'Dog', 'secupress' ),   '🐱' => __( 'Cat', 'secupress' ),    '🐵' => __( 'Monkey', 'secupress' ), '🐷' => __( 'Pig', 'secupress' ),     '🦁' => __( 'Lion', 'secupress' )   ];
+	$sets['nature']    = [ '🌳' => __( 'Tree', 'secupress' ),  '🪵' => __( 'Logs', 'secupress' ),   '🍀' => __( 'Clover', 'secupress' ), '🍁' => __( 'Leaf', 'secupress' ),    '🌸' => __( 'Flower', 'secupress' ) ];
+	$sets['fruits']    = [ '🍎' => __( 'Apple', 'secupress' ), '🍌' => __( 'Banana', 'secupress' ), '🍋' => __( 'Lemon', 'secupress' ),  '🍇' => __( 'Grapes', 'secupress' ),  '🥝' => __( 'Kiwi', 'secupress' )   ];
+	$sets['vegeta']    = [ '🌶️' => __( 'Chili', 'secupress' ), '🥕' => __( 'Carrot', 'secupress' ), '🌽' => __( 'Corn', 'secupress' ),   '🥑' => __( 'Avocado', 'secupress' ), '🍅' => __( 'Tomato', 'secupress' ) ];
+	$sets['chars']     = [ '🤖' => __( 'Robot', 'secupress' ), '🤡' => __( 'Clown', 'secupress' ),  '👻' => __( 'Ghost', 'secupress' ),  '👽' => __( 'Alien', 'secupress' ),   '💩' => __( 'Poo', 'secupress' )    ];
+	$sets['food']      = [ '🍞' => __( 'Bread', 'secupress' ), '🧀' => __( 'Cheese', 'secupress' ), '🥩' => __( 'Steak', 'secupress' ),  '🧈' => __( 'Butter', 'secupress' ),  '🥗' => __( 'Salad', 'secupress' )  ];
+	$sets['ffood']     = [ '🌮' => __( 'Taco', 'secupress' ),  '🌭' => __( 'Hotdog', 'secupress' ), '🍕' => __( 'Pizza', 'secupress' ),  '🍔' => __( 'Burger', 'secupress' ),  '🍟' => __( 'Fries', 'secupress' )  ];
+	$sets['space']     = [ '🌍' => __( 'Earth', 'secupress' ), '✨' => __( 'Stars', 'secupress' ),  '🌜' => __( 'Moon', 'secupress' ),   '☀️' => __( 'Sun', 'secupress' ),     '☄️' => __( 'Comet', 'secupress' )  ];
+	$sets['objects']   = [ '🎩' => __( 'Hat', 'secupress' ),   '👋' => __( 'Hand', 'secupress' ),   '👁️' => __( 'Eye', 'secupress' ),    '👓' => __( 'Glasses', 'secupress' ), '🚗' => __( 'Car', 'secupress' )    ];
+	$sets['objects2']  = [ '🏠' => __( 'House', 'secupress' ), '🎹' => __( 'Piano', 'secupress' ),  '⚽️' => __( 'Ball', 'secupress' ),   '🍪' => __( 'Cookie', 'secupress' ),  '⭐️' => __( 'Star', 'secupress' )   ];
+	
+	$sets  = apply_filters( 'secupress.plugins.emojisets', $sets );
+
+	unset( $sets['all'], $sets['random'] ); // Don't set those names, see docblock.
+
+	if ( 'all' === $set ) {
+		return $sets;
+	}
+
+	if ( 'random' === $set ) {
+		$sets = secupress_shuffle_assoc( $sets );
+		return reset( $sets );
+	}
+
+	if ( ! isset( $sets[ $set ] ) ) {
+		return reset( $sets );
+	}
+
+	return $sets[ $set ];
+}
+
+/**
+  * This function will generate a random name, humanly readable
+  *
+  * @param (int) $count
+  * 
+  * @since 2.2.6
+  * @author Julio Potier
+  * 
+  * @return (string) $name
+  */
+function secupress_usernames_lexicomatisation( $count = 8 ) {
+	$v    = array_flip( str_split( 'aaeeiou' ) );
+	$c    = array_flip( str_split( 'bcdfgjlmnprstv' ) );
+	$name = '';
+	for ( $i = 1; $i <= $count; $i++ ) { 
+		if ( ceil( $count / 2 ) == $i ) { // float vs int, use == here.
+			$name .= ' ' . array_rand( $c ) . '. ' . array_rand( $v );
+		}
+		$name .= array_rand( $c ) . array_rand( $v );
+	}
+	return ucwords( $name );
 }

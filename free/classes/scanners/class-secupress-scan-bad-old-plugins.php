@@ -17,7 +17,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '2.2.6';
 
 
 	/** Properties. ============================================================================= */
@@ -39,16 +39,16 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 */
 	protected function init() {
 		$this->title = __( 'Check if you are using plugins that have been deleted from the official repository or have not been updated for at least two years.', 'secupress' );
-		$this->more  = __( 'Do not use a plugin that has been removed from the official repository, and prevent usage of plugins that have not been maintained for two years at least.', 'secupress' );
+		$this->more  = __( 'Do not use a plugin that has been closed on the official repository, and prevent usage of plugins that have not been maintained for two years at least.', 'secupress' );
 
 		if ( is_network_admin() ) {
-			$this->more_fix  = __( 'Select removed and old plugins to be deleted.', 'secupress' );
+			$this->more_fix  = __( 'Select closed and old plugins to be deleted.', 'secupress' );
 			$this->more_fix .= '<br/>' . __( 'Not fixable on Multisite.', 'secupress' );
 			$this->fixable   = false;
 		} elseif ( ! is_multisite() ) {
-			$this->more_fix = __( 'Select and delete removed and old plugins.', 'secupress' );
+			$this->more_fix = __( 'Select and delete closed and old plugins.', 'secupress' );
 		} else {
-			$this->more_fix = __( 'Deactivate removed and old plugins.', 'secupress' );
+			$this->more_fix = __( 'Deactivate closed and old plugins.', 'secupress' );
 		}
 	}
 
@@ -65,11 +65,11 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'You don’t use removed or old plugins.', 'secupress' ),
-			1   => __( 'You don’t use removed or old plugins anymore.', 'secupress' ),
-			2   => __( 'All removed or old plugins have been deleted.', 'secupress' ),
-			3   => __( 'All deletable removed or old plugins have been deleted.', 'secupress' ),
-			4   => __( 'All removed or old plugins have been deactivated.', 'secupress' ),
+			0   => __( 'You don’t use closed or old plugins.', 'secupress' ),
+			1   => __( 'You don’t use closed or old plugins anymore.', 'secupress' ),
+			2   => __( 'All closed or old plugins have been deleted.', 'secupress' ),
+			3   => __( 'All deletable closed or old plugins have been deleted.', 'secupress' ),
+			4   => __( 'All closed or old plugins have been deactivated.', 'secupress' ),
 			// "warning"
 			/** Translators: %s is a file name. */
 			100 => __( 'Error, could not read %s.', 'secupress' ),
@@ -81,6 +81,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			106 => _n_noop( 'Sorry, the following plugin could not be deactivated: %s.', 'Sorry, the following plugins could not be deactivated: %s.', 'secupress' ),
 			/** Translators: %s is the plugin name. */
 			107 => sprintf( __( 'You have a big network, %s must work on some data before being able to perform this scan.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
+			110 => sprintf( __( 'Your installation may contain old or closed plugins. The %sPRO version%s will be more accurate.', 'secupress' ), '<a href="' . secupress_admin_url( 'get-pro' ) . '">', '</a>' ),
 			// "bad"
 			/** Translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
 			200 => _n_noop( '<strong>%1$d plugin</strong> is no longer in the WordPress directory: %2$s.', '<strong>%1$d plugins</strong> are no longer in the WordPress directory: %2$s.', 'secupress' ),
@@ -164,18 +165,38 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			$to_keep = array();
 
 			// Plugins no longer in directory.
-			$bad_plugins = $this->get_installed_plugins_no_longer_in_directory();
+			$bad_plugins = $this->get_closed_plugins();
+			$count       = is_array( $bad_plugins ) ? count( $bad_plugins ) : false;
 
-			if ( $count = count( $bad_plugins ) ) {
+			if ( ! $count ) {
+				// "warning"
+				if ( secupress_is_pro() ) {
+					$this->add_message( 0 );
+				} else {
+					$this->add_message( 110 );
+				}
+			}
+
+			if ( $count > 0 ) {
 				// "bad"
 				$this->add_message( 200, array( $count, $count, self::wrap_in_tag( $bad_plugins ) ) );
 			}
 
 			// Plugins not updated in over 2 years.
-			$bad_plugins = $this->get_installed_plugins_over_2_years();
+			$bad_plugins = $this->get_old_plugins();
 			$bad_plugins = $to_keep ? array_diff_key( $bad_plugins, $to_keep ) : $bad_plugins;
+			$count       = is_array( $bad_plugins ) ? count( $bad_plugins ) : false;
 
-			if ( $count = count( $bad_plugins ) ) {
+			if ( ! $count ) {
+				// "warning"
+				if ( secupress_is_pro() ) {
+					$this->add_message( 0 );
+				} else {
+					$this->add_message( 110 );
+				}
+			}
+
+			if ( $count > 0 ) {
 				// "bad"
 				$this->add_message( 201, array( $count, $count, self::wrap_in_tag( $bad_plugins ) ) );
 			}
@@ -329,7 +350,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 
 		$deleted_plugins = array();
 
-		foreach ( $selected_plugins as $plugin_file => $plugin_data ) {
+		foreach ( $selected_plugins as $plugin_file => $dummy ) {
 			// Run Uninstall hook.
 			if ( is_uninstallable_plugin( $plugin_file ) ) {
 				uninstall_plugin( $plugin_file );
@@ -566,7 +587,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 				if ( $is_symlinked ) {
 					$form .= '<del>' . $plugin_name . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
 				} else {
-					$form .= $plugin_name;
+					$form .= "<strong>$plugin_name</strong>";
 				}
 				$form .= '</label><br/>';
 			}
@@ -592,13 +613,13 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 		$plugins = array();
 
 		// Plugins no longer in directory.
-		$tmp = $this->get_installed_plugins_no_longer_in_directory( true );
+		$tmp = $this->get_closed_plugins( true );
 		if ( $tmp ) {
 			$plugins = $tmp;
 		}
 
 		// Plugins not updated in over 2 years.
-		$tmp = $this->get_installed_plugins_over_2_years( true );
+		$tmp = $this->get_old_plugins( true );
 		if ( $tmp ) {
 			$plugins = array_merge( $plugins, $tmp );
 		}
@@ -622,8 +643,8 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 *
 	 * @return (array).
 	 */
-	final protected function get_installed_plugins_no_longer_in_directory( $for_fix = false ) {
-		return $this->get_installed_bad_plugins( 'removed_plugins', $for_fix );
+	final protected function get_closed_plugins( $for_fix = false ) {
+		return false;//$this->get_installed_bad_plugins( 'closed', $for_fix );
 	}
 
 
@@ -634,10 +655,10 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 *
 	 * @param (bool) $for_fix False: for scan. True: for fix.
 	 *
-	 * @return (array).
+	 * @return (array|false).
 	 */
-	final protected function get_installed_plugins_over_2_years( $for_fix = false ) {
-		return $this->get_installed_bad_plugins( 'notupdated_plugins', $for_fix );
+	final protected function get_old_plugins( $for_fix = false ) {
+		return $this->get_installed_bad_plugins( 'old', $for_fix );
 	}
 
 
@@ -649,65 +670,17 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 * @param (string) $plugins_type "removed_plugins" or "notupdated_plugins".
 	 * @param (bool)   $for_fix      False: for scan. True: for fix.
 	 *
-	 * @return (array) An array like `array( path => plugin_name, path => plugin_name )`.
+	 * @return (array|false) An array like `array( path => plugin_name, path => plugin_name )`.
 	 */
 	final protected function get_installed_bad_plugins( $plugins_type, $for_fix = false ) {
 		static $whitelist_error = false;
 
-		if ( 'notupdated_plugins' === $plugins_type ) {
-			$bad_plugins  = secupress_get_notupdated_plugins();
-			$plugins_file = 'data/not-updated-in-over-two-years-plugin-list.data';
-		} else {
-			$bad_plugins  = secupress_get_removed_plugins();
-			$plugins_file = 'data/no-longer-in-directory-plugin-list.data';
-		}
-
-		if ( false === $bad_plugins ) {
-			// The file is not readable.
-			$plugins_file = SECUPRESS_INC_PATH . $plugins_file;
-			$args         = array( '<code>' . str_replace( ABSPATH, '', $plugins_file ) . '</code>' );
-			// "warning"
-			if ( $for_fix ) {
-				$this->add_fix_message( 100, $args );
-			} else {
-				$this->add_message( 100, $args );
-			}
+		$bad_plugins = secupress_get_bad_plugins( $plugins_type );
+		if ( ! is_array( $bad_plugins ) ) {
 			return false;
 		}
 
-		if ( ! $bad_plugins ) {
-			return array();
-		}
-
-		// Deal with the white list.
-		$whitelist = secupress_get_plugins_whitelist();
-
-		if ( false === $whitelist ) {
-			// The file is not readable.
-			$whitelist = array();
-
-			if ( ! $whitelist_error ) {
-				// No need to trigger the error more than once.
-				$whitelist_error = true;
-				$whitelist_file  = SECUPRESS_INC_PATH . 'data/whitelist-plugin-list.data';
-				$args            = array( '<code>' . str_replace( ABSPATH, '', $whitelist_file ) . '</code>' );
-				// "warning"
-				if ( $for_fix ) {
-					$this->add_fix_message( 100, $args );
-				} else {
-					$this->add_message( 100, $args );
-				}
-			}
-		}
-
-		$bad_plugins = array_diff_key( $bad_plugins, $whitelist );
-
-		if ( ! $bad_plugins ) {
-			return array();
-		}
-
 		$all_plugins = get_plugins();
-		$bad_plugins = array_flip( $bad_plugins );
 		$bad_plugins = array_intersect_key( $all_plugins, $bad_plugins );
 		$bad_plugins = wp_list_pluck( $bad_plugins, 'Name' );
 
@@ -723,7 +696,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 * @return (array) An array like `array( path => plugin_name )`.
 	 */
 	final protected function has_hello_dolly() {
-		$plugins = array();
+		$plugins = [];
 
 		// Sub-sites don't need to delete Dolly.
 		if ( ! $this->is_for_current_site() && file_exists( WP_PLUGIN_DIR . '/hello.php' ) ) {

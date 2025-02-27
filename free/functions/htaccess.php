@@ -2,6 +2,25 @@
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
+ * Tell if rules should be inserted in the `.htaccess` file when an IP in banned.
+ *
+ * @since 1.0
+ *
+ * @return (bool)
+ */
+function secupress_write_in_htaccess() {
+	/**
+	 * Filter to write in the file.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (bool) $write False by default.
+	 */
+	return apply_filters( 'secupress.write_in_htaccess', false );
+}
+
+
+/**
  * Used to write in a `.htaccess` file
  *
  * @since 1.0

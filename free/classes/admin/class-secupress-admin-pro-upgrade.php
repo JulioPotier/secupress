@@ -15,7 +15,7 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '2.2.6';
 
 	/**
 	 * Name of the post action used to install the Pro plugin.
@@ -41,7 +41,7 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 	 * @author Grégory Viguier
 	 */
 	protected function _init() {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( wp_doing_ajax() ) {
 			parent::_init();
 			return;
 		}
@@ -298,15 +298,11 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 	 *
 	 * @return (object|bool|null) The information object on success, null on failure, false if the data is false.
 	 */
-	protected function get_remote_information() {
-		$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
-			'sp_action'  => 'get_upgrade_data',
-			'user_email' => secupress_get_consumer_email(),
-			'user_key'   => secupress_get_consumer_key(),
-		) );
-
-		$information = wp_remote_get( $url, array( 'timeout' => 15 ) );
-
+	public function get_remote_information() {
+		$headers     = secupress_get_basic_auth_headers( secupress_get_consumer_email(), secupress_get_consumer_key() );
+		$url         = SECUPRESS_API_MAIN . 'key/v2/?sp_action=get_upgrade_data';
+		$information = wp_remote_get( $url, [ 'timeout' => 15, 'headers' => $headers ] );
+		
 		if ( is_wp_error( $information ) || 200 !== wp_remote_retrieve_response_code( $information ) ) {
 			return false;
 		}
@@ -315,7 +311,7 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 		$information = @json_decode( $information );
 
 		if ( ! is_object( $information ) || empty( $information->success ) ) {
-			return null;
+			return $information;
 		}
 
 		if ( empty( $information->data ) ) {

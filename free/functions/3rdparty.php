@@ -182,3 +182,36 @@ if ( strpos( gethostname(), 'wps' ) === 0 ) {
 */
 add_filter( 'secupress.settings.field.bbq-headers_user-agents-list',      '__return_null' );
 add_filter( 'secupress.settings.field.bbq-url-content_bad-contents-list', '__return_null' );
+
+/**
+ * Return the e-commerce plugin used in this site, or false
+ * 
+ * @since 2.2.6
+ * @author Julio Potier
+ *
+ * @return (bool|string) False if no detected or Name of the plugin
+ **/
+function secupress_is_ecommerce() {
+	$plugins = [
+				'Easy Digital Downloads' => 'easy-digital-downloads/easy-digital-downloads.php',
+				'Ecwid Shopping Cart'    => 'ecwid-shopping-cart/ecwid-shopping-cart.php',
+				'Woocommerce'            => 'woocommerce/woocommerce.php', 
+				'WP EasyCart'            => 'wp-easycart/wpeasycart.php',
+				'SureCart'               => 'surecart/surecart.php',
+				'StudioCart'             => 'studiocart/studiocart.php',
+				'WPMarmite Pay'         => 'wpmarmite-pay/wpmarmite-pay.php',
+			];
+	/**
+	 * Filter the list of the top most known e-commerce plugins
+	 * 
+	 * @since 2.2.6
+	 * @author Julio Potier
+	 * 
+	 * @param (array) $plugins
+	 * @return (array) $plugins
+	 */ 
+	$plugins = apply_filters( 'secupress.ecommerce_plugin_list', $plugins );
+	$plugins = array_filter( $plugins, 'secupress_is_plugin_active' );
+
+	return ! empty( $plugins ) ? $plugins : false;
+}

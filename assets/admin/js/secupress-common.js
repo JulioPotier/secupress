@@ -117,7 +117,7 @@ var secupressNotices = {
 
 	/**
 	 * Tabs
-	 * @description : handle basic tabs sytem
+	 * @description : handle basic tabs system
 	 * @author : Geoffrey
 	 */
 	$('.secupress-tabs').each( function() {
@@ -195,4 +195,31 @@ var secupressNotices = {
 		} );
 
 	} );
+
+	/**
+	 * Trigger "reinstall plugins button"
+	 * @author: Julio Potier
+	 * @since: 2.2.6
+	 */
+	$('#reinstall-plugins').on('click', function(e) {
+		let url = ajaxurl;
+		e.preventDefault();
+		$(this).prop('disabled', true);
+		url = url + '?action=secupress_reinstall_plugins&_ajax_nonce=' + $(this).data('nonce');
+		let $p_result = $("#reinstall-plugins-results");
+		$($p_result).text('');
+		$.getJSON( url, function( data ) {
+			$.each( data.data, function( key, val ) {
+				let id = key.replace(/[^a-zA-Z]/g, '_');
+				$($p_result).append('<li id="result-' + id + '">' + val + ' <img src="images/loading.gif"></li>');
+				$.getJSON( url + '&plugins=' + key, function( response ) {
+						$("#result-" + id).html(response.data);
+					}
+				);
+				}
+			);
+			}
+		);
+		$(this).prop('disabled', false);
+	} );	
 } )(jQuery, document, window);

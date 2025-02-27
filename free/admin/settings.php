@@ -79,7 +79,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 	$localize_wp = array(
 		'isPro'               => (int) secupress_is_pro(),
 		'confirmText'         => __( 'OK', 'secupress' ),
-		'cancelText'          => __( 'Cancel' ),
+		'cancelText'          => _x( 'Cancel', 'verb', 'secupress' ),
 	);
 
 	wp_localize_script( 'secupress-wordpress-js', 'SecuPressi18n', $localize_wp );
@@ -104,8 +104,8 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 
 	wp_localize_script( 'secupress-common-js', 'SecuPressi18nCommon', array(
 		'confirmText'         => __( 'OK', 'secupress' ),
-		'cancelText'          => __( 'Cancel' ),
-		'closeText'           => __( 'Close' ),
+		'cancelText'          => _x( 'Cancel', 'verb', 'secupress' ),
+		'closeText'           => _x( 'Close', 'verb', 'secupress' ),
 	) );
 
 	// Settings page.
@@ -140,13 +140,15 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 		wp_localize_script( 'secupress-modules-js', 'SecuPressi18nModules', array(
 			// Roles.
 			'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ),
+			// Firewall.
+			'selectOneOptMinimum'  => __( 'Select 1 option minimum', 'secupress' ),
 			// Generic.
 			'confirmTitle'         => __( 'Are you sure?', 'secupress' ),
 			'confirmText'          => __( 'OK', 'secupress' ),
-			'cancelText'           => __( 'Cancel' ),
+			'cancelText'           => _x( 'Cancel', 'verb', 'secupress' ),
 			'error'                => __( 'Error', 'secupress' ),
 			'unknownError'         => __( 'Unknown error.', 'secupress' ),
-			'delete'               => __( 'Delete', 'secupress' ),
+			'delete'               => _x( 'Delete', 'verb', 'secupress' ),
 			'done'                 => __( 'Done!', 'secupress' ),
 			// Backups.
 			'confirmDeleteBackups' => __( 'You are about to delete all your backups.', 'secupress' ),
@@ -180,7 +182,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			'firstScanImage'       => SECUPRESS_ADMIN_IMAGES_URL . 'icon-radar.png',
 			// Expand Textareas.
 			'expandTextOpen'       => __( 'Show More', 'secupress' ),
-			'expandTextClose'      => __( 'Close' ),
+			'expandTextClose'      => _x( 'Close', 'verb', 'secupress' ),
 			// Malware Scan.
 			'malwareScanStatus'    => $file_monitoring_running,
 			'malwareScanError'     => '<span class="dashicons dashicons-dismiss"></span> ' . __( 'AJAX Security Error: Please reload the page manually.', 'secupress' ),
@@ -209,10 +211,10 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			wp_enqueue_script( 'secupress-chartjs', SECUPRESS_ADMIN_JS_URL . 'chart' . $suffix . '.js', array(), '1.0.2.1', true );
 
 			wp_localize_script( 'secupress-chartjs', 'SecuPressi18nChart', array(
-				'good'          => array( 'value' => $counts['good'],          'text' => __( 'Good', 'secupress' ) ),
-				'warning'       => array( 'value' => $counts['warning'],       'text' => __( 'Warning', 'secupress' ) ),
-				'bad'           => array( 'value' => $counts['bad'],           'text' => __( 'Bad', 'secupress' ) ),
-				'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
+				'good'          => array( 'value' => $counts['good'],          'text' => _x( 'Good', 'scan result', 'secupress' ) ),
+				'warning'       => array( 'value' => $counts['warning'],       'text' => _x( 'Warning', 'scan result', 'secupress' ) ),
+				'bad'           => array( 'value' => $counts['bad'],           'text' => _x( 'Bad', 'scan result', 'secupress' ) ),
+				'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => _x( 'Not Scanned Yet', 'scan result', 'secupress' ) ),
 			) );
 		}
 
@@ -222,7 +224,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			'pluginSlug'         => SECUPRESS_PLUGIN_SLUG,
 			'step'               => $is_main ? secupress_get_scanner_pagination() : 0,
 			'confirmText'        => __( 'OK', 'secupress' ),
-			'cancelText'         => __( 'Cancel' ),
+			'cancelText'         => _x( 'Cancel', 'verb', 'secupress' ),
 			'error'              => __( 'Error', 'secupress' ),
 			'fixed'              => __( 'Fixed', 'secupress' ),
 			'fixedPartial'       => __( 'Partially fixed', 'secupress' ),
@@ -233,12 +235,12 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			'someManualFixes'    => __( 'Some fixes require your intervention.', 'secupress' ),
 			'spinnerUrl'         => admin_url( 'images/wpspin_light-2x.gif' ),
 			'reScan'             => _x( 'Scan', 'verb', 'secupress' ),
-			'scanDetails'        => __( 'Scan Details', 'secupress' ),
-			'fixDetails'         => __( 'Fix Details', 'secupress' ),
+			'scanDetails'        => _x( 'Scan Details', 'noun', 'secupress' ),
+			'fixDetails'         => _x( 'Fix Details', 'verb', 'secupress' ),
 			'firstScanURL'       => esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1',
 			'a11y' => array(
 				'scanEnded'    => __( 'Security scan just finished.', 'secupress' ),
-				'bulkFixStart' => __( 'Currently fixing…', 'secupress' ) . ' ' . __( 'Please wait until fixing is complete.', 'secupress' ),
+				'bulkFixStart' => __( 'Currently fixing&hellip;', 'secupress' ) . ' ' . __( 'Please wait until fixing is complete.', 'secupress' ),
 			),
 			'comingSoon'       => __( 'Coming Soon', 'secupress' ),
 			'docNotReady'      => __( 'The documentation is actually under construction, thank you for your patience.', 'secupress' ),
@@ -260,7 +262,6 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 	// Logs page.
 	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_logs' === $hook_suffix ) {
 		// CSS.
-		////// CSS.
 		wp_enqueue_style( 'secupress-logs-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-logs' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 		wp_enqueue_style( 'secupress-modules-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-modules' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 		wp_enqueue_script( 'secupress-logs-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-logs' . $suffix . '.js', array( 'jquery-ui-slider' ), $version );
@@ -276,10 +277,11 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 /** PLUGINS LIST ================================================================================ */
 /** --------------------------------------------------------------------------------------------- */
 
-add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupress_settings_action_links' );
+add_filter( ( is_multisite() ? 'network_admin_' : '' ) . 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupress_settings_action_links' );
 /**
  * Add links to the plugin row.
  *
+ * @since 2.2.6 Add links for multisite, FINALLY!
  * @since 2.0 Add my license link
  * @since 1.0
  *
@@ -289,7 +291,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupre
  */
 function secupress_settings_action_links( $actions ) {
 	if ( ! secupress_is_white_label() ) {
-		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( SECUPRESS_WEB_MAIN . __( 'support', 'secupress' ) ), __( 'Support', 'secupress' ) ) );
+		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . _x( 'support', 'link to website (Only FR or EN!)', 'secupress' ) ), _x( 'Support', 'noon', 'secupress' ) ) );
 
 		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( __( 'https://docs.secupress.me/', 'secupress' ) ), __( 'Docs', 'secupress' ) ) );
 	}
@@ -414,7 +416,7 @@ function secupress_scanners() {
 	$reports     = array();
 	$last_report = '—';
 	$time_offset = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
-	$use_grade = secupress_get_module_option( 'advanced-settings_grade-system', true );
+	$use_grade   = secupress_get_module_option( 'advanced-settings_grade-system', true );
 
 	if ( $items ) {
 		$last_percent = -1;
@@ -428,7 +430,7 @@ function secupress_scanners() {
 		$last_report = date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $last_report['time'] + $time_offset );
 	}
 
-	if ( isset( $_GET['step'] ) && 1 === (int) $_GET['step'] ) {
+	if ( isset( $_GET['step'] ) && '1' === $_GET['step'] ) {
 		secupress_set_old_report();
 	}
 
@@ -468,7 +470,7 @@ function secupress_scanners() {
 					<?php } ?>
 					<p class="secupress-label-with-icon secupress-last-scan-result<?php if ( ! $use_grade ) { echo ' hidden'; } ?>">
 						<i class="secupress-icon-secupress" aria-hidden="true"></i>
-						<span class="secupress-upper"><?php _e( 'Scan results', 'secupress' ); ?></span>
+						<span class="secupress-upper"><?php _ex( 'Scan results', 'noon', 'secupress' ); ?></span>
 						<span class="secupress-primary"><?php echo $last_report; ?></span>
 					</p>
 					<p class="secupress-text-end hide-if-no-js">
@@ -846,8 +848,7 @@ function secupress_scanners() {
  * @param (string) $title The title.
  */
 function secupress_admin_heading( $title = '' ) {
-	$heading_tag = secupress_wp_version_is( '4.3-alpha' ) ? 'h1' : 'h2';
-	printf( '<%1$s class="secupress-page-title screen-reader-text">%2$s <sup>%3$s</sup> %4$s</%1$s>', $heading_tag, SECUPRESS_PLUGIN_NAME, SECUPRESS_VERSION, $title );
+	printf( '<h1 class="secupress-page-title screen-reader-text">%1$s <sup>%2$s</sup> %3$s</h1>', SECUPRESS_PLUGIN_NAME, SECUPRESS_VERSION, $title );
 }
 
 /**
@@ -914,7 +915,6 @@ function secupress_scanners_template() {
 	secupress_require_class( 'scan' );
 
 	$is_subsite   = is_multisite() && ! is_network_admin();
-	$heading_tag  = secupress_wp_version_is( '4.4-alpha' ) ? 'h2' : 'h3';
 	// Allowed tags in "Learn more" contents.
 	$allowed_tags = array(
 		'a'      => array( 'href' => array(), 'title' => array(), 'target' => array() ),
@@ -928,6 +928,8 @@ function secupress_scanners_template() {
 		'p'      => array(),
 		'pre'    => array( 'class' => array() ),
 		'br'     => array(),
+		'h2'     => array(),
+		'h3'     => array(),
 	);
 	// Auto-scans: scans that will be executed on page load.
 	$autoscans   = SecuPress_Scan::get_and_delete_autoscans();

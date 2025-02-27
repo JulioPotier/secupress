@@ -38,8 +38,8 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title    = __( 'Check if your usernames are disallowed.', 'secupress' );
-		$this->more     = __( 'Some usernames are known to be used for malicious usage, or created by bots.', 'secupress' );
+		$this->title    = __( 'Check if your usernames are correctly set.', 'secupress' );
+		$this->more     = __( 'Some usernames are known to be used for malicious usage, or created by bots, or the same as the nickname.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
 			'<em>' . __( 'Forbid Usernames', 'secupress' ) . '</em>',
@@ -61,9 +61,11 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 		$messages = array(
 			// "good"
 			0   => __( 'All the usernames are correct.', 'secupress' ),
-			1   => __( 'Module activated: the users with a disallowed username will be asked to change it.', 'secupress' ),
+			1   => __( 'Module activated: The users with a disallowed username will be asked to change it, also users with a nickname same as their login will be automatically renamed.', 'secupress' ),
+			2   => __( 'Users updated: The users with a login same as their nickname or display_name have been renamed, their login is still the same.', 'secupress' ),
 			// "bad"
 			200 => _n_noop( '<strong>%1$s user</strong> has a disallowed username: %2$s', '<strong>%1$s users</strong> have a disallowed username: %2$s', 'secupress' ),
+			201 => _n_noop( '<strong>%1$s user</strong> has the same nickname as login: %2$s', '<strong>%1$s users</strong> have the same nickname as login: %2$s', 'secupress' ),
 			// "cantfix"
 			300 => __( 'The module is already activated. Let’s give your users some time to change their username.', 'secupress' ),
 		);
@@ -95,7 +97,11 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 	/**
 	 * Scan for flaw(s).
 	 *
+	 * @since 2.2.6 Use REGEX to handle "*"
+	 * @author Julio Potier
+	 * 
 	 * @since 1.0
+	 * @author Grégory Viguier
 	 *
 	 * @return (array) The scan results.
 	 */
@@ -111,7 +117,8 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 
 		// Blacklisted names.
 		$names  = static::get_blacklisted_usernames();
-		$logins = $wpdb->get_col( "SELECT user_login from $wpdb->users WHERE user_login IN ( '$names' )" ); // WPCS: unprepared SQL ok.
+		$sql    = "SELECT user_login from $wpdb->users WHERE user_login REGEXP '^($names)$'"; // WPCS: unprepared SQL ok.
+		$logins = $wpdb->get_col( $sql );
 		$ids    = count( $logins );
 
 		// "bad"
@@ -119,6 +126,16 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 			$this->slice_and_dice( $logins, 10 );
 			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
 			$this->add_message( 200, array( $ids, $ids, static::wrap_in_tag( $logins, 'strong' ) ) );
+		}
+
+		$logins = $wpdb->get_col( "SELECT u.user_login FROM $wpdb->users u, $wpdb->usermeta um WHERE u.user_login=u.display_name OR (um.user_id=u.ID AND um.meta_key='nickname' AND um.meta_value=u.user_login ) GROUP BY ID" ); // WPCS: unprepared SQL ok.
+		$ids    = count( $logins );
+
+		// "bad"
+		if ( $ids ) {
+			$this->slice_and_dice( $logins, 10 );
+			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
+			$this->add_message( 201, array( $ids, $ids, static::wrap_in_tag( $logins, 'strong' ) ) );
 		}
 
 		// "good"
@@ -197,6 +214,29 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 			}
 		}
 
+		// Same nickname or display_name
+		$ids = $wpdb->get_col( "SELECT ID FROM $wpdb->users u, $wpdb->usermeta um WHERE u.user_login=u.display_name OR (um.user_id=u.ID AND um.meta_key='nickname' AND um.meta_value=u.user_login ) GROUP BY ID" ); // WPCS: unprepared SQL ok.
+		if ( $ids ) {
+			foreach( $ids as $id ) {
+				$user         = get_user_by( 'ID', $id );
+				$userID       = $user->ID;
+				$displayname  = $user->display_name;
+				$userlogin    = $user->user_login;
+				$usernickname = $user->nickname;
+				$newname      = secupress_usernames_lexicomatisation();
+
+				if ( $displayname === $userlogin && $usernickname === $userlogin ) {
+					update_user_meta( $userID, 'nickname', $newname );
+					wp_update_user( array( 'ID' => $userID, 'display_name' => $newname ) );
+				} elseif ( $displayname === $userlogin) {
+					wp_update_user( array ('ID' => $userID, 'display_name' => $usernickname ) );
+				} elseif ( $usernickname === $userlogin ) {
+					update_user_meta( $userID, 'nickname', $displayname );
+				}
+				$this->add_fix_message( 2 );
+			}
+		}
+
 		// "good"
 		$this->maybe_set_fix_status( 0 );
 
@@ -209,12 +249,18 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 	/**
 	 * Get the blacklisted usernames.
 	 *
+	 * @since 2.2.6 Use REGEX to handle "*"
+	 * @author Julio Potier
+	 * 
 	 * @since 1.0
+	 * @author Grégory Viguier
 	 *
 	 * @return (string) A comma separated list of blacklisted usernames.
 	 */
 	final protected static function get_blacklisted_usernames() {
-		$list = secupress_get_blacklisted_usernames();
-		return implode( "','", esc_sql( $list ) );
+		$names = secupress_get_blacklisted_usernames();
+		$names = implode( '|', array_map( 'preg_quote', $names ) );
+		$names = str_replace( '\*', '.*', $names );
+		return $names;
 	}
 }

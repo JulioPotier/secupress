@@ -21,7 +21,17 @@ function secupress_scanit( $test_name, $format_response = false, $for_current_si
 	$response          = false;
 	$formated_response = 'error';
 
-	if ( ! $test_name || ! file_exists( secupress_class_path( 'scan', $test_name ) ) ) {
+	if ( ! $test_name ) {
+		return false;
+	}
+
+	if ( ! file_exists( secupress_class_path( 'scan', $test_name ) ) ) {
+		$test_name = str_replace( '_', ' ', $test_name );
+		$test_name = ucwords( $test_name );
+		$test_name = str_replace( ' ', '_', $test_name );
+	}
+
+	if ( ! file_exists( secupress_class_path( 'scan', $test_name ) ) ) {
 		return false;
 	}
 

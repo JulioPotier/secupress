@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
  * @param (string|object) $data A message to display or a WP_Error object.
  */
 function secupress_admin_die( $data = null ) {
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	if ( wp_doing_ajax() ) {
 		wp_send_json_error( $data );
 	}
 
@@ -59,7 +59,7 @@ function secupress_admin_send_response_or_redirect( $response = false, $redirect
 		secupress_admin_die( 'Missing $response in ' . __FUNCTION__ ); // Do not translate.
 	}
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	if ( wp_doing_ajax() ) {
 		wp_send_json_success( $response );
 	}
 
@@ -94,7 +94,7 @@ function secupress_admin_send_message_die( $args ) {
 		'type'        => 'success',
 	), $args );
 
-	$is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+	$is_ajax = wp_doing_ajax();
 
 	if ( ! $args['message'] && ! $is_ajax ) {
 		secupress_admin_die();
@@ -156,7 +156,7 @@ function secupress_check_user_capability( $force_mono = false ) {
  *                     Send a JSON response back to an Ajax request, indicating failure.
  */
 function secupress_check_admin_referer( $action = -1, $query_arg = '_wpnonce' ) {
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	if ( wp_doing_ajax() ) {
 		if ( false === check_ajax_referer( $action, $query_arg, false ) ) {
 			wp_send_json_error();
 		}

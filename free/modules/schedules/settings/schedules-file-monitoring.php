@@ -40,7 +40,7 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'        => __( 'Notification of result', 'secupress' ),
-	'description'  => __( 'When finished, a notification will be sent to the following email address (optional).', 'secupress' ),
+	'description'  => __( 'Once completed, a notification will be sent to the provided email address (optional).', 'secupress' ),
 	'label'        => __( 'Email' ),
 	'label_for'    => $this->get_field_name( 'email' ),
 	'type'         => 'email',

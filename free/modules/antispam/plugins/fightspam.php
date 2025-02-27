@@ -528,6 +528,10 @@ function secupress_fightspam_maybe_do_retests() {
 		return;
 	}
 
+	$time = apply_filters( 'secupress.plugin.fightspam.minutes_between_retests', 1 );
+	if ( has_filter( 'secupress.plugin.fightspam.minutes_between_retests' ) ) {
+		_deprecated_hook( 'secupress.plugin.fightspam.minutes_between_retests', '2.2.6', 'secupress.plugins.fightspam.minutes_between_retests' );
+	}
 	/**
 	 * Filter the time between each retest.
 	 *
@@ -535,7 +539,7 @@ function secupress_fightspam_maybe_do_retests() {
 	 *
 	 * @param (int) $time Time in minutes between each retest.
 	 */
-	$time    = apply_filters( 'secupress.plugin.fightspam.minutes_between_retests', 1 );
+	$time    = apply_filters( 'secupress.plugins.fightspam.minutes_between_retests', $time );
 	$time    = time() - absint( $time * MINUTE_IN_SECONDS );
 	$retests = array();
 
@@ -596,6 +600,10 @@ function secupress_fightspam_get_spam_status_setting() {
 function secupress_fightspam_return_spam_status_setting( $context ) {
 	$approved = secupress_fightspam_get_spam_status_setting();
 
+	if ( has_action( 'secupress.plugin.fightspam.spam_status' ) ) {
+		_deprecated_hook( 'secupress.plugin.fightspam.spam_status', '2.2.6', 'secupress.plugins.fightspam.spam_status' );
+	}
+	do_action( 'secupress.plugin.fightspam.spam_status', $context, $approved );
 	/**
 	 * Fires before declaring a comment as spam.
 	 *
@@ -604,7 +612,7 @@ function secupress_fightspam_return_spam_status_setting( $context ) {
 	 * @param (string) $context  Some context.
 	 * @param (string) $approved The spam status set by the user in the plugin settings.
 	 */
-	do_action( 'secupress.plugin.fightspam.spam_status', $context, $approved );
+	do_action( 'secupress.plugins.fightspam.spam_status', $context, $approved );
 
 	return $approved;
 }
@@ -741,6 +749,10 @@ function secupress_fightspam_get_spam_status( $value ) {
 
 	if ( 'error' !== $status ) {
 		if ( 'blacklisted' === $status ) {
+			if ( has_action( 'secupress.plugin.fightspam.comment_blacklisted' ) ) {
+				_deprecated_hook( 'secupress.plugin.fightspam.comment_blacklisted', '2.2.6', 'secupress.plugins.fightspam.comment_blacklisted' );
+			}
+			do_action( 'secupress.plugin.fightspam.comment_blacklisted', $value );
 			/**
 			 * Fires if the status is "blacklisted".
 			 *
@@ -748,7 +760,7 @@ function secupress_fightspam_get_spam_status( $value ) {
 			 *
 			 * @param (string) $value Username, IP, email, or URL.
 			 */
-			do_action( 'secupress.plugin.fightspam.comment_blacklisted', $value );
+			do_action( 'secupress.plugins.fightspam.comment_blacklisted', $value );
 		}
 
 		// Cache the status for 30 days.

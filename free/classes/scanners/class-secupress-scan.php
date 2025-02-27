@@ -762,7 +762,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	public function manual_fix() {
 		$this->update_fix();
 
-		if ( defined( 'DOING_AJAX' ) ) {
+		if ( wp_doing_ajax() ) {
 			$fix_actions = $this->need_manual_fix();
 
 			if ( $fix_actions ) {

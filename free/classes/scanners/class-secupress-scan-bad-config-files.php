@@ -38,9 +38,9 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements SecuPres
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title    = __( 'Check if your installation contains backed up <code>wp-config.php</code> files like <code>wp-config.bak</code>, <code>wp-config.old</code> etc.', 'secupress' );
+		$this->title    = sprintf( __( 'Check if your installation contains backed up %1$s files like %2$s.', 'secupress' ), secupress_code_me( 'wp-config.php' ), secupress_code_me( 'wp-config.bak/.old' ) );
 		$this->more     = __( 'Some attackers will try to find some backed up config files to try to steal them. Prevent this kind of attack simply by removing them.', 'secupress' );
-		$this->more_fix = __( 'Rename all the <code>wp-config.bak/.old</code> files using a random name and still using the <code>.php</code> extension to prevent being downloaded.', 'secupress' );
+		$this->more_fix = sprintf( __( 'Rename all the %1$s files using a random name and still using the %2$s extension to prevent being downloaded.', 'secupress' ), secupress_code_me( 'wp-config.bak/.old' ), secupress_code_me( '.php' ) );
 	}
 
 
@@ -56,14 +56,14 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements SecuPres
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'You don’t have backed up <code>wp-config</code> files.', 'secupress' ),
-			1   => _n_noop( 'Your backed up <code>wp-config.php</code> file was successfully suffixed with %s.', 'Your backed up <code>wp-config.php</code> files were successfully suffixed with %s.', 'secupress' ),
+			0   => sprintf( __( 'You don’t have backed up %s files.', 'secupress' ), secupress_code_me( 'wp-config' ) ),
+			1   => sprintf( __( 'Your backed up %1$s file was successfully suffixed with %2$s.', 'secupress' ), secupress_code_me( 'wp-config.php' ), '%s' ),
 			// "warning"
-			100 => _n_noop( '%1$d backed up <code>wp-config.php</code> file was successfully suffixed with %2$s.', '%1$d backed up <code>wp-config.php</code> files were successfully suffixed with %2$s.', 'secupress' ),
+			100 => sprintf( __( '%1$d backed up %3$s file was successfully suffixed with %2$s.', 'secupress' ), '%1$d', '%2$s', secupress_code_me( 'wp-config.php' ) ),
 			101 => _n_noop( 'Sorry, this file could not be renamed: %s', 'Sorry, those files could not be renamed: %s', 'secupress' ),
 			// "bad"
-			200 => _n_noop( 'Your installation should not contain this backed up <strong>wp-config.php</strong> file: %s.', 'Your installation should not contain these backed up <strong>wp-config.php</strong> files: %s.', 'secupress' ),
-			201 => _n_noop( 'Sorry, the backed up <code>wp-config.php</code> file could not be renamed.', 'Sorry, the backed up <code>wp-config.php</code> files could not be renamed.', 'secupress' ),
+			200 => sprintf( __( 'Your installation should not contain this backed up %1$s file: %2$s.', 'secupress' ), secupress_code_me( 'wp-config.php' ), '%s' ),
+			201 => sprintf( __( 'Sorry, the backed up %s file could not be renamed.', 'secupress' ), secupress_code_me( 'wp-config.php' ) ),
 		);
 
 		if ( isset( $message_id ) ) {

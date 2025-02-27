@@ -61,17 +61,28 @@ class SecuPress_Scan_WPOrg extends SecuPress_Scan implements SecuPress_Scan_Inte
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
-		$versions = secupress_get_php_versions();
+		/**
+		 * Filter the .org API text incase of...
+		 * @since 2.2.6
+		 * @param (string) $dot_org
+		 */ 
+		$dot_org  = apply_filters( 'secupress.dot_org.text', 'WordPress.org' );
+		/**
+		 * Filter the .org API support link incase of...
+		 * @since 2.2.6
+		 * @param (string) $support
+		 */ 
+		$support  = apply_filters( 'secupress.dot_org.support_link', __( 'https://wordpress.org/support', 'secupress' ) );
 		$messages = array(
 			// "good"
-			0   => __( 'Your site can communicate with WordPress.org.', 'secupress' ),
+			0     => sprintf( __( 'Your site can communicate with %s.', 'secupress' ), $dot_org ),
 			// "bad"
-			200   => __( 'Your site could not reach WordPress.org.', 'secupress' ),
+			200   => sprintf( __( 'Your site could not reach WordPress.org.', 'secupress' ), $dot_org ),
 			// "cantfix"
-			300 => sprintf(
+			300   => sprintf(
 				'<p><a href="%s" target="_blank" rel="noopener noreferrer">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
 				/* translators: Localized Support reference. */
-				esc_url( __( 'https://wordpress.org/support' ) ),
+				esc_url( $support ),
 				__( 'Get help resolving this issue.', 'secupress' ),
 				/* translators: accessibility text */
 				__( '(opens in a new tab)' )
@@ -116,8 +127,13 @@ class SecuPress_Scan_WPOrg extends SecuPress_Scan implements SecuPress_Scan_Inte
 			$this->add_message( 0 );
 			return parent::scan();
 		}
-
-		$wp_dotorg = wp_remote_get( 'https://api.wordpress.org', $this->get_default_request_args() );
+		/**
+		 * Filter the .org API incase of...
+		 * @since 2.2.6
+		 * @param (string) $dot_org_url
+		 */ 
+		$dot_org_url = apply_filters( 'secupress.dot_org.url', 'https://api.wordpress.org' );
+		$wp_dotorg   = wp_remote_get( $dot_org_url, $this->get_default_request_args() );
 
 		if ( ! is_wp_error( $wp_dotorg ) ) {
 			$this->add_message( 0 );

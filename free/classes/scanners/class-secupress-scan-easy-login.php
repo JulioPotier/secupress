@@ -69,9 +69,10 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 			// "good"
 			0   => __( 'The login page is protected by double authentication with %s.', 'secupress' ),
 			1   => __( 'The <strong>PasswordLess Double Authentication</strong> module has been activated for every role. Users will receive an email to log-in now.', 'secupress' ),
+			9   => __( 'The login page is protected by double authentication.', 'secupress' ),
 			// "bad"
 			200 => __( 'Your login system is <strong>not strong enough</strong>, you need a <strong>double authentication system</strong>.', 'secupress' ),
-			201 => sprintf( __( 'Our module %s could fix this.', 'secupress' ), '<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-double-auth_type">' . __( 'PasswordLess', 'secupress' ) . '</a>' ),
+			201 => sprintf( __( 'Our module %s could fix this.', 'secupress' ), '<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-double-auth_type">' . __( 'Two-Factor Authentication', 'secupress' ) . '</a>' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -109,11 +110,12 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 
 		$activated = $this->filter_scanner( __CLASS__ );
 		if ( true === $activated ) {
-			$this->add_message( 0 );
+			$this->add_message( 9 );
 			return parent::scan();
 		}
 
 		$activated = secupress_is_submodule_active( 'users-login', 'passwordless' ) ? 'PasswordLess' : false;
+		$activated = secupress_is_submodule_active( 'users-login', 'otp-auth' ) ? __( 'Two-Factor Authentication', 'secupress' ) : $activated;
 
 		/**
 		 * Overwrite the activated bool to force a good information

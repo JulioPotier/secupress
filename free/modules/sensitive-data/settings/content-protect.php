@@ -16,7 +16,7 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => $is_plugin_active,
-	'label'             => __( 'Yes, protect my media from being hotlinked', 'secupress' ),
+	'label'             => __( 'Yes, safeguard my media from being hotlinked', 'secupress' ),
 	'disabled'          => ! secupress_is_site_ssl(),
 	'helpers' => array(
 		array(
@@ -46,7 +46,7 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => $is_plugin_active,
-	'label'             => __( 'Yes, do not allow to guess the URL of my posts and pages.', 'secupress' ),
+	'label'             => __( 'Yes, prevent guessing the URL of my posts and pages', 'secupress' ),
 	'helpers'           => $helpers,
 ) );
 
@@ -55,17 +55,17 @@ $robots_enabled = secupress_blackhole_is_robots_txt_enabled();
 
 $this->add_field( array(
 	'title'             => __( 'Blackhole', 'secupress' ),
-	'description'       => sprintf( __( 'A blackhole is a forbidden folder, mentioned in the %1$s file as %2$s. If a bot does not respect this rule, its IP address will be banned.', 'secupress' ), '<code>robots.txt</code>', '<em>Disallowed</em>' ),
+	'description'       => sprintf( __( 'A blackhole is a prohibited directory listed in the %1$s file as %2$s. If a bot fails to adhere to this rule, its IP address will be banned.', 'secupress' ), '<code>robots.txt</code>', '<em>Disallowed</em>' ),
 	'label_for'         => $this->get_field_name( 'blackhole' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'sensitive-data', 'blackhole' ),
-	'label'             => sprintf( __( 'Yes, add a blackhole in my %s file.', 'secupress' ), '<code>robots.txt</code>' ),
+	'label'             => sprintf( __( 'Yes, add a blackhole in my %s file', 'secupress' ), '<code>robots.txt</code>' ),
 	'disabled'          => ! $robots_enabled,
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => $robots_enabled ? false : __( 'This feature is available only for sites installed at the domain root.', 'secupress' ),
+			'description' => $robots_enabled ? false : __( 'This feature is only available for sites installed at the domain root.', 'secupress' ),
 		),
 	),
 ) );
@@ -86,14 +86,14 @@ if ( $is_plugin_active && function_exists( 'secupress_hotlink_get_apache_rules' 
 	// Apache.
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = trim( secupress_hotlink_get_apache_rules() );
 		$rules   = "# BEGIN SecuPress hotlink\n$rules\n# END SecuPress";
 	}
 	// IIS7.
 	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>web.config</code>' );
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>web.config</code>' );
 		$rules   = secupress_hotlink_get_iis7_rules();
 	}
 
@@ -119,7 +119,7 @@ $is_plugin_active = (int) secupress_is_submodule_active( 'sensitive-data', 'dire
 
 $this->add_field( array(
 	'title'             => __( 'Directory Listing', 'secupress' ),
-	'description'       => __( 'Directory Listing is a functionality that allows anyone to list a directory content (its files and sub-folders) simply by entering its URL in a web browser. This is highly insecure and most hosts disable it by default. If this is not the case you can disable it here.', 'secupress' ),
+	'description'       => __( 'Directory Listing is a feature that permits anyone to view the contents of a directory (including its files and sub-folders) by entering its URL in a web browser. This presents a significant security risk, and most hosts disable it by default. If this feature is enabled and you wish to disable it, you can do so here.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
@@ -137,20 +137,20 @@ if ( $is_plugin_active && function_exists( 'secupress_directory_listing_apache_r
 	// Nginx.
 	if ( $is_nginx ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'You need to add the following code to your %s file:', 'secupress' ), '<code>nginx.conf</code>' );
+		$message = sprintf( __( 'Please add the following code to your %s file:', 'secupress' ), '<code>nginx.conf</code>' );
 		$rules   = secupress_directory_listing_nginx_rules();
 	}
 	// Apache.
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = trim( secupress_directory_listing_apache_rules() );
 		$rules   = "# BEGIN SecuPress directory_listing\n$rules\n# END SecuPress";
 	}
 	// IIS7.
 	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>web.config</code>' );
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>web.config</code>' );
 		$rules   = secupress_directory_listing_iis7_rules();
 	}
 
@@ -175,7 +175,7 @@ $main_field_name  = $this->get_field_name( 'php-disclosure' );
 $is_plugin_active = (int) secupress_is_submodule_active( 'sensitive-data', 'php-easter-egg' );
 
 $this->add_field( array(
-	'title'             => __( 'PHP disclosure', 'secupress' ),
+	'title'             => __( 'PHP Disclosure', 'secupress' ),
 	/** Translators: here we speak about PHP modules, as in http://de2.php.net/manual/en/function.phpinfo.php */
 	'description'       => __( 'PHP contains a flaw that discloses sensitive information about installed modules, this is also known as "PHP Easter Egg". This is highly insecure and most hosts disable it by default. If this is not the case you can disable it here.', 'secupress' ),
 	'label_for'         => $main_field_name,
@@ -202,14 +202,14 @@ if ( $is_plugin_active && function_exists( 'secupress_php_disclosure_apache_rule
 	// Apache.
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = trim( secupress_php_disclosure_apache_rules() );
 		$rules   = "# BEGIN SecuPress php_disclosure\n$rules\n# END SecuPress";
 	}
 	// IIS7.
 	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>web.config</code>' );
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>web.config</code>' );
 		$rules   = secupress_php_disclosure_iis7_rules();
 	}
 
@@ -234,7 +234,7 @@ $main_field_name  = $this->get_field_name( 'php-version' );
 $is_plugin_active = (int) secupress_is_submodule_active( 'discloses', 'no-x-powered-by' );
 
 $this->add_field( array(
-	'title'             => __( 'PHP version disclosure', 'secupress' ),
+	'title'             => __( 'PHP Version Disclosure', 'secupress' ),
 	'description'       => sprintf( __( 'Some servers send a header called %s that contains the PHP version used on your site. It may be a useful information for attackers, and should be removed.', 'secupress' ), '<strong>X-Powered-By</strong>' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
@@ -259,14 +259,14 @@ if ( $is_plugin_active && function_exists( 'secupress_no_x_powered_by_apache_rul
 	// Apache.
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = trim( secupress_no_x_powered_by_apache_rules() );
 		$rules   = "# BEGIN SecuPress no_x_powered_by\n$rules\n# END SecuPress";
 	}
 	// IIS7.
 	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>web.config</code>' );
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>web.config</code>' );
 		$rules   = secupress_no_x_powered_by_iis7_rules();
 	}
 
@@ -291,7 +291,7 @@ $main_field_name  = $this->get_field_name( 'wp-version' );
 $is_plugin_active = (int) secupress_is_submodule_active( 'discloses', 'wp-version' );
 
 $this->add_field( array(
-	'title'             => __( 'WordPress version disclosure', 'secupress' ),
+	'title'             => __( 'WordPress Version Disclosure', 'secupress' ),
 	'description'       => __( 'Disclosing your WordPress version may be a useful information for attackers, it should be removed.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
@@ -316,14 +316,14 @@ if ( $is_plugin_active && function_exists( 'secupress_wp_version_apache_rules' )
 	// Apache.
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = trim( secupress_wp_version_apache_rules() );
 		$rules   = "# BEGIN SecuPress wp_version\n$rules\n# END SecuPress";
 	}
 	// IIS7.
 	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>web.config</code>' );
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>web.config</code>' );
 		$rules   = secupress_wp_version_iis7_rules();
 	}
 
@@ -333,63 +333,6 @@ if ( $is_plugin_active && function_exists( 'secupress_wp_version_apache_rules' )
 			'description'  => $message,
 			'depends'      => $main_field_name,
 			'label_for'    => $this->get_field_name( 'wp_version_rules' ),
-			'type'         => 'textarea',
-			'value'        => $rules,
-			'attributes'   => array(
-				'readonly' => 'readonly',
-				'rows'     => substr_count( $rules, "\n" ) + 1,
-			),
-		) );
-	}
-}
-
-
-$main_field_name  = $this->get_field_name( 'bad-url-access' );
-$is_plugin_active = (int) secupress_is_submodule_active( 'sensitive-data', 'bad-url-access' );
-
-$this->add_field( array(
-	'title'             => __( 'Bad URL Access', 'secupress' ),
-	'description'       => __( 'Directly accessing some WordPress files would disclose sensitive information that will help an attacker, like your site’s internal path.', 'secupress' ),
-	'label_for'         => $main_field_name,
-	'plugin_activation' => true,
-	'type'              => 'checkbox',
-	'value'             => $is_plugin_active,
-	'label'             => __( 'Yes, forbid access to those files', 'secupress' ),
-) );
-
-
-/**
- * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Bad URL Access.
- */
-if ( $is_plugin_active && function_exists( 'secupress_bad_url_access_apache_rules' ) ) {
-	$message = false;
-
-	// Nginx.
-	if ( $is_nginx ) {
-		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'You need to add the following code to your %s file:', 'secupress' ), '<code>nginx.conf</code>' );
-		$rules   = secupress_bad_url_access_nginx_rules();
-	}
-	// Apache.
-	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
-		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
-		$rules   = trim( secupress_bad_url_access_apache_rules() );
-		$rules   = "# BEGIN SecuPress bad_url_access\n$rules\n# END SecuPress";
-	}
-	// IIS7.
-	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
-		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>web.config</code>' );
-		$rules   = secupress_bad_url_access_iis7_rules();
-	}
-
-	if ( $message ) {
-		$this->add_field( array(
-			'title'        => _x( 'Rules', 'rewrite rules', 'secupress' ),
-			'description'  => $message,
-			'depends'      => $main_field_name,
-			'label_for'    => $this->get_field_name( 'bad_url_access_rules' ),
 			'type'         => 'textarea',
 			'value'        => $rules,
 			'attributes'   => array(
@@ -412,7 +355,7 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => $is_plugin_active,
-	'label'             => __( 'Yes, forbid access to those files', 'secupress' ),
+	'label'             => __( 'Yes, restrict access to these files', 'secupress' ),
 ) );
 
 
@@ -431,14 +374,14 @@ if ( $is_plugin_active && function_exists( 'secupress_protect_readmes_apache_rul
 	// Apache.
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = trim( secupress_protect_readmes_apache_rules() );
 		$rules   = "# BEGIN SecuPress readme_discloses\n$rules\n# END SecuPress";
 	}
 	// IIS7.
 	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>web.config</code>' );
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>web.config</code>' );
 		$rules   = secupress_protect_readmes_iis7_rules();
 	}
 
@@ -497,12 +440,66 @@ $main_field_name  = $this->get_field_name( 'bad-url-access' );
 $is_plugin_active = (int) secupress_is_submodule_active( 'sensitive-data', 'bad-url-access' );
 
 $this->add_field( array(
-	'title'             => __( 'Bad URL Access', 'secupress' ),
-	'description'       => __( 'Directly accessing some WordPress files would disclose sensitive information that will help an attacker, like your site’s internal path.', 'secupress' ),
+	'title'             => __( 'Bad URL Access and File Extensions', 'secupress' ),
+	'description'       => __( 'Directly accessing certain URLs or files on your site could expose sensitive information that might help an attacker.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => $is_plugin_active,
-	'label'             => __( 'Yes, forbid access to those files', 'secupress' ),
+	'label'             => __( 'Yes, restrict access to these URLs and files', 'secupress' ),
 ) );
 
+$this->add_field( array(
+	'title'             => __( 'Allowed URLs', 'secupress' ),
+	'depends'           => $main_field_name,
+	'name'              => $main_field_name . '_allowed-urls',
+	'type'              => 'textarea',
+	'helpers'           => array(
+		array(
+			'type'        => 'description',
+			'description' => __( 'One URL per line.', 'secupress' ) . ' ' . __( 'They will be filtered to retain only those pointing to existing files and folders.', 'secupress' ),
+		),
+	),
+) );
+
+/**
+ * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Bad URL Access.
+ */
+if ( $is_plugin_active && function_exists( 'secupress_bad_url_access_apache_rules' ) ) {
+	$message = false;
+
+	// Nginx.
+	if ( $is_nginx ) {
+		/** Translators: %s is a file name. */
+		$message = sprintf( __( 'You need to add the following code to your %s file:', 'secupress' ), '<code>nginx.conf</code>' );
+		$rules   = secupress_bad_url_access_nginx_rules();
+	}
+	// Apache.
+	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
+		/** Translators: %s is a file name. */
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
+		$rules   = trim( secupress_bad_url_access_apache_rules() );
+		$rules   = "# BEGIN SecuPress bad_url_access\n$rules\n# END SecuPress";
+	}
+	// IIS7.
+	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
+		/** Translators: %s is a file name. */
+		$message = sprintf( __( 'Your %s file is not writable. Please add the following code to it:', 'secupress' ), '<code>web.config</code>' );
+		$rules   = secupress_bad_url_access_iis7_rules();
+	}
+
+	if ( $message ) {
+		$this->add_field( array(
+			'title'        => _x( 'Rules', 'rewrite rules', 'secupress' ),
+			'description'  => $message,
+			'depends'      => $main_field_name,
+			'label_for'    => $this->get_field_name( 'bad_url_access_rules' ),
+			'type'         => 'textarea',
+			'value'        => $rules,
+			'attributes'   => array(
+				'readonly' => 'readonly',
+				'rows'     => substr_count( $rules, "\n" ) + 1,
+			),
+		) );
+	}
+}

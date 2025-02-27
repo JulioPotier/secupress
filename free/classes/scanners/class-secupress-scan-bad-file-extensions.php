@@ -66,7 +66,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		$this->more_fix = sprintf(
 			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
 			'<strong>' . __( 'Bad File Extensions', 'secupress' ) . '</strong>',
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'file-system' ) ) . '#module-bad-file-extensions">' . __( 'Malware Scan', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'file-system' ) ) . '#module-bad-file-extensions">' . __( 'Malware Scanner', 'secupress' ) . '</a>'
 		);
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
@@ -257,7 +257,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	protected function fix_apache() {
 		global $wp_settings_errors;
 
-		secupress_activate_submodule( 'file-system', 'bad-file-extensions' );
+		secupress_activate_submodule( 'sensitive-data', 'bad-file-extensions' );
 
 		// Got error?
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
@@ -283,7 +283,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	protected function fix_iis7() {
 		global $wp_settings_errors;
 
-		secupress_activate_submodule( 'file-system', 'bad-file-extensions' );
+		secupress_activate_submodule( 'sensitive-data', 'bad-file-extensions' );
 
 		// Got error?
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
@@ -310,7 +310,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	protected function fix_nginx() {
 		global $wp_settings_errors;
 
-		secupress_activate_submodule( 'file-system', 'bad-file-extensions' );
+		secupress_activate_submodule( 'sensitive-data', 'bad-file-extensions' );
 
 		// Get the error.
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
@@ -337,11 +337,9 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		$wp_filesystem = secupress_get_filesystem();
 		$uploads       = wp_upload_dir( null, false );
 		$basedir       = wp_normalize_path( $uploads['basedir'] );
-		$extensions    = secupress_bad_file_extensions_get_forbidden_extensions();
 
 		// Get the file name.
-		$file_ext  = mt_rand( 0, count( $extensions ) - 1 );
-		$file_ext  = $extensions[ $file_ext ];
+		$file_ext  = 'sp' . strtolower( secupress_generate_key( 3 ) );
 		$file_name = 'secupress-temporary-file-' . secupress_generate_hash( 'file_name', 2, 6 ) . '.' . $file_ext;
 		$file_path = $basedir . '/' . $file_name;
 

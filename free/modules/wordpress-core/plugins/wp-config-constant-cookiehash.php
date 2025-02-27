@@ -23,7 +23,7 @@ add_action( 'secupress.plugins.activation', 'secupress_wpconfig_cookiehash_activ
  * @author Julio Potier
  */
 function secupress_wpconfig_cookiehash_activation() {
-	if ( defined( 'SECUPRESS_COOKIEHASH_MODULE_EXISTS' ) ) {
+	if ( defined( 'SECUPRESS_COOKIEHASH_MODULE_ACTIVE' ) ) {
 		return;
 	}
 

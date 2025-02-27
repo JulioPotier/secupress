@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
-/** MIGRATE / UPGRADE =========================================================================== */
+/** SECUPRESS UPGRADER ========================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
 /**
@@ -216,7 +216,99 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'firewall/plugins/bad-sqli-scan.php' );
 		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'users-login/plugins/ask-old-password.php' );
 		secupress_remove_old_plugin_file( SECUPRESS_CLASSES_PATH . 'class-secupress-admin-support.php.php' );
+
 		delete_site_option( 'secupress_scan_wp_config' );
+	}
+
+	// < 2.2.6
+	if ( version_compare( $actual_version, '2.2.6', '<' ) ) {
+		// See secupress_init_get_malware_files()
+		if ( secupress_is_pro() ) {
+			wp_clear_scheduled_hook( 'secupress_bad_plugins' );
+			wp_clear_scheduled_hook( 'secupress_bad_themes' );
+
+			wp_clear_scheduled_hook( 'secupress_license_check' );
+			wp_schedule_event( time(), 'weekly', 'secupress_license_check' );
+		
+			wp_clear_scheduled_hook( 'secupress_malware_files' );
+			wp_schedule_event( time(), 'daily', 'secupress_malware_files' );
+		}
+
+		// Cannot use secupress_is_submodule_active() here because these are not modules yet (< 2.0...)
+		secupress_remove_old_plugin_file( SECUPRESS_CLASSES_PATH . 'class-secupress-admin-support.php' ); // from < 2.0, fix the ".php.php", yep...
+
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'firewall/plugins/request-methods-header.php' ); // Deleted module (obsolete).
+		secupress_remove_old_plugin_file( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-bad-request-methods.php' );
+
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'addons/settings/backup.php' ); // Deleted settings.
+
+		if ( secupress_has_pro() ) {
+			secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'file-system/plugins/bad-file-extensions.php' );
+		}
+		
+
+		if ( secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-dieondberror' ) ) { // We need to create the dropin file
+			secupress_deactivate_submodule( 'wordpress-core', 'wp-config-constant-dieondberror' );
+			secupress_activate_submodule( 'wordpress-core', 'wp-config-constant-dieondberror' );
+		}
+		if ( secupress_is_submodule_active( 'users-login', 'forbid-user-creation' ) ) { // this one depends on...
+			secupress_activate_submodule( 'users-login', 'user-creation-protection' ); // ... this one now.
+		}
+
+		secupress_deactivate_submodule_silently( 'plugins-themes', 'theme-activation' );
+		if ( secupress_has_pro() ) {
+			secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'plugins-themes/plugins/theme-activation.php' );
+		}
+
+		secupress_deactivate_submodule_silently( 'plugins-themes', 'theme-deletion' );
+		if ( secupress_has_pro() ) {
+			secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'plugins-themes/plugins/theme-deletion.php' );
+		}
+
+		if ( secupress_is_submodule_active( 'plugins-themes', 'theme-installation' ) ) {
+			secupress_deactivate_submodule( 'plugins-themes', 'theme-installation' );
+			secupress_activate_submodule( 'plugins-themes', 'theme-installation' );
+			secupress_add_transient_notice( __( 'The modules for `No Theme Activation`, `No Theme Deletion` have been consolidated into the `No Theme Actions` module.', 'secupress' ) );
+		}
+
+		secupress_deactivate_submodule( 'sensitive-data', 'bad-file-extensions' ); // Not silently because we need to remove the htaccess rules.
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'sensitive-data/settings/bad-file-extensions.php' );
+		if ( secupress_has_pro() ) {
+			secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'sensitive-data/plugins/bad-file-extensions.php' );
+		}
+
+		secupress_deactivate_submodule_silently( 'plugins-themes', 'plugin-activation' );
+		if ( secupress_has_pro() ) {
+			secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'plugins-themes/plugins/plugin-activation.php' );
+		}
+
+		secupress_deactivate_submodule_silently( 'plugins-themes', 'plugin-deactivation' );
+		if ( secupress_has_pro() ) {
+			secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'plugins-themes/plugins/plugin-deactivation.php' );
+		}
+
+		secupress_deactivate_submodule_silently( 'plugins-themes', 'plugin-deletion' );
+		if ( secupress_has_pro() ) {
+			secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'plugins-themes/plugins/plugin-deletion.php' );
+		}
+
+		if ( secupress_is_submodule_active( 'plugins-themes', 'plugin-installation' ) ) {
+			secupress_deactivate_submodule( 'plugins-themes', 'plugin-installation' );
+			secupress_activate_submodule( 'plugins-themes', 'plugin-installation' );
+			secupress_add_transient_notice( __( 'The modules for `No Plugin Activation`, `No Plugin Deactivation`, and `No Plugin Deletion` have been consolidated into the `No Plugin Actions` module.', 'secupress' ) );
+		}
+
+		delete_transient( 'secupress_unlock_admin_key' ); // name changed, now contains user_email.
+
+		delete_site_option( 'secupress_scan_wp_config' ); // new CONCATENE_SCRIPT scan, remove the last one.
+		
+		delete_site_option( 'secupress_captcha_keys' ); // old captcha v1
+
+		$filesystem      = secupress_get_filesystem();
+		$api_key_content = $filesystem->get_contents( SECUPRESS_PATH . 'defines.php' );
+		$api_key_content = str_replace( base64_encode( SECUPRESS_WEB_MAIN ), base64_encode( home_url() ), $api_key_content );
+		$filesystem->put_contents( SECUPRESS_PATH . 'defines.php', $api_key_content, FS_CHMOD_FILE );
+
 	}
 }
 
@@ -238,7 +330,7 @@ function secupress_better_changelog() {
 }
 
 /**
- * Will display our changelog content wiht our CSS
+ * Will display our changelog content with our CSS
  *
  * @since 1.4.3
  * @author Julio Potier
@@ -247,21 +339,22 @@ function secupress_hack_changelog() {
 	global $admin_body_class;
 
 	$api = plugins_api( 'plugin_information', array(
-		'slug' => 'secupress',
-		'is_ssl' => is_ssl(),
-		'fields' => [ 'short_description' => false,
-					'reviews' => false,
-					'downloaded' => false,
-					'downloadlink' => false,
-					'last_updated' => false,
-					'added' => false,
-					'tags' => false,
-					'homepage' => false,
-					'donate_link' => false,
-					'ratings' => false,
-					'active_installs' => true,
-					'banners' => true,
-					'sections' => true,
+		'slug'   => 'secupress',
+		'is_ssl' => secupress_server_is_ssl(),
+		'fields' => [ 
+					'short_description' => false,
+					'reviews'           => false,
+					'downloaded'        => false,
+					'downloadlink'      => false,
+					'last_updated'      => false,
+					'added'             => false,
+					'tags'              => false,
+					'homepage'          => false,
+					'donate_link'       => false,
+					'ratings'           => false,
+					'active_installs'   => true,
+					'banners'           => true,
+					'sections'          => true,
 				]
 	) );
 
@@ -459,11 +552,11 @@ exit;
 }
 
 if ( ! secupress_is_white_label() ) {
-	// add_action( 'admin_notices', 'secupress_display_whats_new' );
+	//// add_action( 'admin_notices', 'secupress_display_whats_new' );
 	/**
 	 * Display a "what's new" notice when not in WhiteLabel and user has the correct capa
 	 *
-	 * @since 2.0 secupress_add_transient_notice + SECUPRESS_MAJOR_VERSION
+	 * @since 2.0 secupress_add_transient_notice + SECUPRESS_VERSION
 	 * @since 1.4.10
 	 * @author Julio Potier
 	 *
@@ -471,14 +564,14 @@ if ( ! secupress_is_white_label() ) {
 	 * @return (void)
 	 **/
 	function secupress_display_whats_new() {
-		$notice_id = 'new-' . sanitize_key( SECUPRESS_MAJOR_VERSION );
+		$notice_id = 'new-' . sanitize_key( SECUPRESS_VERSION );
 		if ( ! current_user_can( secupress_get_capability() ) || secupress_notice_is_dismissed( $notice_id ) ) {
 			return;
 		}
 
-		$title    = sprintf( '<strong>' . __( 'What’s new in SecuPress %s', 'secupress' ) . '</strong>', SECUPRESS_MAJOR_VERSION );
+		$title    = sprintf( '<strong>' . __( 'What’s new in SecuPress %s', 'secupress' ) . '</strong>', SECUPRESS_VERSION );
 		$readmore = '<a href="https://secupress.me/changelog" target="_blank"><em>' . __( 'Or read full changelog on secupress.me', 'secupress' ) . '</em></a>';
-		$newitems = [ 	//__( 'New HTTP Logs Module', 'secupress' ),
+		$newitems = [ 	//__( '.', 'secupress' ),
 						// __( 'New Vulnerable Themes and Plugins API', 'secupress' ),
 						// __( 'New GeoIP API', 'secupress' ),
 						// __( 'New Sessions Details', 'secupress' ),

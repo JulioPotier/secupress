@@ -45,7 +45,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 			/** Translators: 1 is a plugin name, 2 is the name of a protection, 3 is the name of a module. */
 			__( 'Hide the %1$s version to prevent giving too much information to attackers. The %2$s protection from the module %3$s will be activated.', 'secupress' ),
 			'WooCommerce',
-			'<strong>' . __( 'Plugin version disclosure', 'secupress' ) . '</strong>',
+			'<strong>' . __( 'Plugin Version Disclosure', 'secupress' ) . '</strong>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_plugin-version-discloses">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
 		);
 	}
@@ -63,7 +63,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	public static function get_messages( $message_id = null ) {
 		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
 		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
-			'<strong>' . __( 'Plugin version disclosure', 'secupress' ) . '</strong>',
+			'<strong>' . __( 'Plugin Version Disclosure', 'secupress' ) . '</strong>',
 			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_plugin-version-discloses">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
 		);
 

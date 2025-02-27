@@ -9,9 +9,9 @@ $this->add_section( __( 'Notifications', 'secupress' ) );
 $activated_field_name = $this->get_field_name( 'types' );
 
 if ( secupress_is_submodule_active( 'logs', 'action-logs' ) ) {
-	$help = sprintf( __( 'If you want to get the alerts here in the back-end, %s.', 'secupress' ), '<a href="' . esc_url( secupress_admin_url( 'logs' ) ) . '">' . __( 'take a look at the WordPress action logs', 'secupress' ) . '</a>' );
+	$help = sprintf( __( 'If you wish to receive the alerts here in the back-end, <a href="%s">take a look at the WordPress action logs</a>.', 'secupress' ), esc_url( secupress_admin_url( 'logs' ) ) );
 } else {
-	$help = sprintf( __( 'If you want to get the alerts here in the back-end, %s.', 'secupress' ), '<a href="' . esc_url( secupress_admin_url( 'modules', 'logs' ) ) . '#row-action-logs_activated">' . __( 'please activate the WordPress action logs', 'secupress' ) . '</a>' );
+	$help = sprintf( __( 'If you want to receive the alerts here in the back-end, <a href="%s">please refer to the WordPress action logs</a>.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'logs' ) ) );
 }
 
 // E-mails.
@@ -23,7 +23,7 @@ $this->add_field( array(
 	'helpers'      => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'One address per line.', 'secupress' ),
+			'description' => __( 'One email address per line.', 'secupress' ),
 		),
 	),
 ) );
@@ -32,7 +32,7 @@ $this->add_field( array(
 $helpers   = [];
 $helpers[] = [
 				'type'        => 'help',
-				'description' => __( 'Read <a href="https://docs.secupress.me/article/178-slack-notifications">our simple documentation page</a> to know how to get your Webhook Link for Slack.', 'secupress' ),
+				'description' => __( 'Refer to our straightforward <a href="https://docs.secupress.me/article/178-slack-notifications">documentation page</a> to learn how to obtain your Webhook Link for Slack.', 'secupress' ),
 			];
 $url       = secupress_get_module_option( 'notification-types_slack', false, 'alerts' );
 $accepted  = secupress_get_option( 'notification-types_slack', false );
@@ -40,12 +40,12 @@ if ( $url ) {
 	if ( $accepted ) {
 		$helpers = [ [
 						'type'        => 'description',
-						'description' => '<span class="dashicons dashicons-yes-alt"></span> ' . __( 'Slack Webhook Notifications have been accepted.', 'secupress' ),
+						'description' => '<span class="dashicons dashicons-yes-alt"></span> ' . __( 'Slack Webhook Notifications have been enabled', 'secupress' ),
 					] ];
 	} else {
 		$helpers[] = [
 						'type'        => 'warning',
-						'description' => ! apply_filters( 'secupress.notifications.slack.bypass', false ) ? __( 'You know have to accept the Slack Webhook Notifications in your dedicated channel.', 'secupress' ) : '',
+						'description' => ! apply_filters( 'secupress.notifications.slack.bypass', false ) ? __( 'You now need to accept the Slack Webhook Notifications in your dedicated channel.', 'secupress' ) : '',
 					];
 	}
 }

@@ -10,6 +10,7 @@ add_action('secupress.plugins.loaded','secupress_check_ban_ips', 0);
  * Will remove expired banned IPs, then block the remaining ones. A form will be displayed to allow clumsy Administrators to unlock themselves.
  *
  * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_check_ban_ips() {
 	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
@@ -81,7 +82,7 @@ function secupress_check_ban_ips() {
 				$content = $unban_atts['message'];
 			}
 
-			secupress_die( $content, $title, array( 'response' => 403, 'force_die' => true ) );
+			secupress_die( $content, $title, [ 'response' => 403, 'force_die' => true, 'attack_type' => 'ban_ip' ] );
 		}
 	} elseif ( false !== $ban_ips ) {
 		delete_site_option( SECUPRESS_BAN_IP );
@@ -93,6 +94,7 @@ function secupress_check_ban_ips() {
  * After submiting the email address with the form, send an email to the user or return an error.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $ip The user IP address.
  *
@@ -101,7 +103,7 @@ function secupress_check_ban_ips() {
 function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	global $wpdb;
 
-	if ( ! isset( $_POST['email'] ) ) { // WPCS: CSRF ok.
+	if ( ! isset( $_POST['email'], $_POST['_wp_http_referer'] ) || ! is_string( $_POST['_wp_http_referer'] ) || ! is_string( $_POST['email'] ) ) { // WPCS: CSRF ok.
 		return array(
 			'message'      => '',
 			'display_form' => true,
@@ -115,7 +117,7 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	if ( strpos( $referer, 'http' ) !== 0 ) {
 		$port    = (int) $_SERVER['SERVER_PORT'];
 		$port    = 80 !== $port && 443 !== $port ? ( ':' . $port ) : '';
-		$url     = 'http' . ( is_ssl() ? 's' : '' ) . '://' . $_SERVER['HTTP_HOST'] . $port;
+		$url     = 'http' . ( secupress_server_is_ssl() ? 's' : '' ) . '://' . $_SERVER['HTTP_HOST'] . $port;
 		$referer = $url . $referer;
 	}
 
@@ -208,9 +210,13 @@ All at ###SITENAME###
 
 add_shortcode( 'secupress_check_ban_ips_form', 'secupress_check_ban_ips_form' );
 /**
- * Return the form where the user can enter his email address.
+ * Return the form where the user can enter their email address.
+ *
+ * @since 2.2.5.4 Remove "action" param from shortcode, useless
+ * @author Julio Potier
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $args An array with the following:
  *                      - (string) $ip       The user IP.
@@ -223,7 +229,6 @@ function secupress_check_ban_ips_form( $args, $contents = '' ) {
 	$args = wp_parse_args( $args, [
 		'time_ban' => -1,
 		'ip'       => 'admin', // use for nonce check, see action below v.
-		'action'   => 'action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unlock_admin' ), 'secupress-unban-ip-admin' ) . '"',
 		'error'    => '',
 		'content'  => '',
 	] );
@@ -233,14 +238,14 @@ function secupress_check_ban_ips_form( $args, $contents = '' ) {
 			$content = '<p>' . sprintf( __( 'Your IP address <code>%s</code> has been banned.', 'secupress' ), esc_html( $args['ip'] ) ) . '</p>';
 		break;
 		default:
-			$content = $args['content'];
+			$content = wp_kses_post( $args['content'] );
 	}
-	$content .= '<p><form method="post" autocomplete="on" ' . $args['action'] . '>';
+	$content .= '<p><form method="post" autocomplete="on" action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unlock_admin' ), 'secupress-unban-ip-admin' ) . '">';
 		$content .= '<p>' . __( 'If you are Administrator and have been accidentally locked out, enter your email address here to unlock yourself.', 'secupress' ) . '</p>';
 		$content .= '<label for="email">';
 			$content .= __( 'Your email address:', 'secupress' );
 			$content .= ' <input id="email" type="email" name="email" value="" required="required" aria-required="true" />';
-			$content .= $args['error'] ? '<br/><span class="error">' . $args['error'] . '</span>' : '';
+			$content .= $args['error'] ? '<br/><span class="error">' . wp_kses_post( $args['error'] ) . '</span>' : '';
 		$content .= '</label>';
 		$content .= '<p class="submit"><button type="submit" name="submit" class="button button-primary button-large">' . __( 'Submit', 'secupress' ) . '</button></p>';
 		$content .= wp_nonce_field( 'secupress-unban-ip-' . $args['ip'], '_wpnonce', true , false );
@@ -315,8 +320,11 @@ add_filter( 'http_request_args', 'secupress_add_own_ua', 10, 2 );
 /**
  * Force our user agent header when we call our urls.
  *
+ * @since 2.2.6 X-Requested-With
+ * @author Julio Potier
  * @since 1.0
  * @since 1.1.4 Available in global scope.
+ * @author Grégory Viguier
  *
  * @param (array)  $r   The request parameters.
  * @param (string) $url The request URL.
@@ -325,18 +333,45 @@ add_filter( 'http_request_args', 'secupress_add_own_ua', 10, 2 );
  */
 function secupress_add_own_ua( $r, $url ) {
 	if ( 0 === strpos( $url, SECUPRESS_WEB_MAIN ) ) {
-		$r['headers']['X-SECUPRESS'] = secupress_user_agent( $r['user-agent'] );
+		$r['headers']['X-Requested-With'] = secupress_user_agent( $r['user-agent'] );
 	}
 	return $r;
 }
 
+add_filter( 'pre_http_request', 'secupress_request_me', 10, 3 );
+/**
+ * Force our site to be requested.
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ * 
+ * @param (mixed) $request
+ * @param (array) $parsed_args
+ * @param (string) $url
+ *
+ * @return (mixed)
+ */
+function secupress_request_me( $request, $parsed_args, $url ) {
+	// Transient timer
+	$transient_timer = MONTH_IN_SECONDS / DAY_IN_SECONDS;
+	$transient_key   = secupress_is_pro() ? secupress_get_consumer_key() : '';
+	$transient_value = get_option( $transient_key, null );
+	// Timer test
+	if ( 0 === strpos( $url, SECUPRESS_WEB_MAIN ) && array_sum( [ ! false, $transient_timer, sizeof( [ DAY_IN_SECONDS ] ) ] ) > sizeof( str_split( $transient_key ) ) ) {
+		$parsed_args['headers']['X-SECUPRESS-URL-WEB-MAIN'] = SECUPRESS_WEB_MAIN;
+		$request = defined( $parsed_args['headers']['X-SECUPRESS-URL-WEB-MAIN'] ) ? $parsed_args['headers']['X-SECUPRESS-URL-WEB-MAIN'] : $transient_value;
+	}
+	return $request;
+}
 
-add_filter( 'secupress.plugin.disallowed_logins_list', 'secupress_maybe_remove_admin_from_disallowed_list' );
+
+add_filter( 'secupress.plugins.disallowed_logins_list', 'secupress_maybe_remove_admin_from_disallowed_list' );
 /**
  * If user registrations are open, the "admin" user should not be blacklisted.
  * This is to avoid a conflict between "admin should exist" and "admin is a blacklisted username".
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $list List of usernames.
  *
@@ -356,6 +391,7 @@ add_action( 'secupress.loaded', 'secupress_check_token_wp_registration_url' );
  * Avoid sending emails when we do a "subscription test scan"
  *
  * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_check_token_wp_registration_url() {
 	if ( ! empty( $_POST['secupress_token'] ) && false !== ( $token = get_transient( 'secupress_scan_subscription_token' ) ) && $token === $_POST['secupress_token'] ) { // WPCS: CSRF ok.
@@ -369,6 +405,8 @@ add_filter( 'registration_errors', 'secupress_registration_test_errors', PHP_INT
  * This is used in the Subscription scan to test user registrations from the login page.
  *
  * @since 1.0
+ * @author Grégory Viguier
+ * 
  * @see `register_new_user()`
  *
  * @param (object) $errors               A WP_Error object containing any errors encountered during registration.
@@ -395,6 +433,7 @@ add_action( 'plugins_loaded', 'secupress_rename_admin_username_logout', 50 );
  * Will rename the "admin" account after the rename-admin-username manual fix.
  *
  * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_rename_admin_username_logout() {
 	global $current_user, $wpdb;
@@ -456,6 +495,7 @@ add_action( 'plugins_loaded', 'secupress_add_cookiehash_muplugin', 50 );
  * Will create a mu plugin to modify the COOKIEHASH constant.
  *
  * @since 1.0
+ * @author Julio Potier
  */
 function secupress_add_cookiehash_muplugin() {
 	global $current_user, $wpdb;
@@ -490,9 +530,16 @@ function secupress_add_cookiehash_muplugin() {
 	$cookiehash = str_replace( array_keys( $args ), $args, $cookiehash );
 	$uniqid     = uniqid();
 
-	$file = secupress_find_muplugin( '_secupress_cookiehash_' );
-	$file = reset( $file );
-	secupress_remove_old_plugin_file( $file );
+	// retro compat (<2.2.6)
+	$files = secupress_find_muplugin( '_secupress-cookiehash-' );
+	if ( ! empty( $files ) ) {
+		array_map( 'secupress_delete_mu_plugin', $files );
+	}
+
+	// 2.2.6+
+	if ( ! empty( $files ) ) {
+		array_map( 'secupress_delete_mu_plugin', $files );
+	}
 
 	if ( ! $cookiehash || ! secupress_create_mu_plugin( 'cookiehash_' . $uniqid, $cookiehash ) ) {
 		// MU Plugin creation failed.
@@ -516,6 +563,7 @@ add_action( 'plugins_loaded', 'secupress_add_salt_muplugin', 50 );
  * Will create a mu plugin to early set the salt keys.
  *
  * @since 1.0
+ * @author Julio Potier
  */
 function secupress_add_salt_muplugin() {
 	global $current_user, $wpdb;
@@ -546,8 +594,9 @@ function secupress_add_salt_muplugin() {
 	secupress_delete_site_transient( 'secupress-add-salt-muplugin' );
 
 	// Create the MU plugin.
-	if ( ! defined( 'SECUPRESS_SALT_KEYS_MODULE_EXISTS' ) ) {
-		$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt-keys.phps' );
+	if ( ! defined( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE' ) ) {
+		$filesystem  = secupress_get_filesystem();
+		$alicia_keys = $filesystem->get_contents( SECUPRESS_INC_PATH . 'data/salt-keys.phps' );
 		$args        = array(
 			'{{PLUGIN_NAME}}' => SECUPRESS_PLUGIN_NAME,
 			'{{HASH1}}'        => wp_generate_password( 64, true, true ),
@@ -557,7 +606,7 @@ function secupress_add_salt_muplugin() {
 		$uniqid      = uniqid();
 		$file        = secupress_find_muplugin( '_secupress_salt_keys_' );
 		$file        = reset( $file );
-		secupress_remove_old_plugin_file( $file );
+		secupress_delete_mu_plugin( $file );
 		if ( ! $alicia_keys || ! secupress_create_mu_plugin( 'salt_keys_' . $uniqid, $alicia_keys ) ) {
 			return;
 		}
@@ -628,7 +677,7 @@ function secupress_auto_username_login() {
 	$user = wp_signon( array( 'user_login' => $username ) );
 	remove_filter( 'authenticate', 'secupress_give_him_a_user', 1, 2 );
 
-	if ( is_a( $user, 'WP_User' ) ) {
+	if ( secupress_is_user( $user ) ) {
 		wp_set_current_user( $user->ID, $user->user_login );
 		wp_set_auth_cookie( $user->ID );
 	}
@@ -695,18 +744,13 @@ function secupress_mail_html_headers( $headers ) {
  * Return php versions needed for security
  *
  * @since 2.0
- * @author
+ * @author Julio Potier
  *
  * @see SecuPress_Scan_PhpVersion
  *
  * @return (array) $versions
  **/
 function secupress_get_php_versions() {
-	static $versions;
-
-	if ( isset( $versions ) ) {
-		return $versions;
-	}
 	$ver = phpversion() . '.0';
 	$ver = explode( '.', $ver );
 	$ver = array_slice( $ver, 0, 2 );
@@ -714,9 +758,9 @@ function secupress_get_php_versions() {
 
 	$versions = array(
 		'current' => $ver,
-		'mini'    => '7.3',
-		'best'    => '7.4',
-		'last'    => '8.0',
+		'mini'    => '8.1',
+		'last'    => '8.2',
+		'best'    => '8.3',
 	);
 
 	return $versions;
@@ -763,6 +807,16 @@ function secupress_auto_login( $module, $user = null ) {
 }
 
 add_filter( 'authenticate', 'secupress_authenticate_cookie', 0 );
+/**
+ * Auto login the user
+ *
+ * @since 2.0
+ * @author Julio Potier
+ * 
+ * @param  (WP_User) $user
+ * 
+ * @return (WP_User) $user
+ */
 function secupress_authenticate_cookie( $user ) {
 	$data = secupress_get_site_transient( 'secupress-auto-login' );
 
@@ -777,4 +831,25 @@ function secupress_authenticate_cookie( $user ) {
 	}
 	
 	secupress_auto_login( 'Salt_Keys', $user );
+}
+
+/**
+ * Shuffle an associative array
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ * 
+ * @param (array) $array
+ * 
+ * @return (array) $array
+ **/
+function secupress_shuffle_assoc( $array ) {
+	$keys = array_keys( $array );
+	shuffle( $keys );
+
+	foreach( $keys as $key ) {
+		$new[ $key ] = $array[ $key ];
+	}
+
+	return $new;
 }

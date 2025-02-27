@@ -1,23 +1,44 @@
 <?php
 /**
- * Plugin Name: SecuPress Free — WordPress Security
+ * Plugin Name: SecuPress Free with Simple SSL – Simple and Performant Security
+ * 
  * Plugin URI: https://secupress.me
  * Description: More than a plugin, the guarantee of a protected website by experts.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 2.2.5.3
- * Code Name: Python (Mark XX)
+ * Version: 2.3
+ * Code Name: Starboost (Mark XXXIX)
  * Network: true
  * Contributors: SecuPress, juliobox, GregLone
  * License: GPLv2
  * Domain Path: /languages/
  * Requires at least: 4.9
- * Requires PHP: 5.6
- * Copyright 2012-2024 SecuPress
+ * Requires PHP: 7.0
+ * Copyright 2012-2025 SecuPress
+ * 
+ *  ██████╗███████╗ █████╗██╗   ██╗██████╗ ██████╗ ███████╗ ██████╗ ██████╗   ███╗   ███╗███████╗
+ * ██╔════╝██╔════╝██╔═══╝██║   ██║██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝   ████╗ ████║██╔════╝
+ * ███████╗█████╗  ██║    ██║   ██║██████╔╝██████╔╝█████╗  ███████╗███████╗   ██╔████╔██║█████╗  
+ * ╚════██║██╔══╝  ██║    ██║   ██║██╔═══╝ ██╔═██╝ ██╔══╝  ╚════██║╚════██║   ██║╚██╔╝██║██╔══╝  
+ * ███████║███████╗ █████╗╚██████╔╝██║     ██║  ██╗███████╗███████║███████║██╗██║ ╚═╝ ██║███████╗
+ * ╚══════╝╚══════╝ ╚════╝ ╚═════╝ ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝╚═╝╚═╝     ╚═╝╚══════╝  
  */
+
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
-
+$secupress_is_playground = isset( $_SERVER['SERVER_NAME'] ) && 'playground.wordpress.net' === $_SERVER['SERVER_NAME'];
+add_action( 'admin_notices', 'secupress_does_not_work_on_playground' );
+/* :) */
+function secupress_does_not_work_on_playground() {
+	global $secupress_is_playground;
+	if ( ! $secupress_is_playground ) {
+		return;
+	}
+	echo '<div class="error"><p><strong>SecuPress</strong> does not work on <code>https://playground.wordpress.net/</code>.<br>Use <a href="https://demo.tastewp.com/secupress/">https://demo.tastewp.com/secupress/</a> to test the Free Version.<br>You can also <a href="https://secupress.me/pricing/">purchase a Pro Version</a> to test it (we refund during 14 days).</p></div>'; // DO NOT TRANSLATE
+}
+if ( $secupress_is_playground ) {
+	return; // DO NOT LOAD SECUPRESS
+}
 /** --------------------------------------------------------------------------------------------- */
 /** DEFINES ===================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
@@ -38,13 +59,22 @@ define( 'SECUPRESS_FULL_FILETREE'         , 'secupress_full_filetree' );
 define( 'SECUPRESS_DATABASE_MALWARES'     , 'secupress_database_malwares' );
 define( 'SECUPRESS_FIX_DISTS'             , 'secupress_fix_dists' );
 define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
+define( 'SECUPRESS_USER_PROTECTION'       , 'secupress_user_protection' );
 define( 'SECUPRESS_WHITE_IP'              , 'secupress_whitelist_ip' );
+define( 'SECUPRESS_ATTACKS'               , 'secupress_attacks_log' );
+define( 'SECUPRESS_BAD_THEMES'            , 'secupress_bad_themes__vuln' );
+define( 'SECUPRESS_OLD_THEMES'            , 'secupress_bad_themes__old' );
+define( 'SECUPRESS_CLOSED_THEMES'         , 'secupress_bad_themes__closed' );
+define( 'SECUPRESS_BAD_PLUGINS'           , 'secupress_bad_plugins__vuln' );
+define( 'SECUPRESS_OLD_PLUGINS'           , 'secupress_bad_plugins__old' );
+define( 'SECUPRESS_CLOSED_PLUGINS'        , 'secupress_bad_plugins__closed' );
 define( 'SECUPRESS_RATE_URL'              , 'https://wordpress.org/support/view/plugin-reviews/secupress?filter=5#topic' );
 define( 'SECUPRESS_WEB_MAIN'              , 'https://secupress.me/' );
-define( 'SECUPRESS_MODULES_PATH'          , SECUPRESS_INC_PATH . 'modules' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_ADMIN_PATH'            , SECUPRESS_INC_PATH . 'admin' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_CLASSES_PATH'          , SECUPRESS_INC_PATH . 'classes' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_ADMIN_SETTINGS_MODULES', SECUPRESS_ADMIN_PATH . 'modules' . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_API_MAIN'              , 'https://secupress.me/wp-json/api/' );
+define( 'SECUPRESS_MODULES_PATH'          , SECUPRESS_INC_PATH . 'modules/' );
+define( 'SECUPRESS_ADMIN_PATH'            , SECUPRESS_INC_PATH . 'admin/' );
+define( 'SECUPRESS_CLASSES_PATH'          , SECUPRESS_INC_PATH . 'classes/' );
+define( 'SECUPRESS_ADMIN_SETTINGS_MODULES', SECUPRESS_ADMIN_PATH . 'modules/' );
 define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
 define( 'SECUPRESS_FREE_URL'              , SECUPRESS_PLUGIN_URL . 'free/' );
 define( 'SECUPRESS_FRONT_URL'             , SECUPRESS_FREE_URL . 'front/' );
@@ -53,7 +83,7 @@ define( 'SECUPRESS_ASSETS_URL'            , SECUPRESS_PLUGIN_URL . 'assets/' );
 define( 'SECUPRESS_ADMIN_CSS_URL'         , SECUPRESS_ASSETS_URL . 'admin/css/' );
 define( 'SECUPRESS_ADMIN_JS_URL'          , SECUPRESS_ASSETS_URL . 'admin/js/' );
 define( 'SECUPRESS_ADMIN_IMAGES_URL'      , SECUPRESS_ASSETS_URL . 'admin/images/' );
-define( 'SECUPRESS_PHP_MIN'               , '5.6' );
+define( 'SECUPRESS_PHP_MIN'               , '7.0' );
 define( 'SECUPRESS_WP_MIN'                , '4.9' );
 define( 'SECUPRESS_INT_MAX'               , PHP_INT_MAX - 20 );
 
@@ -76,20 +106,33 @@ require_once( SECUPRESS_INC_PATH . 'functions/hotfixes.php' );
 require_once( SECUPRESS_INC_PATH . 'activation.php' );
 
 
+add_action( 'init', 'secupress_init_i18n', 0 );
+/**
+ * Load the i18n here since WP6.7 is doing sh*t
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ */
+function secupress_init_i18n() {
+	// Load translations.
+	secupress_load_plugin_textdomain_translations();
+}
+
 add_action( 'plugins_loaded', 'secupress_init', 0 );
 /**
  * Tell WP what to do when the plugin is loaded.
  *
+ * @since 2.2.6 wp-login.php || is_admin()
+ * @author Julio Potier
  * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_init() {
+	global $pagenow;
 	// Nothing to do if autosave.
 	if ( defined( 'DOING_AUTOSAVE' ) ) {
 		return;
 	}
-
-	// Load translations.
-	secupress_load_plugin_textdomain_translations();
 
 	// Functions.
 	secupress_load_functions();
@@ -111,7 +154,7 @@ function secupress_init() {
 	// Cleanup leftovers periodically.
 	SecuPress_Cleanup_Leftovers::get_instance();
 
-	if ( is_admin() ) {
+	if ( 'wp-login.php' === $pagenow || is_admin() ) {
 		if ( is_multisite() ) {
 			// Hooks for multisite.
 			require_once( SECUPRESS_ADMIN_PATH . 'multisite/centralize-blog-options.php' );
@@ -120,6 +163,7 @@ function secupress_init() {
 
 		// Notices.
 		SecuPress_Admin_Notices::get_instance();
+	 	SecuPress_Admin_Notices::enqueue_script();
 
 		// Pro upgrade.
 		SecuPress_Admin_Pro_Upgrade::get_instance();
@@ -145,11 +189,11 @@ function secupress_init() {
 	}
 }
 
-
 add_action( 'secupress.loaded', 'secupress_load_plugins' );
 /**
  * Load modules.
  *
+ * @author Grégory Viguier
  * @since 1.0
  */
 function secupress_load_plugins() {
@@ -157,7 +201,7 @@ function secupress_load_plugins() {
 	$modules = secupress_get_modules();
 
 	if ( $modules ) {
-		foreach ( $modules as $key => $module ) {
+		foreach ( $modules as $key => $dummy ) {
 			if ( secupress_has_pro() ) {
 				$file = SECUPRESS_PRO_MODULES_PATH . sanitize_key( $key ) . '/tools.php';
 
@@ -276,29 +320,62 @@ function secupress_load_plugins() {
 	 * @since 1.0
 	 */
 	do_action( 'secupress.plugins.loaded' );
+	/**
+	 * Fires once all our plugins/submodules has been loaded in front-office or ajax.
+	 *
+	 * @since 2.2.6
+	 */
+	if ( ! is_admin() || wp_doing_ajax() ) {
+		do_action( 'secupress.plugins.loaded.front' );
+	}
+	/**
+	 * Fires once all our plugins/submodules has been loaded in back-office.
+	 *
+	 * @since 2.2.6
+	 */
+	if ( is_admin() && ! wp_doing_ajax() ) {
+		do_action( 'secupress.plugins.loaded.back' );
+	}
 }
 
 /**
  * Check is the $locale if a FR one
  *
- * @return (bool) True if $locale is fr_FR (france) or fr_BE (belgium) or fr_CA (canada)
  * @author Julio Potier
  * @since 2.2
+ * 
  * @param (string) $locale The locale to be tested
+ * 
+ * @return (bool) True if $locale is fr_FR (france) or fr_BE (belgium) or fr_CA (canada)
  **/
 function secupress_locale_is_FR( $locale ) {
 	return 'fr_FR' === $locale || 'fr_CA' === $locale || 'fr_BE' === $locale;
 }
 
 /**
+ * Check is the $locale if a DE one
+ *
+ * @author Julio Potier
+ * @since 2.2.6
+ * 
+ * @param (string) $locale The locale to be tested
+ * @return (bool) True if $locale is de_DE, de_DE_formal, de_CH_informal, de_AT, de_CH
+ **/
+function secupress_locale_is_DE( $locale ) {
+	return 'de_DE' === $locale || 'de_DE_formal' === $locale || 'de_CH_informal' === $locale || 'de_AT' === $locale || 'de_CH' === $locale;
+}
+
+/**
  * Include files that contain our functions.
  *
+ * @since 2.2.6 wp-login.php || is_admin()
+ * @author Julio Potier
  * @since 1.2.3
  * @since 1.2.5 Includes requirement checks.
  * @author Grégory Viguier
  */
 function secupress_load_functions() {
-	global $is_iis7, $wp_version;
+	global $is_iis7, $wp_version, $pagenow;
 	static $done = false;
 
 	if ( $done ) {
@@ -340,9 +417,9 @@ function secupress_load_functions() {
 	/**
 	 * Require our functions.
 	 */
+	require_once( SECUPRESS_INC_PATH . 'functions/common.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/compat.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/deprecated.php' );
-	require_once( SECUPRESS_INC_PATH . 'functions/common.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/3rdparty.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/formatting.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/options.php' );
@@ -351,6 +428,7 @@ function secupress_load_functions() {
 	require_once( SECUPRESS_INC_PATH . 'functions/ip.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/files.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/htaccess.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/widgets.php' );
 
 	if ( $is_iis7 ) {
 		require_once( SECUPRESS_INC_PATH . 'functions/iis7.php' );
@@ -368,7 +446,7 @@ function secupress_load_functions() {
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/settings.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/scan-fix.php' );
 
-	if ( ! is_admin() ) {
+	if ( 'wp-login.php' !== $pagenow && ! is_admin() ) {
 		return;
 	}
 
@@ -402,30 +480,30 @@ add_filter( 'load_textdomain_mofile', 'secupress_load_own_i18n', 10, 2 );
 /**
  * Load our own i18n to prevent too long strings or spelling errors from voluteers at translate.wp.org, sorry guys.
  *
+ * @since 2.2.6 Usage of secupress_locale_is_DE()
  * @since 2.2 Usage of secupress_locale_is_FR()
  * @since 2.0.3 fr_BE & fr_CA = fr_FR
  * @since 2.0
  * @author Julio Potier
  *
- * @hook load_textdomain_mofile
  * @param (string)  $mofile The file to be loaded
  * @param (string)  $domain The desired textdomain
+ * 
  * @return (string) $mofile
  **/
 function secupress_load_own_i18n( $mofile, $domain ) {
-	if ( 'secupress' === $domain && false !== strpos( $mofile, WP_LANG_DIR . '/plugins/' ) ) {
+	if ( 'secupress' === $domain ) {
 		$locale = apply_filters( 'plugin_locale', determine_locale(), $domain );
 		if ( ! function_exists( 'determine_locale' ) ) { // WP 5.0.
-			$determined_locale     = get_locale();
-			if ( is_admin() ) {
-				$determined_locale = get_user_locale();
-			}
+			$determined_locale = is_admin() ? get_user_locale() : get_locale();
 		} else {
 			$determined_locale = determine_locale();
 		}
 		$locale = apply_filters( 'plugin_locale', $determined_locale, $domain );
 		if ( secupress_locale_is_FR( $locale ) ) {
 			$locale = 'fr_FR';
+		} elseif ( secupress_locale_is_DE( $locale ) ) {
+			$locale = 'de_DE';
 		}
 		$mofile = WP_PLUGIN_DIR . '/' . dirname( plugin_basename( SECUPRESS_FILE ) ) . '/languages/' . $domain . '-' . $locale . '.mo';
 	}
@@ -434,6 +512,7 @@ function secupress_load_own_i18n( $mofile, $domain ) {
 /**
  * Translations for the plugin textdomain.
  *
+ * @author Grégory Viguier
  * @since 1.0
  */
 function secupress_load_plugin_textdomain_translations() {
@@ -454,7 +533,7 @@ function secupress_load_plugin_textdomain_translations() {
 
 	// Make sure Poedit keeps our plugin headers.
 	/** Translators: Plugin Name of the plugin/theme */
-	__( 'SecuPress Free — WordPress Security', 'secupress' );
+	__( 'SecuPress Free with Simple SSL – Simple and Performant Security', 'secupress' );
 	/** Translators: Description of the plugin/theme */
 	__( 'Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.', 'secupress' );
 }

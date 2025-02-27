@@ -5,10 +5,29 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 /** ACTIVATE ==================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
+add_action( 'secupress.loaded', 'secupress_db_error_delete_file' );
+/**
+ * Delete the file .secupress_db_down_flag if exists and send an email to inform the admin
+ *
+ * @author Julio Potier
+ * @since 2.2.6
+ **/
+function secupress_db_error_delete_file() {
+	if ( ! is_admin() ) {
+		return;
+	}
+	$fname = ABSPATH . '/.secupress_db_down_flag';
+	if ( file_exists( $fname ) ) {
+		@unlink( $fname );
+		secupress_add_notice( __( 'Please be informed that your website experienced downtime due to a database error. We are pleased to report that the issue has been resolved and your website is now fully operational.', 'secupress' ), 'updated', '' );
+	}
+}
+
 register_activation_hook( SECUPRESS_FILE, 'secupress_activation' );
 /**
  * Tell WP what to do when the plugin is activated.
  *
+ * @author Grégory Viguier
  * @since 1.0
  */
 function secupress_activation() {
@@ -23,7 +42,7 @@ function secupress_activation() {
 	do_action( 'secupress.activation' );
 
 	/**
-	 * As this activation hook appens before our sub-modules are loaded (and the page is reloaded right after that),
+	 * As this activation hook happens before our sub-modules are loaded (and the page is reloaded right after that),
 	 * this transient will trigger a custom activation hook in `secupress_load_plugins()`.
 	 */
 	set_site_transient( 'secupress_activation', 1 );
@@ -34,6 +53,7 @@ add_action( 'secupress.plugins.activation', 'secupress_maybe_set_rules_on_activa
 /**
  * Maybe set rules to add in `.htaccess` or `web.config` file on SecuPress activation.
  *
+ * @author Grégory Viguier
  * @since 1.0
  */
 function secupress_maybe_set_rules_on_activation() {
@@ -66,6 +86,7 @@ add_action( 'secupress.all.plugins.activation', 'secupress_maybe_write_rules_on_
 /**
  * Maybe add rules in `.htaccess` or `web.config` file on SecuPress or SecuPress Pro activation.
  *
+ * @author Grégory Viguier
  * @since 1.1.4
  */
 function secupress_maybe_write_rules_on_activation() {
@@ -271,6 +292,7 @@ register_deactivation_hook( SECUPRESS_FILE, 'secupress_deactivation' );
 /**
  * Tell WP what to do when the plugin is deactivated.
  *
+ * @author Grégory Viguier
  * @since 1.0
  */
 function secupress_deactivation() {
@@ -307,6 +329,7 @@ add_action( 'secupress.plugins.deactivation', 'secupress_maybe_remove_rules_on_d
 /**
  * Maybe remove rules from `.htaccess` or `web.config` file on SecuPress deactivation.
  *
+ * @author Grégory Viguier
  * @since 1.0
  */
 function secupress_maybe_remove_rules_on_deactivation() {
@@ -325,8 +348,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 
 		if ( ! $filesystem->is_writable( $file_path ) ) {
 			// If the file is not writable, display a message.
-			$message  = sprintf( __( '%s:', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . ' ';
-			$message .= sprintf(
+			$message = sprintf(
 				/** Translators: 1 is a file name, 2 and 3 are small parts of code. */
 				__( 'It seems your %1$s file is not writable, you have to edit it manually. Please remove all rules between %2$s and %3$s.', 'secupress' ),
 				'<code>.htaccess</code>',
@@ -370,8 +392,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 
 		if ( false === $doc->load( $file_path ) ) {
 			// If the file is not writable, display a message.
-			$message  = sprintf( __( '%s:', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . ' ';
-			$message .= sprintf(
+			$message = sprintf(
 				/** Translators: 1 is a file name, 2 is a small part of code. */
 				__( 'It seems your %1$s file is not writable, you have to edit the file manually. Please remove all nodes with %2$s.', 'secupress' ),
 				'<code>web.config</code>',
@@ -400,8 +421,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 	// Nginx.
 	if ( $is_nginx ) {
 		// Since we can't edit the file, display a message.
-		$message  = sprintf( __( '%s:', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . ' ';
-		$message .= sprintf(
+		$message = sprintf(
 			/** Translators: 1 and 2 are small parts of code, 3 is a file name. */
 			__( 'Your server runs <strong>Nginx</strong>. You have to edit the configuration file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
 			'<code># BEGIN SecuPress</code>',
@@ -419,6 +439,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
  * Create a MU plugin that will display an admin notice. When the user click the button, the MU plugin is destroyed.
  * This is used to display a message after SecuPress is deactivated.
  *
+ * @author Grégory Viguier
  * @since 1.0
  *
  * @param (string) $plugin_id A unique identifier for the MU plugin.
@@ -465,5 +486,11 @@ function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
 	}
 
 	$filesystem->put_contents( $filename, $contents );
+
+	$mus = get_option( SECUPRESS_INSTALLED_MUPLUGINS, [] );
+	if ( $mus ) {
+		$mus[ basename( $filename ) ] = get_plugin_data( $filename );
+		update_option( SECUPRESS_INSTALLED_MUPLUGINS, $mus );
+	}
 }
 

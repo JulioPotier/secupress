@@ -34,9 +34,6 @@ function secupress_firewall_settings_callback( $settings ) {
 	// Bad contents.
 	secupress_bad_contents_settings_callback( $modulenow, $settings, $activate );
 
-	// Country Management.
-	secupress_geoip_settings_callback( $modulenow, $settings, $activate );
-
 	/**
 	 * Filter the settings before saving.
 	 *
@@ -64,7 +61,6 @@ function secupress_bad_headers_settings_callback( $modulenow, &$settings, $activ
 	// (De)Activation.
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'user-agents-header', ! empty( $activate['bbq-headers_user-agents-header'] ) );
-		secupress_manage_submodule( $modulenow, 'request-methods-header', ! empty( $activate['bbq-headers_request-methods-header'] ) );
 		if ( secupress_is_pro() ) {
 			secupress_manage_submodule( $modulenow, 'bad-referer', ! empty( $activate['bbq-headers_bad-referer'] ) );
 		}
@@ -99,8 +95,10 @@ function secupress_bad_headers_settings_callback( $modulenow, &$settings, $activ
 function secupress_bad_contents_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
+		if ( ! empty( $settings['bbq-url-content_block-functions-sources'] ) ) {
+			secupress_manage_submodule( $modulenow, 'block-functions', ! empty( $activate['bbq-url-content_block-functions'] ) );
+		}
 		secupress_manage_submodule( $modulenow, 'bad-url-contents', ! empty( $activate['bbq-url-content_bad-contents'] ) );
-		secupress_manage_submodule( $modulenow, 'bad-url-length', ! empty( $activate['bbq-url-content_bad-url-length'] ) );
 		secupress_manage_submodule( $modulenow, 'ban-404-php', ! empty( $activate['bbq-url-content_ban-404-php'] ) );
 	}
 
@@ -116,54 +114,6 @@ function secupress_bad_contents_settings_callback( $modulenow, &$settings, $acti
 	}
 }
 
-
-/**
- * Country Management plugin.
- *
- * @since 1.0
- *
- * @param (string)     $modulenow Current module.
- * @param (array)      $settings  The module settings, passed by reference.
- * @param (bool|array) $activate  Used to (de)activate plugins.
- */
-function secupress_geoip_settings_callback( $modulenow, &$settings, $activate ) {
-	// Settings.
-	$geoip_values = array( '-1' => 1, 'blacklist' => 1, 'whitelist' => 1 );
-
-	$settings['geoip-system_countries'] = ! empty( $settings['geoip-system_countries'] ) && is_array( $settings['geoip-system_countries'] ) ? array_map( 'sanitize_text_field', $settings['geoip-system_countries'] ) : array();
-
-	if ( ! $settings['geoip-system_countries'] || empty( $settings['geoip-system_type'] ) || ! isset( $geoip_values[ $settings['geoip-system_type'] ] ) ) {
-		$settings['geoip-system_type'] = '-1';
-	}
-
-	// (De)Activation.
-	secupress_manage_submodule( $modulenow, 'geoip-system', ( '-1' !== $settings['geoip-system_type'] ) );
-
-	// Make sure to not block the user.
-	if ( '-1' !== $settings['geoip-system_type'] && function_exists( 'secupress_geoip2country' ) ) {
-
-		$country_code = secupress_geoip2country( secupress_get_ip() );
-
-		if ( $country_code ) {
-			$is_whitelist = 'whitelist' === $settings['geoip-system_type'];
-			$countries    = array_flip( $settings['geoip-system_countries'] );
-
-			if ( isset( $countries[ $country_code ] ) && ! $is_whitelist ) {
-				secupress_add_transient_notice( __( 'You cannot block your own country, it has been removed from the disallowed list.', 'secupress' ) );
-				// Unblacklist the user country.
-				unset( $countries[ $country_code ] );
-				$settings['geoip-system_countries'] = array_flip( $countries );
-
-			} elseif ( ! isset( $countries[ $country_code ] ) && $is_whitelist ) {
-				// Whitelist the user country.
-				secupress_add_transient_notice( __( 'You cannot block your own country, it has been added to the allowed list.', 'secupress' ) );
-				$countries   = array_flip( $countries );
-				$countries[] = $country_code;
-				$settings['geoip-system_countries'] = $countries;
-			}
-		}
-	}
-}
 
 
 /** --------------------------------------------------------------------------------------------- */

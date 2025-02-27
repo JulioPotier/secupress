@@ -13,6 +13,9 @@ define( 'DONOTCACHEPAGE', true );
 
 $title = __( 'Warning - Deceptive content', 'secupress' );
 
+define( 'DONOTCACHEOBJECT', true );
+define( 'DONOTCACHEDB', true );
+$title = __( 'Warning - Deceptive content', 'secupress' );
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 	<head>

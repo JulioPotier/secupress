@@ -28,7 +28,7 @@ h1 {
 	color: #26B3A9;
 }
 p {
-	margin: 0 0 1.5em;
+	margin: 0 0 1em;
 }
 a {
 	color: #26B3A9;
@@ -42,6 +42,9 @@ img {
 	max-width: 100%;
 	height: auto;
 }
+.emoji{
+	font-size: 6em;
+}
 .logo {
 	display: block;
 	margin: 1em auto;
@@ -51,7 +54,7 @@ label {
 	display: inline-block;
 	margin-bottom: .5em;
 }
-[type="text"] {
+[type="text"],[type="password"] {
 	box-sizing: border-box;
 	width: 100%;
 	padding: .5em;
@@ -62,9 +65,11 @@ label {
 	font-family: inherit;
 	color: inherit;
 }
-[type="text"]:focus {
+[type="text"]:focus,
+[type="password"]:focus {
 	border-color: rgb(156,144,138);
 }
+[type="button"],
 [type="submit"] {
 	position: relative;
 	display: inline-block;
@@ -91,9 +96,16 @@ label {
 	-webkit-transition: all .3s ease;
 	        transition: all .3s ease;
 }
+[type="button"]{
+	background-color: #BBB;
+}
+[type="button"]:focus,
+[type="button"]:hover {
+	background-color: #888;
+}
 [type="submit"]:focus,
 [type="submit"]:hover {
-	background-color: #393E46;
+	background-color: #008076;
 }
 .error {
 	padding: .5em 1em;

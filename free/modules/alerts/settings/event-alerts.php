@@ -9,7 +9,7 @@ $this->add_section( __( 'Event Alerts', 'secupress' ) );
 $main_field_name = $this->get_field_name( 'activated' );
 
 $this->add_field( array(
-	'title'             => __( 'Alert me for important events', 'secupress' ),
+	'title'             => __( 'Notify me for important events', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
@@ -23,8 +23,8 @@ $label   = explode( '%d', $label );
 $label[] = '';
 
 $this->add_field( array(
-	'title'        => __( 'Choose your alerts frequency', 'secupress' ),
-	'description'  => __( 'It would be a bad idea to alert you every time something happens, so messages will be grouped.', 'secupress' ),
+	'title'        => __( 'Select your alert frequency', 'secupress' ),
+	'description'  => __( 'Alerts will be grouped to avoid overwhelming notifications for every occurrence.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'name'         => $this->get_field_name( 'frequency' ),
 	'row_class'    => 'row-nopad-top',
@@ -39,11 +39,11 @@ $this->add_field( array(
 	'helpers'      => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'You will be notified <strong>only</strong> if something happens.', 'secupress' ),
+			'description' => __( 'You will be notified <strong>only</strong> if an event occurs.', 'secupress' ),
 		),
 		array(
 			'type'        => 'description',
-			'description' => __( 'For some important events, a notification will be sent right away.', 'secupress' ),
+			'description' => __( 'For certain critical events, immediate notification will be sent.', 'secupress' ),
 		),
 	),
 ) );

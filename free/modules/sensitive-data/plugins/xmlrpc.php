@@ -29,7 +29,7 @@ function secupress_xmlrpc_disable_rpc() {
 			secupress_die(
 				__( 'XML-RPC services are disabled on this site.', 'secupress' ),
 				__( 'XML-RPC is disabled', 'secupress' ),
-				array( 'response' => 403, 'force_die' => true )
+				[ 'response' => 403, 'force_die' => true, 'attack_type' => 'xmlrpc' ]
 			);
 		}
 
@@ -129,6 +129,6 @@ function secupress_xmlrpc_block_multiauth_attempts( $user, $username, $password 
 	secupress_die(
 		__( 'XML-RPC services are disabled on this site.', 'secupress' ),
 		__( 'XML-RPC is disabled', 'secupress' ),
-		array( 'response' => 403 )
+		[ 'response' => 403, 'attack_type' => 'xmlrpc' ]
 	);
 }

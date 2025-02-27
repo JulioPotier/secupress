@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 $this->set_current_section( 'antispam' );
-$this->add_section( __( 'Anti Spam Rules', 'secupress' ) );
+$this->add_section( __( 'Anti-Spam Rules', 'secupress' ) );
 
 
 $field_name       = $this->get_field_name( 'antispam' );
@@ -18,8 +18,8 @@ if ( secupress_is_submodule_active( 'antispam', 'remove-comment-feature' ) ) {
 }
 
 $this->add_field( array(
-	'title'             => __( 'Anti Spam', 'secupress' ),
-	'description'       => __( 'If you do not activate this anti-spam module or remove the comment feature, please, activate another anti-spam plugin for your security!', 'secupress' ),
+	'title'             => __( 'Anti-Spam', 'secupress' ),
+	'description'       => __( 'If you choose not to activate this anti-spam module or remove the comment feature, we recommend activating another anti-spam plugin for added security!', 'secupress' ),
 	'name'              => $field_name,
 	'plugin_activation' => true,
 	'type'              => 'radioboxes',
@@ -27,14 +27,13 @@ $this->add_field( array(
 	'default'           => array(),
 	'label_screen'      => __( 'Which anti-spam do you need', 'secupress' ),
 	'options'           => array(
-		'fightspam'              => __( 'I <strong>need comments</strong> on my website, fight comment spam.', 'secupress' ),
-		'remove-comment-feature' => __( 'I <strong>do not need comments</strong> on my website, remove all the comment features.', 'secupress' ),
+		'fightspam'              => __( 'Yes, comments <strong>are required</strong> on my website to combat comment spam', 'secupress' ),
+		'remove-comment-feature' => __( 'No, comments <strong>are not required</strong> on my website. Please remove all the comment features', 'secupress' ),
 	),
 	'helpers' => array(
 		array(
 			'depends'     => $field_name . '_fightspam',
 			'type'        => 'description',
-			'description' => __( 'An anti identity spoof system will also be activated: registered users will be able to comment using their username and email only if they are logged in.', 'secupress' ),
 		),
 		array(
 			'depends'     => $field_name . '_remove-comment-feature',
@@ -46,17 +45,17 @@ $this->add_field( array(
 
 
 $options = array(
-	'spam'  => __( 'Only <strong>mark it as spam</strong>', 'secupress' ),
-	'trash' => __( '<strong>Delete permanently</strong> any spam', 'secupress' ),
+	'spam'  => __( 'Only <strong>mark as spam</strong>', 'secupress' ),
+	'trash' => __( '<strong>Permanently delete</strong> any spam', 'secupress' ),
 );
 
 if ( defined( 'EMPTY_TRASH_DAYS' ) && is_numeric( EMPTY_TRASH_DAYS ) && EMPTY_TRASH_DAYS > 0 ) {
-	$options['trash'] = sprintf( _n( '<strong>Send to trash</strong> any spam and delete it after %s day', '<strong>Send to trash</strong> any spam and delete it after %s days', EMPTY_TRASH_DAYS, 'secupress' ), EMPTY_TRASH_DAYS );
+	$options['trash'] = sprintf( _n( '<strong>Send spam to trash</strong> and delete it after %s day', '<strong>Send spam to trash</strong> and delete it after %s days', EMPTY_TRASH_DAYS, 'secupress' ), EMPTY_TRASH_DAYS );
 }
 
 $this->add_field( array(
 	'title'        => __( 'Handling Spam', 'secupress' ),
-	'description'  => __( 'Usually WordPress keeps spam in the database, by using the deletion setting, you will free up some database storage space.', 'secupress' ),
+	'description'  => __( 'Typically, WordPress stores spam in the database. By enabling the deletion setting, you can free up database storage space.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'name'         => $this->get_field_name( 'mark-as' ),
 	'type'         => 'radios',
@@ -66,18 +65,17 @@ $this->add_field( array(
 ) );
 unset( $options );
 
-
 $this->add_field( array(
 	'title'        => __( 'Shortcode usage', 'secupress' ),
-	'description'  => __( 'A <a href="https://codex.wordpress.org/Shortcode" target="_blank">shortcode</a> can create macros to be used in a post’s content.', 'secupress' ),
+	'description'  => sprintf( __( 'A <a href="%s" target="_blank">shortcode</a> can generate code to be used in a post’s content.', 'secupress' ), 'https://developer.wordpress.org/plugins/shortcodes/' ),
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'block-shortcodes' ),
 	'type'         => 'checkbox',
-	'label'        => __( 'Yes, mark as spam any comment using any shortcode', 'secupress' ),
+	'label'        => __( 'Yes, mark as spam any comment containing any shortcode or BBCode', 'secupress' ),
 	'helpers' => array(
 		array(
 			'type'        => 'description',
-			'description' => __( '<em>BBcodes</em> and <em>shortcodes</em> are lookalikes, both will be blocked. A shortcode looks like <code>[this]</code>.', 'secupress' ),
+			'description' => __( '<em>BBcodes</em> and <em>shortcodes</em> are similar in appereance; both will be blocked. A shortcode typically appears as <code>[this]</code>.', 'secupress' ),
 		),
 	),
 ) );
@@ -89,7 +87,7 @@ $this->add_field( array(
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'better-blacklist-comment' ),
 	'type'         => 'checkbox',
-	'label'        => __( 'Yes, use a better comments disallowed terms to detect spams', 'secupress' ),
+	'label'        => __( 'Yes, implement enhanced comment filtering with disallowed terms to detect spam', 'secupress' ),
 	'disabled'     => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-disallowed-terms.data' ),
 	'helpers' => array(
 		array(
@@ -110,7 +108,7 @@ $this->add_field( array(
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'forbid-pings-trackbacks' ),
 	'type'         => 'checkbox',
-	'label'        => __( '<strong>Forbid</strong> the usage of Pingbacks & Trackbacks', 'secupress' ),
+	'label'        => __( 'Yes, <strong>forbid</strong> the usage of Pingbacks & Trackbacks', 'secupress' ),
 	'helpers' => array(
 		array(
 			'type'        => 'description',
@@ -126,11 +124,11 @@ $this->add_field( array(
 	'label_for'    => $this->get_field_name( 'comment-delay' ),
 	'type'         => 'checkbox',
 	'default'      => 1,
-	'label'        => __( '<strong>Wait 30 seconds</strong> before posting a comment', 'secupress' ),
+	'label'        => __( 'Yes, wait <strong>30 seconds</strong> before posting a comment', 'secupress' ),
 	'helpers' => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'If someone tries to post before that, we consider it a bot and block it.', 'secupress' ),
+			'description' => __( 'If someone attempts to post before that delay, we will consider it a bot and block the action.', 'secupress' ),
 		),
 	),
 ) );

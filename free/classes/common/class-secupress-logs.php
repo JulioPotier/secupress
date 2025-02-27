@@ -599,24 +599,24 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public static function register_post_statuses() {
 		$criticities = array(
 			'high'   => array(
-				'label'       => __( 'High', 'secupress' ),
-				'label_count' => _n_noop( 'High <span class="count">(%s)</span>', 'High <span class="count">(%s)</span>', 'secupress' ),
+				'label'       => _x( 'High', 'priority level', 'secupress' ),
+				'label_count' => _nx_noop( 'High <span class="count">(%s)</span>', 'High <span class="count">(%s)</span>', 'priority level', 'secupress' ),
 				'public'      => false,
 				'internal'    => true,
 				'protected'   => true,
 				'private'     => true,
 			),
 			'normal' => array(
-				'label'       => __( 'Normal', 'secupress' ),
-				'label_count' => _n_noop( 'Normal <span class="count">(%s)</span>', 'Normal <span class="count">(%s)</span>', 'secupress' ),
+				'label'       => __( 'Normal', 'priority level', 'secupress' ),
+				'label_count' => _nx_noop( 'Normal <span class="count">(%s)</span>', 'Normal <span class="count">(%s)</span>', 'priority level', 'secupress' ),
 				'public'      => false,
 				'internal'    => true,
 				'protected'   => true,
 				'private'     => true,
 			),
 			'low'    => array(
-				'label'       => __( 'Low', 'secupress' ),
-				'label_count' => _n_noop( 'Low <span class="count">(%s)</span>', 'Low <span class="count">(%s)</span>', 'secupress' ),
+				'label'       => __( 'Low', 'priority level', 'secupress' ),
+				'label_count' => _nx_noop( 'Low <span class="count">(%s)</span>', 'Low <span class="count">(%s)</span>', 'priority level', 'secupress' ),
 				'public'      => false,
 				'internal'    => true,
 				'protected'   => true,
@@ -1003,7 +1003,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['post'] ) || ! is_array( $_GET['post'] ) ) {
-			wp_send_json_error( sprintf( _n( '%s Log deleted.', '%s Logs deleted.', 0, 'secupress' ), 0 ) );
+			wp_send_json_error( sprintf( _n( '%s log deleted.', '%s logs deleted.', 0, 'secupress' ), 0 ) );
 		}
 
 		$deleted = $this->delete_logs( $_GET['post'] );
@@ -1046,7 +1046,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		secupress_check_user_capability();
 
 		if ( ! isset( $_GET['id'] ) ) {
-			wp_send_json_error( sprintf( _n( '%s Log deleted.', '%s Logs deleted.', 0, 'secupress' ), 0 ) );
+			wp_send_json_error( sprintf( _n( '%s log deleted.', '%s logs deleted.', 0, 'secupress' ), 0 ) );
 		}
 
 		$posts   = $this->get_logs_from_user_id( $_GET['id'], true );
@@ -1091,13 +1091,13 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['ip'] ) ) {
-			wp_send_json_error( sprintf( _n( '%s Log deleted.', '%s Logs deleted.', 0, 'secupress' ), 0 ) );
+			wp_send_json_error( sprintf( _n( '%s log deleted.', '%s logs deleted.', 0, 'secupress' ), 0 ) );
 		}
 
 		$ip = urldecode( $_GET['ip'] );
 
 		if ( ! secupress_ip_is_valid( $ip ) ) {
-			wp_send_json_error( sprintf( _n( '%s Log deleted.', '%s Logs deleted.', 0, 'secupress' ), 0 ) );
+			wp_send_json_error( sprintf( _n( '%s log deleted.', '%s logs deleted.', 0, 'secupress' ), 0 ) );
 		}
 
 		$posts   = $this->get_logs_from_ip( $ip, true );
@@ -1261,7 +1261,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 	/**
 	 * Used when creating a Log to set default values: time, order, user_ip, user_id, and user_login.
-	 * If the user does not exists, user_id and user_login are not set.
+	 * If the user does not exist, user_id and user_login are not set.
 	 *
 	 * @since 1.0
 	 *

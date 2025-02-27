@@ -277,8 +277,16 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 				$( "#secupress-module-form-settings [type='submit']" ).first().trigger( "click.secupress" );
 			}
 		} );
+		$( ".secupress-setting-row_bbq-url-content_block-functions-sources :checkbox" ).on( "click.secupress", function() {
+			this.setCustomValidity( '' );
+
+			if ( 0 === $( '[name="' + this.name + '"]:checked' ).length ) {
+				this.setCustomValidity( SecuPressi18nModules.selectOneOptMinimum );
+				$( "#secupress-module-form-settings [type='submit']" ).first().trigger( "click.secupress" );
+			}
+		} );
 	} else {
-		$( ".affected-role-row p.warning" ).removeClass( "hide-if-js" );
+		$( ".affected-role-row p.warning, .secupress-setting-row_bbq-url-content_block-functions-sources p.warning" ).removeClass( "hide-if-js" );
 	}
 
 } )(jQuery, document, window);
@@ -1470,6 +1478,8 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 (function($, d, w, undefined) {
 	if ( undefined !== SecuPressi18nModules && 'on' === SecuPressi18nModules.malwareScanStatus ) {
 		window.stop();
+
+		
 		function secupress_get_malwarescanstatus() {
 			var params = {
 				"action":   "secupress_malwareScanStatus",
@@ -1482,7 +1492,33 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 				} else if( r.data.malwareScanStatus ) {
 					w.location.href = SecuPressi18nModules.MalwareScanURI;
 				} else {
-		 			setTimeout( secupress_get_malwarescanstatus, 15 * 1000 );
+					if ( r.data.currentItems.length === 1 && r.data.currentItems[0] === '/' ) {
+						$("#description-database-icon .dashicons-yes-alt").removeClass( 'dashicons-yes-alt' ).show();
+						setTimeout( function() { 
+							$("#description-database-icon .dashicons:last").addClass( 'dashicons-yes-alt' ); 
+							$("#description-database-icon .dashicons-yes-alt img").hide();
+							$("#description-links-icon .dashicons-yes-alt").removeClass( 'dashicons-yes-alt' ).show();
+							$("#secupress-scanner-info code").html( $("#description-links-icon").data('i18n') );
+						}, 2500 );
+						
+						setTimeout( function() { 
+							$("#description-links-icon .dashicons:last").addClass( 'dashicons-yes-alt' ); 
+							$("#description-links-icon .dashicons-yes-alt img").hide();
+							$("#description-file-icon img").show();
+							$("#secupress-scanner-info code").text( '/' );
+						}, 5000 );
+						
+		 				setTimeout( secupress_get_malwarescanstatus, 5 * 1000 );
+					} else if ( r.data.currentItems.length === 0 ) {
+		 				setTimeout( secupress_get_malwarescanstatus, 5 * 1000 );
+					} else { // ( r.data.currentItems.length > 1 )
+						$("#description-database-icon .dashicons-yes-alt" ).show();
+						$("#description-database-icon .dashicons-yes-alt img").hide();
+						$("#description-links-icon .dashicons-yes-alt").show();
+						$("#description-links-icon .dashicons-yes-alt img").hide();
+						$("#description-file-icon img").show();
+		 				setTimeout( secupress_get_malwarescanstatus, 15 * 1000 );
+		 			}
 					timer = 16 / r.data.currentItems.length * 1000;
 					r.data.currentItems.forEach( ( elem, index ) => {
 							setTimeout( function() { $("#secupress-scanner-info code").text( elem ); }, timer  * ( index + 1 ) );
@@ -1496,6 +1532,14 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	}
 } )(jQuery, document, window);
 
+
+// Malware Scan "Search for malwares" =======================================================================
+(function( w, d, $, undefined ) {
+	$( '#toggle_file_scanner' ).on( 'click', function(e) {
+		$( this ).text( $( this ).data( 'loading-i18n' ) ).parent().next().remove();
+
+	} );
+} )(window, document, jQuery);
 
 // Malware Scan "Select all" =======================================================================
 (function( w, d, $, undefined ) {
@@ -1643,22 +1687,6 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	} );
 } )(jQuery, document, window);
 
-// Captcha module test ====================
-(function($, d, w, undefined) {
-	if ( ! $( '#captcha_activate' ).length ) {
-		return;
-	}
-	params = {
-		'action': 'secupress_test_captcha_random_string_action--' + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)
-	};
-	$.getJSON( ajaxurl, params ).always( function( r ) {
-		if ( '0' === r.responseText && 400 === r.status ) {
-			$( '#captcha_activate' ).prop( 'disabled', false ).parent().removeClass( 'disabled' ).parent().next().hide();
-			$( '#captcha_activate' ).prop( 'checked', 1 == $('#captcha_activate').data( 'value' ) );
-			$( '#login_auth_submit' ).prop( 'disabled', false );
-		}
-	});
-} )(jQuery, document, window);
 
 // Database prefix ==========================================================================
 (function($, d, w, undefined) {
@@ -1690,4 +1718,16 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		r = r.replace(/[^a-zA-Z]+/g, '').substr(0,5);
 		$( '[name="secupress_wordpress-core_settings[database_db_prefix]"]' ).val( 'wp_' + r + '_' ).focus();
 	} );
+} )(jQuery, document, window);
+
+// Move UI ==========================================================================
+(function($, d, w, undefined) {
+	var $arrayOfDivToMove = $("[data-move_item]");
+    $arrayOfDivToMove.each(function() {
+        var moveTo = $(this).data('move_item');
+        var $paragraphToInsertAfter = $(moveTo);
+        if ( $paragraphToInsertAfter ) {
+	        $(this).insertAfter($paragraphToInsertAfter);
+	    }
+    });
 } )(jQuery, document, window);

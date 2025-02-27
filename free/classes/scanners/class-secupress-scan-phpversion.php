@@ -65,9 +65,9 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 		$messages = array(
 			// "good"
 			0   => sprintf( __( 'You are using <strong>PHP v%s</strong>.', 'secupress' ), $versions['current'] ),
-			1   => sprintf( __( 'You are using <strong>PHP v%s</strong>, do not go lower!', 'secupress' ), $versions['current'] ),
-			2   => sprintf( __( 'You are using <strong>PHP v%s</strong>, this is the last old supported.', 'secupress' ), $versions['current'] ),
-			3   => sprintf( __( 'You are using <strong>PHP v%s</strong>, the last one? Perfect!', 'secupress' ), $versions['current'] ),
+			1   => sprintf( __( 'You are using <strong>PHP v%s</strong>, do not go lower!', 'secupress' ), $versions['current'] ), // last
+			2   => sprintf( __( 'You are using <strong>PHP v%s</strong>, this is the last old supported.', 'secupress' ), $versions['current'] ), // mini
+			3   => sprintf( __( 'You are using <strong>PHP v%s</strong>, the last one? Perfect!', 'secupress' ), $versions['current'] ), // best
 			// "warning"
 			100 => __( 'Unable to determine version of PHP.', 'secupress' ),
 			// "bad"
@@ -116,12 +116,12 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 		}
 
 		$versions = secupress_get_php_versions();
-		if ( version_compare( $versions['current'], $versions['mini'] ) < 0 ) {
+		if ( version_compare( $versions['current'], $versions['mini'] ) < 0 ) { // minimum supported
 			$this->add_message( 200 );
 			$this->add_pre_fix_message( 300 );
-		} elseif ( version_compare( $versions['current'], $versions['best'] ) < 0 ) {
+		} elseif ( version_compare( $versions['current'], $versions['last'] ) < 0 ) { // last supported
 			$this->add_message( 1 );
-		} elseif ( version_compare( $versions['current'], $versions['last'] ) < 0 ) {
+		} elseif ( version_compare( $versions['current'], $versions['best'] ) < 0 ) { // best supported
 			$this->add_message( 2 );
 		} else {
 			$this->add_message( 3 );

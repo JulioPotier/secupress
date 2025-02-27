@@ -43,10 +43,12 @@ jQuery( document ).ready( function( $ ) {
 	(function($, d, w, undefined) {
 
 		$( ".secupress-bad-theme" ).each( function( index, html ) {
-			var $theme = $( "#" + $( this ).attr( "data-theme" ) + "-name" );
-			$theme.parent().find( ".theme-update" ).remove();
-			$theme.parent().find( ".theme-actions .activate" ).remove();
-			$theme.after( html );
+			var $theme = $( "*[data-slug='" + $( this ).attr( "data-theme" ) + "']" );
+			$theme.find( ".theme-actions .activate, .theme-actions .load-customize" ).remove();
+			if ( $theme.find( ".update-message" ).length > 0 ) {
+				$(html).css('top', '40px');
+			}
+			$theme.find( ".theme-screenshot" ).after( html );
 		} );
 
 	} )(jQuery, document, window);

@@ -24,17 +24,25 @@ function secupress_lock_default_role_option() {
 	$roles      = $roles->get_names();
 	$valid_role = in_array( $role, array_keys( $roles ) ) && ! isset( secupress_get_forbidden_default_roles()[ $role ] );
 	if ( $valid_role ) {
+		$role = apply_filters( 'secupress.plugin.lock_default_role', $role );
+		if ( has_filter( 'secupress.plugin.lock_default_role' ) ) {
+			_deprecated_hook( 'secupress.plugin.lock_default_role', '2.2.6', 'secupress.plugins.lock_default_role' );
+		}
 		/**
 		* Filter the default role for WP if found
 		* @param (string) $role
 		*/
-		return apply_filters( 'secupress.plugin.lock_default_role', $role );
+		return apply_filters( 'secupress.plugins.lock_default_role', $role );
 	}
 	/**
 	* Filter the default role for WP if empty
 	* @param (string) 'subscriber'
 	*/
-	return apply_filters( 'secupress.plugin.lock_default_role.empty', 'subscriber' );
+	$role = apply_filters( 'secupress.plugin.lock_default_role.empty', 'subscriber' );
+	if ( has_filter( 'secupress.plugin.lock_default_role.empty' ) ) {
+		_deprecated_hook( 'secupress.plugin.lock_default_role.empty', '2.2.6', 'secupress.plugins.lock_default_role.empty' );
+	}
+	return apply_filters( 'secupress.plugins.lock_default_role.empty', $role );
 }
 
 

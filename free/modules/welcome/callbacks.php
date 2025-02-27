@@ -81,7 +81,6 @@ function secupress_settings_licence_callback() {
 		'consumer_email' => '',
 		'consumer_key'   => '',
 	) );
-	$values['install_time'] = ! empty( $old_values['install_time'] ) ? (int) $old_values['install_time'] : time();
 	$new_email  = $values['consumer_email'] ? sanitize_email( $values['consumer_email'] )    : '';
 	$new_key    = $values['consumer_key']   ? sanitize_text_field( $values['consumer_key'] ) : '';
 	$has_new    = $new_email && $new_key;
@@ -235,39 +234,33 @@ function secupress_pro_settings_white_label_callback() {
  *
  * @return (array) $new_values The new settings, some values may have changed.
  */
-function secupress_global_settings_activate_pro_license( $new_values, $old_values = array() ) {
+function secupress_global_settings_activate_pro_license( $new_values, $old_values = [] ) {
+	if ( ! isset( $new_values['consumer_email'], $new_values['consumer_key'] ) ) {
+		return $new_values;
+	}
 	// If the Pro is not installed, get the plugin information.
 	$need_plugin_data = (int) ! secupress_has_pro();
 	$api_old_values   = secupress_array_merge_intersect( $old_values, array(
 		'consumer_email' => '',
 		'consumer_key'   => '',
 		'site_is_pro'    => 0,
-		'install_time'   => 0,
 	) );
 	unset( $new_values['license_error'] );
 
-	if ( $new_values['install_time'] > 1 ) {
-		$install_time = time() - $new_values['install_time'];
-	} elseif ( -1 !== $new_values['install_time'] ) {
-		$install_time = 0;
-	} else {
-		$install_time = -1;
-	}
-
-	$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
+	$headers = secupress_get_basic_auth_headers( $new_values['consumer_email'], $new_values['consumer_key'] );
+	$url     = SECUPRESS_API_MAIN . 'key/v2/?' . http_build_query( [
 		'sp_action'    => 'activate_pro_license',
-		'user_email'   => $new_values['consumer_email'],
-		'user_key'     => $new_values['consumer_key'],
-		'install_time' => $install_time,
 		'plugin_data'  => $need_plugin_data,
-	) );
-
-	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
+	] );
+	$response = wp_remote_get( $url, [ 'timeout' => 10, 'headers' => $headers ] );
 
 	if ( $body = secupress_global_settings_api_request_succeeded( $response ) ) {
 		// Success!
-		$new_values['install_time'] = -1;
-		$new_values['consumer_key'] = sanitize_text_field( $body->data->user_key );
+		$new_values['consumer_key']      = sanitize_text_field( $body->data->user_key );
+		$new_values['license']           = [];
+		$new_values['license']['count']  = isset( $body->data->license->count ) ? (int) $body->data->license->count : 1;
+		$new_values['license']['limit']  = isset( $body->data->license->limit ) ? (int) $body->data->license->limit : 1;
+		$new_values['license']['status'] = isset( $body->data->license->status ) ? esc_html( $body->data->license->status ) : 'active'; // DO NOT TRANSLATE
 
 		if ( ! empty( $body->data->site_is_pro ) ) {
 			$new_values['site_is_pro'] = 1;
@@ -401,8 +394,8 @@ function secupress_global_settings_api_request_succeeded( $response ) {
  * @return (array|string) An error message or an array of error messages.
  */
 function secupress_global_settings_pro_license_activation_error_message( $code = false, $fallback = 'license_error' ) {
-	$support_link = '<a href="' . esc_url( SecuPress_Admin_Offer_Migration::get_support_url() ) . '" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '">' . __( 'our support team', 'secupress' ) . '</a>';
-	$account_link = '<a href="' . esc_url( SecuPress_Admin_Offer_Migration::get_account_url() ) . '" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '">%s</a>';
+	$support_link = '<a href="' . esc_url( trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . _x( 'support', 'link to website (Only FR or EN!)', 'secupress' ) ) . '" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '">' . __( 'our support team', 'secupress' ) . '</a>';
+	$account_link = '<a href="' . esc_url( trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . _x( 'account', 'link to website (Only FR or EN!)', 'secupress' ) ) . '" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '">%s</a>';
 
 	$api_errors = array(
 		'no_email_license'    => __( 'Please provide a valid email address and your license key.', 'secupress' ),
@@ -491,15 +484,11 @@ function secupress_global_settings_pro_license_activation_error_message( $code =
  */
 function secupress_global_settings_deactivate_pro_license( $new_values ) {
 
-	$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
-		'sp_action'    => 'deactivate_pro_license',
-		'user_email'   => $new_values['consumer_email'],
-		'user_key'     => $new_values['consumer_key'],
-	) );
+	$headers  = secupress_get_basic_auth_headers( secupress_get_consumer_email(), secupress_get_consumer_key() );
+	$url      = SECUPRESS_API_MAIN . 'key/v2/?sp_action=deactivate_pro_license';
+	$response = wp_remote_get( $url, [ 'timeout' => 10, 'headers' => $headers ] );
 
 	unset( $new_values['consumer_email'], $new_values['consumer_key'] );
-
-	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
 
 	if ( is_wp_error( $response ) ) {
 		// The request couldn't be sent.
@@ -517,20 +506,21 @@ function secupress_global_settings_deactivate_pro_license( $new_values ) {
 		return $new_values;
 	}
 
-	$body = wp_remote_retrieve_body( $response );
-	$body = @json_decode( $body );
+	$body        = wp_remote_retrieve_body( $response );
+	$body        = @json_decode( $body );
+	$error_body  = secupress_code_me( esc_html( var_export( $body, 1 ) ) );
 
 	if ( ! is_object( $body ) ) {
 		// The response is not a json.
-		$message = __( 'Our server returned an unexpected response and might be in error.', 'secupress' );
+		$message = sprintf( __( 'Our server returned an unexpected response and might be in error: %s', 'secupress' ), $error_body );
 		$message = secupress_global_settings_pro_license_deactivation_error_message( $message );
 		secupress_add_settings_error( 'general', 'server_bad_response', $message );
 		return $new_values;
 	}
 
-	if ( empty( $body->success ) ) {
+	if ( ! $body->success && ( ! isset( $body->data ) || ! $body->data ) ) {
 		// Didn't succeed.
-		$message = __( 'Our server returned an error.', 'secupress' );
+		$message = sprintf( __( 'Our server returned an error: %s', 'secupress' ), $error_body );
 		$message = secupress_global_settings_pro_license_deactivation_error_message( $message );
 		secupress_add_settings_error( 'general', 'response_error', $message );
 	}

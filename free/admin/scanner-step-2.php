@@ -246,9 +246,9 @@ if ( ! $secupress_tests ) {
 	</div>
 	<div class="secupress-spinner-content secupress-text-center secupress-p3">
 
-		<img class="secupress-big-spinner secupress-mb1" src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>spinner-big.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>spinner-big2x.png 2x" alt="<?php esc_attr_e( 'Fixing…', 'secupress' ); ?>" width="128" height="128">
+		<img class="secupress-big-spinner secupress-mb1" src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>spinner-big.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>spinner-big2x.png 2x" alt="<?php esc_attr_e( 'Fixing&hellip;', 'secupress' ); ?>" width="128" height="128">
 
-		<p class="secupress-text-basup"><?php _e( 'You’ll be automatically redirected to the next step,<br>if you are not within 5 minutes, please reload the page or ignore this step.', 'secupress' ); ?></p>
+		<p class="secupress-text-basup"><?php _e( 'You will be automatically redirected to the next step,<br>if you are not within 3 minutes, please reload the page or ignore this step.', 'secupress' ); ?></p>
 
 	</div>
 </div>

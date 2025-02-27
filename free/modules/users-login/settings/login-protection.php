@@ -8,8 +8,9 @@ $this->add_section( __( 'Login Control', 'secupress' ) );
 
 $is_plugin_active = array();
 $values           = array(
-	'limitloginattempts' => __( 'Limit the number of bad login attempts', 'secupress' ),
-	'bannonexistsuser'   => __( 'Ban login attempts on non-existing usernames', 'secupress' ),
+	'bannonexistsuser'   => __( 'Ban attempts on non-existent usernames', 'secupress' ),
+	'limitloginattempts' => __( 'Restrict bad login attempts (Brute Force)', 'secupress' ),
+	'passwordspraying'   => __( 'Restrict bad password attempts (Password Spraying)', 'secupress' ),
 );
 
 foreach ( $values as $_plugin => $label ) {
@@ -22,7 +23,7 @@ $main_field_name = $this->get_field_name( 'type' );
 
 $this->add_field( array(
 	'title'             => __( 'Use an attempt blocker', 'secupress' ),
-	'description'       => __( 'You can temporary ban bots who try to mess with the login page to prevent being the victim of a brute-force attack.', 'secupress' ),
+	'description'       => __( 'You can temporarily ban bots that try to manipulate the login page to prevent brute-force attacks.', 'secupress' ),
 	'name'              => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkboxes',
@@ -39,6 +40,7 @@ $this->add_field( array(
 	'label_for'    => $this->get_field_name( 'number_attempts' ),
 	'type'         => 'number',
 	'default'      => '10',
+	'move_item'    => '.secupress-field-login-protection_type_limitloginattempts',
 	'attributes'   => array(
 		'min' => 3,
 		'max' => 99,
@@ -47,9 +49,9 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'How long should we ban?', 'secupress' ),
+	'title'        => __( 'How long should the ban last?', 'secupress' ),
 	'description'  => sprintf( __( 'Recommended: %s', 'secupress' ), '5 - 15' ),
-	'depends'      => $main_field_name . '_limitloginattempts ' . $main_field_name . '_bannonexistsuser',
+	'depends'      => $main_field_name . '_limitloginattempts ' . $main_field_name . '_bannonexistsuser ' . $main_field_name . '_passwordspraying',
 	'label_for'    => $this->get_field_name( 'time_ban' ),
 	'type'         => 'number',
 	'label_after'  => _x( 'min', 'minute', 'secupress' ),
@@ -62,7 +64,7 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'             => __( 'Session Control', 'secupress' ),
-	'description'       => __( 'Disconnect or Reset Password of any user in one click.', 'secupress' ),
+	'description'       => __( 'Disconnect or Reset the password of any user in one click.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'sessions_control' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
@@ -71,17 +73,17 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => sprintf( __( 'You will find action links on every user’s row in the <a href="%s">user listing administration page</a>.', 'secupress' ), esc_url( admin_url( 'users.php' ) ) ),
+			'description' => sprintf( __( 'You will find action links on each user’s row in the <a href="%s">user listing administration page</a>.', 'secupress' ), esc_url( admin_url( 'users.php' ) ) ),
 		),
 	),
 ) );
 
 $this->add_field( array(
 	'title'             => __( 'Login Errors', 'secupress' ),
-	'description'       => __( 'Hiding login errors will prevent to leak login informations.', 'secupress' ),
+	'description'       => __( 'Hiding login errors will prevent to leakage of login information.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'login_errors' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'discloses', 'login-errors-disclose' ),
-	'label'             => __( 'Yes, hide the usual login errors', 'secupress' ),
+	'label'             => __( 'Yes, hide the common login errors', 'secupress' ),
 ) );

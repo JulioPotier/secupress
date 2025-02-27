@@ -59,7 +59,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			0   => __( 'All security keys are properly set.', 'secupress' ),
 			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
-			101 => sprintf( __( 'The <code>%s</code> file could not be located.', 'secupress' ), secupress_get_wpconfig_filename() ),
+			101 => sprintf( __( 'The %s file could not be located.', 'secupress' ), secupress_code_me( secupress_get_wpconfig_filename() ) ),
 			// "bad"
 			200 => __( 'The following security keys are not set correctly:', 'secupress' ),
 			201 => _n_noop( '<strong>&middot; Not Set:</strong> %s.',       '<strong>&middot; Not Set:</strong> %s.',       'secupress' ),
@@ -68,7 +68,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			204 => _n_noop( '<strong>&middot; Hardcoded:</strong> %s.',     '<strong>&middot; Hardcoded:</strong> %s.',     'secupress' ),
 			205 => _n_noop( '<strong>&middot; From DB:</strong> %s.',       '<strong>&middot; From DB:</strong> %s.',       'secupress' ),
 			// "cantfix"
-			300 => sprintf( __( 'The <code>%s</code> file is not writable, security keys could not be changed.', 'secupress' ), secupress_get_wpconfig_filename() ),
+			300 => sprintf( __( 'The %s file is not writable, security keys could not be changed.', 'secupress' ), secupress_code_me( secupress_get_wpconfig_filename() ) ),
 			301 => __( 'The security keys fix has been applied but there is still keys that could not be modified so far.', 'secupress' ),
 		);
 

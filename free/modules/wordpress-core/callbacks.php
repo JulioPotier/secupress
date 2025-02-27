@@ -60,6 +60,14 @@ function secupress_wordpress_core_settings_callback( $settings ) {
 	// saltkeys
 	secupress_manage_submodule( $modulenow, 'wp-config-constant-saltkeys', ! empty( $activate['wp-config_saltkeys'] ) );
 
+	// skip bundle
+	secupress_manage_submodule( $modulenow, 'wp-config-constant-skip-bundle', ! empty( $activate['wp-config_skip-bundle'] ) );
+
+	/** 
+	 * @since 2.2.6 script concatenation
+	 */
+	secupress_manage_submodule( $modulenow, 'wp-config-constant-script-concat', ! empty( $activate['wp-config_script-concat'] ) );
+
 	/**
 	 * Filter the settings before saving.
 	 *

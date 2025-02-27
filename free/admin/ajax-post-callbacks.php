@@ -28,12 +28,11 @@ function secupress_scanit_ajax_post_cb() {
 	secupress_check_user_capability( $for_current_site );
 	secupress_check_admin_referer( 'secupress_scanner_' . $test_name . $site_id );
 
-	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
 	if ( isset( $_GET['delay'] ) ) {
 		$delay  = max( min( 5, (int) $_GET['delay'] ), 0 );
 		sleep( $delay );
 	}
-	$response   = secupress_scanit( $test_name, $doing_ajax, $for_current_site );
+	$response   = secupress_scanit( $test_name, wp_doing_ajax(), $for_current_site );
 	secupress_admin_send_response_or_redirect( $response );
 }
 
@@ -61,7 +60,7 @@ function secupress_fixit_ajax_post_cb() {
 	secupress_check_user_capability( $for_current_site );
 	secupress_check_admin_referer( 'secupress_fixit_' . $test_name . $site_id );
 
-	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+	$doing_ajax = wp_doing_ajax();
 	$response   = secupress_fixit( $test_name, $doing_ajax, $for_current_site );
 
 	// If not ajax, perform a scan.
@@ -96,7 +95,7 @@ function secupress_manual_fixit_ajax_post_cb() {
 	secupress_check_user_capability( $for_current_site );
 	secupress_check_admin_referer( 'secupress_manual_fixit_' . $test_name . $site_id );
 
-	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+	$doing_ajax = wp_doing_ajax();
 	$response   = secupress_manual_fixit( $test_name, $doing_ajax, $for_current_site );
 
 	// If not ajax, perform a scan.
@@ -477,7 +476,7 @@ function secupress_ban_ip_ajax_post_cb() {
 	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
 
 	$referer_arg  = '&_wp_http_referer=' . urlencode( esc_url_raw( secupress_admin_url( 'modules', 'logs' ) ) );
-	$format       = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
+	$format       = _x( 'M jS Y', 'date', 'secupress' ) . ' ' . _x( 'G:i', 'date', 'secupress' );
 	$_time        = date_i18n( $format, strtotime('+10 years'));
 	// Send a response.
 	if ( ! $is_list ) {
@@ -688,21 +687,22 @@ function secupress_unlock_admin_ajax_post_cb() {
 		wp_die( 'Something went wrong.' );
 	}
 	$_CLEAN          = [];
-	$_CLEAN['email'] = $_POST['email'];
+	$_CLEAN['email'] = is_email( $_POST['email'] );
+	if ( ! $_CLEAN['email'] ) {
+		wp_die( 'Something went wrong.' );
+	}
 	$user            = get_user_by( 'email', $_CLEAN['email'] );
-	if ( ! secupress_is_user( $user ) || ! user_can( $user, 'manage_options' ) ) {
+	$capa            = secupress_get_capability( true, 'unlock_administrator' );
+	if ( ! secupress_is_user( $user ) || ! user_can( $user, $capa ) ) {
 		wp_die( 'Something went wrong.' );
 	}
 	$url_remember = wp_login_url();
-	$token        = strtolower( wp_generate_password( 10, false ) );
-	set_transient( 'secupress_unlock_admin_key', $token, DAY_IN_SECONDS );
-	$url_remove   = add_query_arg( '_wpnonce', $token, admin_url( 'admin-post.php?action=secupress_deactivate_module&module=move-login' ) );
 
-	$subject      = __( '###SITENAME### – Unlock an administrator', 'secupress' );
+	$subject      = __( '###SITENAME### – Unlock a lost user', 'secupress' );
 	$message      = sprintf( __( 'Hello %1$s,
 It seems you are locked out from the website ###SITENAME###.
 
-You can now follow this link to your new login page (remember it!):
+You can now follow this link to your login page (remember it now!):
 %2$s
 
 Have a nice day !
@@ -713,8 +713,13 @@ All at ###SITENAME###
 							$user->display_name,
 							'<a href="' . $url_remember . '">' . $url_remember . '</a>'
 					);
-	if ( apply_filters( 'secupress.plugins.move_login.email.deactivation_link', true ) ) {
-		$message .= "\n" . sprintf( __( "ps: you can also deactivate the Move Login module:\n%s", 'secupress' ), '<a href="' . $url_remove . '">' . $url_remove . '</a> ' . __( '(Valid 1 day)', 'secupress' ) );
+
+	$capa             = secupress_get_capability(); // Do it again to get the usual capa for managing options.
+	if ( $capa && apply_filters( 'secupress.plugins.move_login.email.deactivation_link', true ) ) {
+		$url_remove   = add_query_arg( [ '_wpnonce' => $token, 'user_email' => $user->user_email ], admin_url( 'admin-post.php?action=secupress_deactivate_module&module=move-login' ) );
+		$token        = strtolower( wp_generate_password( 10, false ) );
+		set_transient( 'secupress_unlock_admin_key-' . $user->user_email, $token, DAY_IN_SECONDS );
+		$message     .= "\n" . sprintf( __( "ps: you can also deactivate the Move Login module:\n%s", 'secupress' ), '<a href="' . $url_remove . '">' . $url_remove . '</a> ' . __( '(Valid 1 day)', 'secupress' ) );
 	}
 
 	/**
@@ -747,10 +752,14 @@ add_action( 'admin_post_nopriv_secupress_deactivate_module', 'secupress_deactiva
  * @since 1.3.2
  **/
 function secupress_deactivate_module_admin_post_cb() {
-	if ( ! isset( $_GET['_wpnonce'], $_GET['module'] ) || empty( $_GET['_wpnonce'] ) || ! get_transient( 'secupress_unlock_admin_key' ) || ! hash_equals( get_transient( 'secupress_unlock_admin_key' ), $_GET['_wpnonce'] ) ) {
+	if ( ! isset( $_GET['_wpnonce'], $_GET['module'], $_GET['user_email'] ) || 
+		empty( $_GET['_wpnonce'] ) || 
+		! get_transient( 'secupress_unlock_admin_key' . $_GET['user_email'] ) || 
+		! hash_equals( get_transient( 'secupress_unlock_admin_key' . $_GET['user_email'] ), $_GET['_wpnonce'] )
+	) {
 		wp_die( 'Something went wrong.' );
 	}
-	delete_transient( 'secupress_unlock_admin_key' );
+	delete_transient( 'secupress_unlock_admin_key-' . $_GET['user_email'] );
 	secupress_deactivate_submodule( 'users-login', array( 'move-login' ) );
 	wp_redirect( wp_login_url( secupress_admin_url( 'modules', 'users-login' ) ) );
 	die();
@@ -856,7 +865,6 @@ function secupress_get_malwarescastatus_admin_post_cb() {
 		$response['malwareScanStatus'] = false;
 		wp_send_json_error( $response );
 	}
-	$response                      = [];
 	$response['malwareScanStatus'] = ! secupress_file_monitoring_get_instance()->is_monitoring_running();
 	$response['currentItems']      = get_site_transient( SECUPRESS_FULL_FILETREE ) !== false ? array_map( function( $val ) { return str_replace( ABSPATH, '/', $val ); }, get_site_transient( SECUPRESS_FULL_FILETREE ) ) : [];
 	wp_send_json_success( $response );
@@ -931,7 +939,7 @@ function secupress_dismiss_pointer_admin_post_cb( $_pointer = '' ) {
 	}
 }
 
-// add_action( 'admin_post_http_log_actions', 'secupress_http_log_actions_admin_post_cb' );
+//// add_action( 'admin_post_http_log_actions', 'secupress_http_log_actions_admin_post_cb' );
 function secupress_http_log_actions_admin_post_cb() {
 	if ( ! isset( $_POST['_wpnonce'], $_POST['log_id'], $_POST['http_log'] ) || ! check_admin_referer( 'http_log_actions' . $_POST['log_id'] ) ) {
 		die( '0' );
@@ -985,4 +993,57 @@ function secupress_http_log_actions_admin_post_cb() {
 	update_option( SECUPRESS_HTTP_LOGS, $http_logs, false );
 	wp_safe_redirect( wp_get_referer() );
 	die();
+}
+
+add_action( 'wp_ajax_secupress_check_malware_plugin', 'secupress_check_malware_plugin_admin_post_cb' );
+/**
+ * 
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ *
+ * @return (string) JSON
+ **/
+function secupress_check_malware_plugin_admin_post_cb() {
+	if ( ! isset( $_POST['plugin'], $_POST['muplugin'], $_POST['_ajax_nonce'] ) || ! check_ajax_referer( 'secupress_check_malware_plugin' ) ) {
+		wp_send_json_error( 'Incorrect AJAX Request' );
+	}
+	$res              = '';
+	$yes              = '<span class="dashicons dashicons-yes-alt"></span>';
+	$toggle           = '<span class="dashicons secupress-dashicon dashicons-arrow-right-alt2"></span>';
+	if ( '1' === $_POST['muplugin'] ) {
+		$plugin_file  = basename( $_POST['plugin'] );
+		$root_path    = MUPLUGINDIR;
+		$tr_name      = 'secupress-check-malware-result-mu-' . md5( $plugin_file );
+		$malware      = secupress_check_malware( $root_path . '/' . $plugin_file, true );
+		if ( $malware ) {
+			$res .= $toggle;
+			$res .= '<code>/' . $plugin_file . '</code>';
+			$res .= $malware;
+		} else {
+			$res  = $yes;
+		}
+	} else { 
+		$flag         = false;
+		$plugin_file  = plugin_basename( $_POST['plugin'] );
+		$root_path    = WP_PLUGIN_DIR . '/' . dirname( $plugin_file );
+		$plugin_files = secupress_list_files_from_folder( $root_path );
+		foreach( $plugin_files as $p_file ) {
+			$tr_name  = 'secupress-check-malware-result-p-' . md5( $root_path );
+			$malware  = secupress_check_malware( str_replace( ABSPATH, '', $root_path . '/' . $p_file ) );
+			if ( $malware ) {
+				$flag = true;
+				$res .= $toggle;
+				$res .= '<code>/' . dirname( $plugin_file ) . '/' . $p_file . '</code>';
+				$res .= $malware;
+				$res .= '<br>';
+			}
+		}
+		if ( ! $flag ) {
+			 $res     = $yes;
+		}
+	}
+	set_transient( $tr_name, $res, DAY_IN_SECONDS );
+
+	wp_send_json_success( $res );
 }

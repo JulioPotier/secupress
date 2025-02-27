@@ -1,10 +1,10 @@
 === SecuPress Free — WordPress Security ===
 Contributors: SecuPress, juliobox, GregLone, Superment
-Tags: wordpress security, secure, security plugin, security, malware
+Tags: wordpress security, malware, security plugin, security
 Requires at least: 4.9
-Tested up to: 6.4.3
-Requires PHP: 5.6
-Stable tag: 2.2.5.3
+Tested up to: 6.7.2
+Requires PHP: 7.0
+Stable tag: 2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,18 +18,20 @@ You can [test SecuPress Free now](https://demo.tastewp.com/secupress/).
 
 = YOU MADE IT, WE KEEP IT SAFE! =
 
-Protect your WordPress with malware scans; block bots & suspicious IPs. Get a complete [WordPress security toolkit](https://secupress.me/) for free or as a pro plugin. SecuPress is GDPR compliant.
+The most advanced WordPress Protection on the market. SecuPress is focused on WordPress attacks and Malwares, not just "usual web protections" like many.
+
+Protect your WordPress with malware scans ; block bots & suspicious IPs. Get a complete [WordPress security toolkit](https://secupress.me/) for free or as a pro plugin. SecuPress is GDPR compliant.
 
 **What’s the difference between free and pro version?**
 If you are proactive, our free WordPress security plugin is a great choice! No time to activate weekly scans? Then [SecuPress pro](https://secupress.me/) is the way to go. Our plugin takes care of everything with automated tasks.
 
 = Here are some of our most popular features: =
 
-* Anti Brute Force login
-* Blocked IPs
-* Firewall
+* Brute Force Login Protection
+* Password Spraying Protection
+* Firewall features
 * Security alerts (1)
-* Malware Scan (1)
+* Malware Scanner (1)
 * Block country by geolocation (1)
 
 = We have included some features you won’t find in most WordPress security plugins: =
@@ -126,7 +128,7 @@ SecuPress will keep a log of important security activities and 404 pages trigger
 
 == Installation ==
 
-*It's recommended to delete all other security plugins before activating SecuPress.*
+*It's important to delete all other security plugins before activating SecuPress.*
 
 1. Upload the plugin files to the `/wp-content/plugins/secupress` directory, or install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the 'Plugins' screen in WordPress.
@@ -137,11 +139,13 @@ SecuPress will keep a log of important security activities and 404 pages trigger
 
 = What does SecuPress do, exactly? =
 
-SecuPress is a WordPress plugin that enhances security without compromising usability or performance. It's user-friendly for you and resilient against hacking attempts. Initially, SecuPress scans your site to identify vulnerabilities and provides a report with suggestions for strengthening your WordPress security. Most recommendations can be easily implemented by checking a box, with only a few requiring manual setup.
+SecuPress is a plugin for WordPress sites which enables better security without sacrificing usability. It’s easy to use for you and hard to hack for pirates. First, SecuPress will scan your site, looking for vulnerabilities and provide a report detailing how to harden your WordPress. The majority of recommendations are easy to implement by checking a box; very few will require a manual setup.
 
-= What sets SecuPress apart from other security plugins? =
+= What makes SecuPress better than any other security plugin? =
 
-SecuPress safeguards your website from various threats, with its standout feature being its user-friendliness. You don't have to be a seasoned technician to effectively use and secure your WordPress site like a pro!
+SecuPress protects your website on multiple fronts: anti spam, double authentication. The best feature for users remains how easy to use this plugin is. You don’t need to be an experienced technician to use and secure your WordPress like an expert!
+
+Our security alarms hosted on our servers supply daily data about the most recent vulnerable plugins and themes. This allows you to always be aware and safe.
 
 = Is SecuPress compatible with multisites installation? =
 
@@ -149,7 +153,7 @@ Yes, SecuPress can be activated for all your sub-sites, just activate it from yo
 
 = Is SecuPress compatible with all web hosters? =
 
-Yes, SecuPress is compatible with all web hosters like o2switch, Hosterra, 1and1, OVH, Siteground, BlueHost, PlanetHoster, WP Engine or GoDaddy? If you encounter an issue, do not hesitate to contact our support team.
+Yes, SecuPress is compatible with all web hosters like o2switch, OVH, Siteground, BlueHost, PlanetHoster, WP Engine or GoDaddy? If you encounter an issue, do not hesitate to contact our support team.
 
 = Is SecuPress compatible with all caching plugins like WP Rocket, WP Fastest Cache, W3 Total Cache, WP Super Cache? =
 
@@ -163,9 +167,9 @@ Yes, SecuPress is compatible with all multilingual WordPress plugins. If you hav
 
 Yes, SecuPress is compatible with all server engines. If you encounter an issue, do not hesitate to contact our support team.
 
-= Is SecuPress compatible with other security plugins like WordFence, Solid Security, Sucuri Security, Bullet Proof Security? =
+= Is SecuPress compatible with other security plugins like WordFence, iThemes Security, Bullet Proof Security? =
 
-The answer is yes and no. A security plugin should work alone. Just like two caching plugins do not make your website faster, two security plugins do not make your WordPress more secure. Security rules tend to be overwritten or conflict with other rules if two security plugins are installed. This can cause errors on your website and is not recommended. So, you can try, but we do not recommend it.
+The answer is no. SecuPress is not compatible with another security plugin. Just like two caching plugins do not make your website faster, two security plugins do not make your WordPress more secure. Security rules tend to be overwritten or conflict with other rules if two security plugins are installed. This can cause errors on your website and is not recommended.
 
 
 == Screenshots ==
@@ -181,10 +185,62 @@ The answer is yes and no. A security plugin should work alone. Just like two cac
 
 == Changelog ==
 
-= 2.2.5.3 =
-
-* 03 April 2024
-* Fix v2.2.5.2 Blackhole nonce blocking some front requests
-* Update Malware Database
+= 2.3 =
+* 28 Fev 2025
+* Update: Many many strings have been revamp to be more clear. Also, belgian-french, canadian-french will load the french i18n ; every german i18n will load the german one.
+* Update: List of allowzed IPs from different services
+* Security Fix: Remove the 'action' param on 'secupress_check_ban_ips_form' shortcode to prevent XSS (useless param I admit)
+* Security Fix: Captcha let attackers to brute force the login page
+* Security Fix: Fix a CSRF in "ban-me-please" function from Blackhole feature where you could send a link to someone to be banned on this site
+* New: Block AI Bots feature
+* New: "SSL & HTTPS" Module page with 3 new features "Force HTTPS", "Redirect every HTTP request to SSL/HTTPS", "Fix Mixed Content Warning"
+* New: Bad Themes Scanner do the same as plugins
+* New: Reinstall all your plugins from a clean wp.org repo in 1 click
+* New: Force Reset Password for all your users in 1 click
+* New: Prevent Password Reset feature
+* New: Force Logout for all your users in 1 click
+* New: Forbid Same Email Domain
+* New: Forbid Bad Email MX Domain
+* New: Block PHP Function Names in HTTP Requests
+* New: Captcha is now at V2, this is a challenge, you can select 2 types of challenges.
+* New: Password Spraying Protection
+* New: Change the author base page (Thanks Greg!). Also force users to change their display names to now match their login (Thanks Daniel!).
+* New: Show All Plugins on the plugins page, to prevent hidden/false plugins
+* New: Plugins actions superseds all the plugins restrictions in place before, also, it can even now prevent the installation or activation directly from FTP or DB. Same for themes.
+* New: Anti-Phishing protection
+* New: Dashboard Widget that shows log attacks counter (finally)
+* New: Display the last login timestamp on users page
+* New: Displays an admin notice when your site was down due to a DB error
+* New: Do not display sensitive infos when your site is down due to DB error, instead, sends you an email (not each time, there is a time frame)
+* New: Add a malware detection column on each attempted install plugin on the plugins page. This is the same result as the Malware Files Scanner but in this context.
+* New: CONCATENATE_SCRIPTS has to be set on FALSE to prevent more easy DDoS on your site using the concatened scripts by WP
+* New: You can now check your licence status into the main settings page in your dashboard
+* New: CORE_UPGRADE_SKIP_NEW_BUNDLED can be set to FALSE to repevent the update of new twentythemes
+* New: SSO between your different sub-websites in a multisite env
+* New: Scan for Bad themes (same as bad plugins)
+* Improved: Bad Plugins Scanner now check in live which of your plugins are outdated even if no update is available, or have been closed on wp.org repository
+* Improved: The Malware Scanner will now also scan more items in the DB, and will check for Spam Content in your contents
+* Improved: Forbid Bad Usernames can now forbid ANY username containing the word "admin" in it. (you can filter that to allow yours)
+* Improved: Prevent User Creation has been improved and will now prevent users directly inserted in DB, or duplicating existing users, or not inserted using WP functions, also if a user should be granted as Admin, it has to be validated by another one.
+* Improved: Better detection of a hacked wp-config.php file
+* Improved: Bad URL Access, we reversed the way it worked, instead of disallowing, we nox only allow, be prepared.
+* Improved: The Moved Login page will now prevent cache from DB and Cache Object too
+* Improved: All our data will now be updated weekly
+* Improved: Force Strong Password will now require a strong password even for previous users, at login.
+* Improved: Your notices will only be displayed for particular capability, not only admins, if needed
+* Improved: If a robots.txt physical file exists, we will use it
+* Improved: Blacklist logins can now take joker chars
+* Improved: Better malware detection in wp-config.php
+* Fix: Missing notices from our cron tasks
+* Fix: Forbid User Enumeration still showing users on some sites
+* Removed: Bad Request Methods feature, not useful anymore
+* Delayed: Real 2FA OTP Auth, superseding PasswordLess (if you're using it, it won't be replaced, but is not available anymore for new sites)
 
 == Upgrade Notice ==
+* SecuPress 2.3-beta now requires PHP 7.0 minimum.
+
+== TODO ==
+Create a trust score for each non WP file and displays it
+Create a "suspicious" status for alerts
+Revamp alerts
+PHP 8.O min

@@ -49,11 +49,15 @@ add_filter( 'pre_option_new_admin_email', 'secupress_lock_admin_email_option' );
  **/
 function secupress_lock_admin_email_option( $email ) {
 	$email = defined( 'SECUPRESS_LOCKED_ADMIN_EMAIL' ) ? SECUPRESS_LOCKED_ADMIN_EMAIL : $email;
+	$email = apply_filters( 'secupress.plugin.admin_email', $email );
+	if ( has_filter( 'secupress.plugin.admin_email' ) ) {
+		_deprecated_hook( 'secupress.plugin.admin_email', '2.2.6', 'secupress.plugins.admin_email' );
+	}
 	/**
 	* Filter the admin email
 	* @param (string) $email
 	*/
-	return apply_filters( 'secupress.plugin.admin_email', $email );
+	return apply_filters( 'secupress.plugins.admin_email', $email );
 }
 
 

@@ -428,7 +428,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'secupress_bulk_delete-' . $this->log_type . '-logs' => __( 'Delete Permanently' ),
+			'secupress_bulk_delete-' . $this->log_type . '-logs' => __( 'Delete permanently', 'secupress' ),
 		);
 	}
 
@@ -699,9 +699,6 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 			echo $prefix . $title;
 		echo "</a>\n";
 
-		if ( ! secupress_wp_version_is( '4.3.0' ) ) {
-			echo $this->handle_row_actions( $post, 'title', $this->get_default_primary_column_name() );
-		}
 	}
 
 
@@ -816,11 +813,11 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 
 		$actions = [];
 		if ( count( get_children( $post ) ) ) {
-			$actions['delete'] = '<a class="secupress-delete-log submitdelete" href="' . esc_url( $delete_href ) . '" title="' . esc_attr__( 'Delete this item and its children permanently' ) . '">' . __( 'Delete Permanently with its children' ) . '</a> <span class="spinner secupress-inline-spinner"></span>';
+			$actions['delete'] = '<a class="secupress-delete-log submitdelete" href="' . esc_url( $delete_href ) . '" title="' . esc_attr__( 'Delete this item and its children permanently' ) . '">' . __( 'Delete permanently with its children', 'secupress' ) . '</a> <span class="spinner secupress-inline-spinner"></span>';
 		} else {
-			$actions['delete'] = '<a class="secupress-delete-log submitdelete" href="' . esc_url( $delete_href ) . '" title="' . esc_attr__( 'Delete this item permanently' ) . '">' . __( 'Delete Permanently' ) . '</a> <span class="spinner secupress-inline-spinner"></span>';
+			$actions['delete'] = '<a class="secupress-delete-log submitdelete" href="' . esc_url( $delete_href ) . '" title="' . esc_attr__( 'Delete this item permanently' ) . '">' . __( 'Delete permanently', 'secupress' ) . '</a> <span class="spinner secupress-inline-spinner"></span>';
 		}
-		$actions['view']   = '<a class="secupress-view-log" href="' . esc_url( $view_href ) . '" title="' . esc_attr__( 'View this log details', 'secupress' ) . '" tabindex="-1">' . __( 'View' ) . '</a>';
+		$actions['view']   = '<a class="secupress-view-log" href="' . esc_url( $view_href ) . '" title="' . esc_attr__( 'View this log details', 'secupress' ) . '" tabindex="-1">' . _x( 'View', 'verb', 'secupress' ) . '</a>';
 
 		/**
 		* Filter the actions, only for secupress

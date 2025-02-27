@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 $this->set_current_section( 'bbq_headers' );
-$this->add_section( __( 'Bad Headers', 'secupress' ) );
+$this->add_section( __( 'Bad Behaviors', 'secupress' ) );
 
 
 $main_field_name = $this->get_field_name( 'user-agents-header' );
@@ -11,55 +11,17 @@ $main_field_name = $this->get_field_name( 'user-agents-header' );
 $this->add_field( array(
 	'title'             => __( 'Block Bad User Agents', 'secupress' ),
 	'label_for'         => $main_field_name,
+	'description'       => __( 'Bots often use custom headers with known bad user agents. You can block them to prevent unwanted visits.', 'secupress' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'firewall', 'user-agents-header' ),
 	'label'             => __( 'Yes, protect my site from bad user-agents', 'secupress' ),
-	'helpers'           => array(
-		array(
-			'type'        => 'description',
-			'description' => __( 'Bots are commonly use their own headers containing some known bad user agent. You can block them to prevent their unwanted visits.', 'secupress' ),
-		),
-	),
-) );
-
-
-$this->add_field( array(
-	'title'        => __( 'User-Agents List', 'secupress' ),
-	'description'  => __( 'Automatically block any user agent containing any HTML tag in it or containing more than 255 characters automatically.', 'secupress' ),
-	'depends'      => $main_field_name,
-	'label_for'    => $this->get_field_name( 'user-agents-list' ),
-	'type'         => 'textarea',
-	'label'        => __( 'List of User Agents to block', 'secupress' ),
-	'helpers'      => array(
-		array(
-			'type'        => 'description',
-			'description' => __( 'Add or remove User Agents you want to be blocked. Separate user agents with commas.', 'secupress' ),
-		),
-	),
-) );
-
-
-$this->add_field( array(
-	'title'             => __( 'Block Bad Request Methods', 'secupress' ),
-	'description'       => __( 'The 3 known safe request methods are <code>GET</code>, <code>POST</code> and <code>HEAD</code>.', 'secupress' ),
-	'label_for'         => $this->get_field_name( 'request-methods-header' ),
-	'plugin_activation' => true,
-	'type'              => 'checkbox',
-	'value'             => (int) secupress_is_submodule_active( 'firewall', 'request-methods-header' ),
-	'label'             => __( 'Yes, protect my site from bad request methods', 'secupress' ),
-	'helpers'           => array(
-		array(
-			'type'        => 'description',
-			'description' => __( 'Some other request methods can be used to retrieve information from your site, avoid them!', 'secupress' ),
-		),
-	),
 ) );
 
 
 $this->add_field( array(
 	'title'             => __( 'Block Fake SEO Bots', 'secupress' ),
-	'description'       => __( 'Some servers are claming to be GoogleBots (or else), detect and block them.', 'secupress' ),
+	'description'       => __( 'Some servers falsely claim to be Googlebots or other reputable user agents. Detect and block them.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'fake-google-bots' ),
 	'plugin_activation' => true,
 	'disabled'          => ! secupress_check_bot_ip( true ),
@@ -69,7 +31,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'warning',
-			'description' => ! secupress_check_bot_ip( true ) ? __( 'Impossible to use this feature, your server can not check a hostname correctly! Sorry.', 'secupress' ) : '',
+			'description' => ! secupress_check_bot_ip( true ) ? __( 'Unable to utilize this feature. Your server cannot accurately check a hostname. We apologize for the inconvenience.', 'secupress' ) : '',
 		),
 	),
 ) );
@@ -77,12 +39,12 @@ $this->add_field( array(
 $main_field_name = $this->get_field_name( 'bad-referer' );
 $this->add_field( array(
 	'title'             => __( 'Block Bad Referers', 'secupress' ),
-	'description'  => __( 'You may want to forbid access to your site depending on from where requests are.', 'secupress' ),
+	'description'       => __( 'You may want to restrict access to your site based on the origin of the requests.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'firewall', 'bad-referer' ),
-	'label'             => __( 'Yes, protect my site from bad referers. <em>Check to see list below</em>.', 'secupress' ),
+	'label'             => __( 'Yes, let me add bad referers in a list to protect my site from them', 'secupress' ),
 ) );
 
 
@@ -98,4 +60,18 @@ $this->add_field( array(
 			'description' => __( 'One URL per line.', 'secupress' ),
 		),
 	),
+) );
+
+$_ai_bots_list          = secupress_is_pro() ? secupress_firewall_bbq_referer_content_ai_bots_list_default() : '';
+$_count_ai_bots         = count( array_filter( explode( "\n", $_ai_bots_list ) ) );
+$_count_ai_bots         = $_count_ai_bots ? number_format_i18n( $_count_ai_bots ) : '';
+$main_field_name        = $this->get_field_name( 'block-ai' );
+$this->add_field( array(
+	'title'             => __( 'Block AI Bots', 'secupress' ),
+	'description'       => __( 'Artificial Intelligence Bots can visit your website and grab your content for their purpose.', 'secupress' ),
+	'plugin_activation' => true,
+	'label_for'         => $main_field_name,
+	'value'             => (int) secupress_is_submodule_active( 'firewall', 'block-ai' ),
+	'type'              => 'checkbox',
+	'label'             => sprintf( __( 'Yes, <strong>block</strong> %s AI Bots.', 'secupress' ), $_count_ai_bots ),
 ) );

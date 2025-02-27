@@ -82,3 +82,58 @@ function secupress_filter_remote_url( $val, $parsed_args, $url ) {
 	return $val;
 }
 
+
+add_filter( 'manage_plugins_custom_column', 'secupress_add_malware_detection_column_content', 10, 3 );
+/**
+ * Display if the not installed plugin contains malwares
+ *
+ * @author Julio Potier
+ * @since 2.2.6
+ * 
+ * @param  (string) $column_name
+ * @param  (string) $plugin_file
+ * @param  (array)  $plugin_data
+ * @return (void)
+ **/
+function secupress_add_malware_detection_column_content( $column_name, $plugin_file, $plugin_data ) {
+	if ( 'secupress_malware_detection' !== $column_name ) {
+		return;
+	}
+	if ( ! secupress_is_pro() ) {
+	?>
+	<span class="secupress-get-pro-version">
+		<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get-pro' ) ) ); ?>
+	</span>
+	<?php
+	return;
+	}
+	$rescan     = '<button class="button-link refreshscan" data-plugin="' . $plugin_file . '" data-muplugin="' . isset( $plugin_data['muplugin'] ) . '" type="button">' . __( 'Re-scan', 'secupress' ) . '</button>';	
+	if ( isset( $plugin_data['muplugin'] ) ) {
+		$tr_name = 'secupress-check-malware-result-mu-' . md5( $plugin_file );
+	} else {
+		$root_path  = WP_PLUGIN_DIR . '/' . dirname( $plugin_file );
+		$tr_name  = 'secupress-check-malware-result-p-' . md5( $root_path );
+	}
+	if ( false !== $res = get_transient( $tr_name ) ) {
+		echo $res . '<p>' . $rescan . '</p>';
+	} else {
+		echo '<span data-muplugin="' . isset( $plugin_data['muplugin'] ) . '" data-plugin="' . esc_attr( $plugin_file ) . '"><span class="spinner is-active" style="float:left"></span></span>';
+	}
+}
+
+// add_filter( 'manage_plugins_columns', 'secupress_add_malware_detection_column' ); // Do not uncomment, let the modules does it.
+/**
+ * Only keep the "name" and "description" columns on our view.
+ *
+ * @author Julio Potier
+ * @since 2.2.6
+ * 
+ * @param (array) $columns
+ * @return (array) $columns
+ **/
+function secupress_add_malware_detection_column( $columns ) {
+	$columns['secupress_malware_detection'] = __( 'Malware Detection', 'secupress' ) . 
+	' <span class="dashicons secupress-dashicon dashicons-editor-expand"></span>';
+	
+	return $columns;
+}

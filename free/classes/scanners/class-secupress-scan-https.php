@@ -38,12 +38,12 @@ function secupress_update_https_detection_errors() {
 		if ( is_wp_error( $unverified_response ) ) {
 			$support_errors->add(
 				'https_request_failed',
-				__( 'HTTPS request failed.' )
+				__( 'HTTPS request failed.', 'secupress' )
 			);
 		} else {
 			$support_errors->add(
 				'ssl_verification_failed',
-				__( 'SSL verification failed.' )
+				__( 'SSL verification failed.', 'secupress' )
 			);
 		}
 
@@ -146,12 +146,12 @@ class SecuPress_Scan_HTTPS extends SecuPress_Scan implements SecuPress_Scan_Inte
 			// "good"
 			0   => __( 'Your website is using an active HTTPS/SSL connection.', 'secupress' ),
 			// "bad"
-			200 => __( 'Your site is not totally using HTTPS/SSL: %s', 'secupress' ),
+			200 => __( 'Your site does not totally use HTTPS/SSL: %s', 'secupress' ),
 			201 => __( 'Your site does not use HTTPS/SSL. Error: %s', 'secupress' ),
-			202   => __( 'Your website seems to run under maintenance mode, relaunch the HTTPS scanner later when you set it off.', 'secupress' ),
+			202 => __( 'Your website seems to run under maintenance mode, relaunch the HTTPS scanner later when you set it off.', 'secupress' ),
 			// "cantfix"
 			300 => __( 'Cannot be fixed automatically. You have to contact you host provider to ask him to <strong>upgrade your site with HTTPS/SSL</strong>.', 'secupress' ),
-			301 => __( 'Update your HOME url and SITE url with <code>https://</code>.', 'secupress' ),
+			301 => sprintf( __( 'Update your HOME url and SITE url with %s.', 'secupress' ), secupress_code_me( 'https://' ) ),
 			302 => __( 'The module <strong>WordPress Core > Locations</strong> is activated, deactivate it to fix this.', 'secupress' ),
 			303 => __( 'Sorry, you are not allowed to update this site to HTTPS.', 'secupress' ),
 		);

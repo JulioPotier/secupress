@@ -4,7 +4,7 @@
  * Description: Block requests containing bad keywords in URL.
  * Main Module: firewall
  * Author: SecuPress
- * Version: 1.1
+ * Version: 2.2.6
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
@@ -13,12 +13,15 @@ add_action( 'secupress.plugins.loaded', 'secupress_block_bad_url_contents', 5 );
 /**
  * Filter the query string to block the request or not
  *
+ * @since 2.2.6 Add "request", move "referer"
  * @since 1.0
+ * @author Julio Potier
  */
 function secupress_block_bad_url_contents() {
-	secupress_block_bad_content_but_what( 'url',     'QUERY_STRING', 'BUC' );
-	secupress_block_bad_content_but_what( 'host',    'REMOTE_HOST',  'BHC' );
-	secupress_block_bad_content_but_what( 'referer', 'HTTP_REFERER', 'BRC' );
+	secupress_block_bad_content_but_what( 'url',     'QUERY_STRING',   'BUC' );
+	secupress_block_bad_content_but_what( 'host',    'REMOTE_HOST',    'BHC' );
+	// secupress_block_bad_content_but_what( 'referer', 'HTTP_REFERER',   'BRC' ); // Removed in 2.2.6, see secupress_pro_check_and_block_refs()
+	secupress_block_bad_content_but_what( 'request', 'REQUEST_METHOD', 'BRK' );
 }
 
 add_filter( 'secupress.options.load_plugins_network_options', 'secupress_block_bad_url_contents_autoload_options' );

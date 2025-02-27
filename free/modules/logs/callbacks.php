@@ -68,7 +68,7 @@ function secupress_activate_404_logs() {
 }
 
 
-add_action( 'admin_post_secupress_activate_http_logs', 'secupress_activate_http_logs' );
+//// add_action( 'admin_post_secupress_activate_http_logs', 'secupress_activate_http_logs' );
 /**
  * Activate or deactivate "HTTP" Logs.
  *

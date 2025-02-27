@@ -17,13 +17,19 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 function secupress_plugins_themes_settings_callback( $settings ) {
 	$modulenow = 'plugins-themes';
 	$activate  = secupress_get_submodule_activations( $modulenow );
+	$settings  = $settings && is_array( $settings ) ? $settings : array();
+
+	if ( isset( $settings['sanitized'] ) ) {
+		return $settings;
+	}
+	$settings['sanitized'] = 1;
 
 	/*
 	 * Each submodule has its own sanitization function.
 	 */
 
 	// Plugins Page.
-	secupress_plugins_settings_callback( $modulenow, $activate );
+	secupress_plugins_settings_callback( $modulenow, $settings, $activate );
 
 	// Themes Page.
 	secupress_themes_settings_callback( $modulenow, $activate );
@@ -31,7 +37,19 @@ function secupress_plugins_themes_settings_callback( $settings ) {
 	// Uploads.
 	secupress_uploads_settings_callback( $modulenow, $activate );
 
-	return array( 'sanitized' => 1 );
+
+
+	/**
+	 * Filter the settings before saving.
+	 *
+	 * @since 1.4.9
+	 *
+	 * @param (array)      $settings The module settings.
+	 * @param (array\bool) $activate Contains the activation rules for the different modules
+	 */
+	$settings = apply_filters( "secupress_{$modulenow}_settings_callback", $settings, $activate );
+
+	return $settings;
 }
 
 
@@ -41,24 +59,35 @@ function secupress_plugins_themes_settings_callback( $settings ) {
  * @since 1.0
  *
  * @param (string)     $modulenow Current module.
+ * @param (array)      $settings  The module settings, passed by reference.
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function secupress_plugins_settings_callback( $modulenow, $activate ) {
+function secupress_plugins_settings_callback( $modulenow, &$settings, $activate ) {
 	if ( false === $activate ) {
 		return;
 	}
+	$db_opt          = secupress_get_module_option( 'plugins_confirm', false, $modulenow );
+	$confirmed       = $db_opt || isset( $settings['plugins_confirm'] );
+	$plugins_actions = isset( $activate['plugins_actions'] ) && $activate['plugins_actions'];
 
 	// (De)Activation.
-	secupress_manage_submodule( $modulenow, 'plugin-installation', ! empty( $activate['plugins_installation'] ) );
-	secupress_manage_submodule( $modulenow, 'detect-bad-plugins', ! empty( $activate['plugins_detect_bad_plugins'] ) );
+	secupress_manage_submodule( $modulenow, 'plugin-installation', $confirmed && $plugins_actions ); // keep the name "plugin-installation", it's the file
+
+	if ( isset( $settings['plugins_show-all-color'] ) ) {
+		$settings['plugins_show-all-color'] = secupress_sanitize_hex_color( $settings['plugins_show-all-color'], '#FAC898' );
+	} else {
+		unset( $settings['plugins_show-all-color'] );
+	}
+	secupress_manage_submodule( $modulenow, 'plugin-show-all',     isset( $activate['plugins_show-all'] ) );
 
 	if ( secupress_is_pro() ) {
-		secupress_manage_submodule( $modulenow, 'plugin-activation', ! empty( $activate['plugins_activation'] ) );
-		secupress_manage_submodule( $modulenow, 'plugin-deactivation', ! empty( $activate['plugins_deactivation'] ) );
-		secupress_manage_submodule( $modulenow, 'plugin-deletion', ! empty( $activate['plugins_deletion'] ) );
-		secupress_manage_submodule( $modulenow, 'autoupdate-bad-plugins', ! empty( $activate['plugins_detect_bad_plugins'] ) && ! empty( $activate['plugins_autoupdate_bad_plugins'] ) );
+		secupress_manage_submodule( $modulenow, 'detect-bad-plugins',  ! empty( $activate['plugins_detect_bad_plugins'] ) );
+	}
+
+	if ( ! secupress_is_submodule_active( $modulenow, 'plugin-installation' ) ) {
+		unset( $settings['plugins_confirm'] );
 	} else {
-		secupress_deactivate_submodule( $modulenow, array( 'plugin-activation', 'plugin-deactivation', 'plugin-deletion', 'autoupdate-bad-plugins' ) );
+		$settings['plugins_confirm'] = 1;
 	}
 }
 
@@ -75,17 +104,11 @@ function secupress_themes_settings_callback( $modulenow, $activate ) {
 	if ( false === $activate ) {
 		return;
 	}
-
 	// (De)Activation.
-	secupress_manage_submodule( $modulenow, 'theme-installation', ! empty( $activate['themes_installation'] ) );
-	secupress_manage_submodule( $modulenow, 'detect-bad-themes', ! empty( $activate['themes_detect_bad_themes'] ) );
+	secupress_manage_submodule( $modulenow, 'theme-installation', isset( $activate['themes_actions'] ) );
 
 	if ( secupress_is_pro() ) {
-		secupress_manage_submodule( $modulenow, 'theme-activation', ! empty( $activate['themes_activation'] ) );
-		secupress_manage_submodule( $modulenow, 'theme-deletion', ! empty( $activate['themes_deletion'] ) );
-		secupress_manage_submodule( $modulenow, 'autoupdate-bad-themes', ! empty( $activate['themes_detect_bad_themes'] ) && ! empty( $activate['themes_autoupdate_bad_themes'] ) );
-	} else {
-		secupress_deactivate_submodule( $modulenow, array( 'theme-activation', 'theme-deletion', 'autoupdate-bad-themes' ) );
+		secupress_manage_submodule( $modulenow, 'detect-bad-themes', ! empty( $activate['themes_detect_bad_themes'] ) );
 	}
 }
 
@@ -100,6 +123,10 @@ function secupress_themes_settings_callback( $modulenow, $activate ) {
  */
 function secupress_uploads_settings_callback( $modulenow, $activate ) {
 	if ( false === $activate ) {
+		return;
+	}
+	if ( isset( $_POST['reinstall-plugins'] ) ) {
+		secupress_reinstall_plugins();
 		return;
 	}
 	// (De)Activation.

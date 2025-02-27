@@ -9,7 +9,7 @@ $this->add_section( __( 'Daily Reports', 'secupress' ) );
 $main_field_name = $this->get_field_name( 'activated' );
 
 $args = [
-	'title'             => __( 'Summary of important events every day', 'secupress' ),
+	'title'             => __( 'Daily summary of key events', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'disabled'          => ! secupress_is_pro(),
 	'plugin_activation' => true,
@@ -29,12 +29,12 @@ if ( secupress_is_pro() ) {
 	} elseif ( (int) date( 'G:i', $time ) === 12 ) {
 		$time = __( 'noon', 'secupress' );
 	} else {
-		$time = date( __( 'g:i a', 'secupress' ), $time );
+		$time = date( _x( 'g:i a', 'date', 'secupress' ), $time );
 	}
 
-	$args['label'] = sprintf( __( 'Yes, send me a daily report at %s.', 'secupress' ), "<strong>$time</strong>" );
+	$args['label'] = sprintf( __( 'Yes, send me a daily report at %s', 'secupress' ), "<strong>$time</strong>" );
 } else {
-	$args['label'] = __( 'Yes, send me a daily report.', 'secupress' );
+	$args['label'] = __( 'Yes, send me a daily report', 'secupress' );
 }
 
 $this->add_field( $args );

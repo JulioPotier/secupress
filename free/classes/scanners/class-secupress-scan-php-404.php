@@ -106,11 +106,11 @@ class SecuPress_Scan_Php_404 extends SecuPress_Scan implements SecuPress_Scan_In
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		$response = wp_remote_get( home_url( 'sp-' . secupress_generate_key( 5 ) . '.php' ), $this->get_default_request_args() );
+		$response = wp_remote_get( home_url( 'secupress-test-scanner-' . secupress_generate_key( 5 ) . '.php' ), $this->get_default_request_args() );
 
 		if ( ! is_wp_error( $response ) ) {
 
-			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
+			if ( 200 === wp_remote_retrieve_response_code( $response ) || 404 === wp_remote_retrieve_response_code( $response ) ) {
 				// "bad"
 				$this->add_message( 200 );
 			} else {

@@ -6,7 +6,7 @@
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
- * Copyright 2012-2021 SecuPress
+ * Copyright 2012-2025 SecuPress
  */
 
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );

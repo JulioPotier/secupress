@@ -1,6 +1,85 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
+
+/**
+ * Display a small page, usually used to block a user until this user provides some info.
+ *
+ * @since 1.0
+ *
+ * @param (string) $title   The title tag content.
+ * @param (string) $content The page content.
+ * @param (array)  $args    Some more data:
+ *                 - $head  Content to display in the document's head.
+ */
+function secupress_action_page( $title, $content, $args = array() ) {
+	global $wp_scripts, $wp_styles;
+	if ( wp_doing_ajax() ) {
+		return;
+	}
+	$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ?  ''  : '.min';
+	$version   = $suffix ? SECUPRESS_VERSION : time();
+	$body      = isset( $args['body'] )      ? $args['body']      : '';
+	$head      = isset( $args['head'] )      ? $args['head']      : '';
+	$logo      = isset( $args['logo'] )      ? $args['logo']      : '';
+	$functions = isset( $args['functions'] ) ? $args['functions'] : '';
+	$wpscripts = isset( $args['wpscripts'] ) ? $args['wpscripts'] : '';
+	$wpstyles  = isset( $args['wpstyles'] )  ? $args['wpstyles']  : '';
+	// Functions management, do not output anything, Example: scripts and styles registration.
+	ob_start();
+	if ( is_array( $functions ) ) {
+		foreach ( $functions as $fct ) {
+			if ( is_callable( $fct ) ) {
+				call_user_func( $fct );
+			}
+		}
+	}
+	ob_end_flush();
+
+	?><!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+	<head>
+		<meta charset="<?php echo esc_attr( strtolower( get_bloginfo( 'charset' ) ) ); ?>" />
+		<title><?php echo strip_tags( $title ); ?></title>
+		<meta content="initial-scale=1.0" name="viewport" />
+		<link href="<?php echo SECUPRESS_ADMIN_CSS_URL . 'secupress-action-page' . $suffix . '.css?ver=' . $version; ?>" media="all" rel="stylesheet" />
+		<?php
+		// Scripts management
+		if ( ! empty( $wpscripts ) && ! is_array( $wpscripts ) ) {
+			$wpscripts = (array) $wpscripts;
+		}
+		if ( $wpscripts ) {
+			foreach( $wpscripts as $wpscript ) {
+				if ( isset( $wp_scripts->registered[ $wpscript ]->extra['data'] ) ) {
+					echo '<script type="text/javascript">' . $wp_scripts->registered[ $wpscript ]->extra['data'] . '</script>' . "\n"; // no esc_js, build by WP, is safe.
+				}
+				echo '<script type="text/javascript" src="' . esc_url( $wp_scripts->registered[ $wpscript ]->src ) . '?ver=' . $version . '"></script>' . "\n";
+			}
+		}
+		// Styles management
+		if ( ! empty( $wpstyles ) && ! is_array( $wpstyles ) ) {
+			$wpstyles = (array) $wpstyles;
+		}
+		if ( $wpstyles ) {
+			foreach( $wpstyles as $wpstyle ) {
+				echo '<link href="' . esc_url( $wp_styles->registered[ $wpstyle ]->src ) . '" rel="stylesheet" media="all" />' . "\n";
+			}
+		}
+
+		echo $head;
+		?>
+	</head>
+	<body <?php echo $body; ?>>
+		<div class="secupress-action-page-content">
+			<?php echo $logo ? $logo : '<div class="wrap"><img src="' . get_site_icon_url( 160, secupress_get_logo( [], 'url' ) ) . '" alt="' . __( 'Site Icon', 'secupress' ) . '"/></div>'; ?>
+			<?php echo $content; ?>
+		</div>
+	</body>
+</html><?php
+	die();
+}
+
+
 /**
  * First half of escaping for LIKE special characters % and _ before preparing for MySQL.
  *
@@ -113,18 +192,26 @@ function secupress_generate_hash( $context, $start = 2, $length = 6 ) {
 /**
  * Generate a random key.
  *
+ * @since 2.2.6 Usage of \Random\Randomizer() + $chars param
  * @since 1.0
  *
- * @param (int) $length Length of the key.
+ * @param (int)    $length Length of the key.
+ * @param (string) $chars  A set of characters.
  *
  * @return (string)
  */
-function secupress_generate_key( $length = 16 ) {
-	$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-
-	$key = '';
-	for ( $i = 0; $i < $length; $i++ ) {
-		$key .= $chars[ wp_rand( 0, 31 ) ];
+function secupress_generate_key( $length = 16, $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890' ) {
+	if ( ! trim( $chars ) ) {
+		wp_trigger_error( __FUNCTION__, 'Invalid $chars parameter', E_USER_ERROR );
+	}
+	if ( method_exists( '\Random\Randomizer', 'getBytesFromString' ) ) { // PHP >=8.3
+		$rnd = new \Random\Randomizer();
+		$key = $rnd->getBytesFromString( $chars, $length );
+	} else {
+		$key   = '';
+		for ( $i = 0; $i < $length; $i++ ) {
+			$key .= $chars[ wp_rand( 0, mb_strlen( $chars ) - 1 ) ];
+		}
 	}
 
 	return $key;
@@ -293,28 +380,54 @@ function secupress_readable_duration( $entry ) {
 /**
  * Tag a string
  *
+ * @since 2.2.6 $attrs
  * @since 2.0.3
  * @author Julio Potier
  *
- * @param (string) $str The text
- * @param (string) $tag The HTML tag
+ * @param (string) $str   The text
+ * @param (string) $tag   The HTML tag
+ * @param (string) $attrs Any other attr, not filtered
  * @return (string)
  **/
-function secupress_tag_me( $str, $tag ) {
-	return sprintf( '<%1$s>%2$s</%1$s>', $tag, $str );
+function secupress_tag_me( $str, $tag, $attrs = '' ) {
+	return sprintf( '<%1$s %3$s>%2$s</%1$s>', $tag, $str, $attrs );
+}
+
+/**
+ * Tag a string with a where href is the same text by default
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ *
+ * @param (string) $str  The text
+ * @param (string) $href The href attr, empty = $str
+ * @param (string) $rels True = rel="noopener noreferer" ; False = ''
+ * @return (string)
+ **/
+function secupress_a_me( $str, $href = '', $attrs = '' ) {
+	if ( empty( $href ) ) {
+		if ( is_email( $str ) ) {
+			$href = 'mailto:' . $str;
+		} else {
+			$href = $str;
+		}
+	}
+	$attrs = " href=\"{$href}\" $attrs";
+	return secupress_tag_me( $str, 'a', $attrs );
 }
 
 /**
  * Tag a string with <code>
  *
+ * @since 2.2.6 $attrs
  * @since 2.0.3
  * @author Julio Potier
  *
  * @param (string) $str The text
  * @return (string)
  **/
-function secupress_code_me( $str ) {
-	return secupress_tag_me( $str, 'code' );
+function secupress_code_me( $str, $attrs = '' ) {
+	return secupress_tag_me( $str, 'code', $attrs );
 }
 
 /**
@@ -358,4 +471,41 @@ function secupress_get_http_logs_limits( $mode = 'text' ) {
 		DAY_IN_SECONDS,
 		0,
 	];
+}
+
+/**
+ * Returns the correct 404 handler rule for the server
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ * 
+ * @return (string) $rule
+ */
+function secupress_get_404_rule_for_rewrites() {
+	global $is_apache, $is_nginx, $is_iis7;
+
+	$rule  = '';
+	$path  = str_replace( ABSPATH, '', SECUPRESS_INC_PATH );
+	$path .= 'data/404-handler.php';
+	$path  = apply_filters( 'secupress.rewrites.404-handler.file', $path );
+	if ( file_exists( realpath( ABSPATH . $path ) ) ) {
+		if ( $is_apache ) {
+			$rule = "RewriteRule ^ {$path}?secupress_bad_url_access__ID=%{ENV:REDIRECT_PHP404}&secupress_bad_url_access__URL=%{REQUEST_URI} [L,QSA]\n";
+		} elseif ( $is_nginx ) {
+			$rule = "rewrite ^ /{$path}?secupress_bad_url_access__ID=$"."REDIRECT_PHP404&secupress_bad_url_access__URL=$"."request_uri last;\n";
+		} elseif ( $is_iis7 ) {
+			$rule = "<action type=\"Rewrite\" url=\"" . $path . "data/404-handler.php\" />\n";
+		}
+	} else {
+		if ( $is_apache ) {
+			$rule = "RewriteRule ^ - [R=404,L]\n";
+		} elseif ( $is_nginx ) {
+			$rule = "return 404;\n";
+		} elseif ( $is_iis7 ) {
+			$rule = "<action type=\"CustomResponse\" statusCode=\"404\"/>\n";
+		}
+	}
+
+	return $rule;
+
 }

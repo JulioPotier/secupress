@@ -102,8 +102,6 @@ function secupress_get_global_network_option_names_for_autoload() {
 				'_site_transient_secupress_toggle_file_scan', // Pro.
 				'_site_transient_secupress_pro_activation', // Pro.
 				'_site_transient_secupress_activation',
-				'_site_transient_timeout_secupress-detect-bad-plugins',
-				'_site_transient_secupress-detect-bad-plugins',
 				'_site_transient_timeout_secupress-detect-bad-themes',
 				'_site_transient_secupress-detect-bad-themes',
 				'_site_transient_secupress_offer_migration_information',

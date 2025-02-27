@@ -1,18 +1,103 @@
 <?php
 /**
  * Module Name: Captcha for Login
- * Description: Add a gentle captcha on the login form
+ * Description: Add a captcha on the login form
  * Main Module: users_login
  * Author: SecuPress
- * Version: 2.0.3
+ * Version: 2.2.6
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
-
 // EMERGENCY BYPASS!
 if ( defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRESS_ALLOW_LOGIN_ACCESS ) {
 	return;
+}
+
+/**
+ * Start a session if needed
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ */
+function secupress_captcha_session() {
+	if ( session_status() === PHP_SESSION_NONE && ! headers_sent() ) {
+		session_start();
+		secupress_update_captcha_seed();
+	}
+}
+secupress_captcha_session();
+if ( ! session_id() ) {
+	define( 'SECUPRESS_CAPTCHA_NO_SESSION', true );
+	return; // No session, the captcha won't work.
+}
+
+/**
+ * Update our sessions vars if needed
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ */
+function secupress_update_captcha_seed() {
+	$_SESSION['captcha-seed']  = $_SESSION['captcha-seed'] ?? secupress_generate_key();
+	$_SESSION['captcha-timer'] = microtime( true );
+}
+
+/**
+ * Returns a part of a time based md5 hash
+ *
+ * @since 2.2.6
+ * @author Julio Potier
+ * 
+ * @param (string|int) $seed
+ * 
+ * @return (string) $md5
+ **/
+function secupress_captcha_key( $seed = 0 ) {
+	return substr( md5( $seed . $_SESSION['captcha-seed'] . secupress_generate_hash( 'captcha' ) ), 2, 8 );
+}
+
+/**
+ * Tell if the captcha UI should be displayed in the page.
+ *
+ * @since 1.3
+ * @author Grégory Viguier
+ * 
+ * @return (bool)
+ */
+function secupress_can_display_captcha() {
+	global $pagenow;
+
+	if ( ! is_multisite() ) {
+		// Only on the login form and the registration form.
+		return ! isset( $_GET['action'] ) || 'login' === $_GET['action'] || 'register' === $_GET['action'];
+	}
+	if ( is_user_logged_in() || is_super_admin() ) {
+		wp_redirect( admin_url() );
+		die();
+	}
+
+	if ( 'wp-signup.php' !== $pagenow ) {
+		// Login page, only on the login form.
+		return ! isset( $_GET['action'] ) || 'login' === $_GET['action'];
+	}
+
+	// Registrations page.
+	$active_signup = get_site_option( 'registration', 'none' );
+	/**
+	 * This filter is documented in wp-signup.php.
+	 * Possible values are 'none', 'user', 'blog' and 'all'.
+	 */
+	$active_signup = apply_filters( 'wpmu_active_signup', $active_signup );
+
+	switch ( $active_signup ) {
+		case 'user':
+		case 'all':
+			// Deal only with the "user" form.
+			return true;
+		default:
+			return false;
+	}
 }
 
 add_action( 'login_form',          'secupress_add_captcha_on_login_form' );
@@ -20,42 +105,130 @@ add_action( 'register_form',       'secupress_add_captcha_on_login_form' );
 add_action( 'signup_extra_fields', 'secupress_add_captcha_on_login_form', 100 );
 /**
  * Print the captcha in the login form.
- *
- * @author Grégory Viguier
+ * 
+ * @since 2.2.6 Captcha v2 revamp
+ * @author Julio Potier
+ * 
  * @since 1.4.7 Add filters
  * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_add_captcha_on_login_form() {
 	if ( ! secupress_can_display_captcha() ) {
 		return;
 	}
-	/**
-	 * This filter is documented in wp-signup.php.
-	 * @param (string) The text to be clicked next to the checkbox
-	 */
-	$yes_im_a_human  = apply_filters( 'secupress.plugins.login-captcha.checkbox.text', __( 'Yes, I’m a human.', 'secupress' ) );
-	$session_expired = apply_filters( 'secupress.plugins.login-captcha.error.text', __( 'Session expired, please try again.', 'secupress' ) );
+	$captcha_title = apply_filters( 'secupress.plugins.login-captcha.title.text', __( 'Human Verification', 'secupress' ) );
 	?>
-	<div>
-		<div id="areyouhuman">
-			<label>
-				<span class="checkme" role="checkbox" tabindex="0" aria-checked="false"></span>
-				<i class="checkme"><?php echo $yes_im_a_human; ?></i>
-			</label>
-		</div>
-		<div id="msg" class="hidden"><?php echo $session_expired; ?></div>
-		<input type="hidden" name="captcha_key" id="captcha_key" value="" />
+	<div id="secupress-areyouhuman">
+		<label><?php echo $captcha_title; ?></label>
+	<?php
+	$style         = secupress_get_module_option( 'captcha_captcha-style', 'simple', 'users-login' );
+	switch ( $style ) {
+		case 'simple':
+			secupress_add_captcha_on_login_form__simple();
+		break;
+		
+		case 'challenge':
+			secupress_add_captcha_on_login_form__challenge();
+		break;
+		
+		default:
+			echo 'Error #' . __FUNCTION__; // DO NOT TRANSLATE
+		break;
+	}
+	?>
 	</div>
 	<?php
 }
 
+/**
+ * Print the simple captcha in the login form
+ * 
+ * @since 2.2.6 Captcha v2 revamp
+ * @author Julio Potier
+ */
+function secupress_add_captcha_on_login_form__simple() {
+	$session_expired = apply_filters( 'secupress.plugins.login-captcha.error.text',   __( 'Too late, please try again.', 'secupress' ) );
+	$verif_success   = apply_filters( 'secupress.plugins.login-captcha.success.text', __( 'Verification Successful!', 'secupress' ) );
+	$please_wait     = apply_filters( 'secupress.plugins.login-captcha.wait.text',    __( 'Please wait', 'secupress' ) );
+	?>
+	<div>
+		<div id="secupress-areyouhuman-simple">
+			<label>
+				<span class="secupress-checkme h ide-if-no-js" role="checkbox" tabindex="0" aria-checked="false"></span>
+				<i class="secupress-checkme" id="i-secupress-checkme"><?php echo $please_wait; ?></i>
+				<i id="i-secupress-checkme-ok"><?php echo $verif_success; ?></i>
+				<i id="i-secupress-checkme-ko"><?php echo $session_expired; ?></i>
+			</label>
+		</div>
+		<input type="hidden" name="captcha-timer" value="<?php echo $_SESSION['captcha-timer'] ?? 0; ?>">
+		<input type="hidden" name="captcha-key" value="<?php echo secupress_captcha_key( $_SESSION['captcha-timer'] ); ?>" />
+	</div>
+	<?php
+}
 
-add_action( 'login_footer',    'secupress_login_captcha_scripts' );
+/**
+ * Print the challenge captcha in the login form
+ * 
+ * @since 2.2.6 Captcha v2 revamp
+ * @author Julio Potier
+ */
+function secupress_add_captcha_on_login_form__challenge() {
+	$sets      = secupress_get_emojiset( 'all' );
+	$set       = secupress_get_module_option( 'captcha_emoji-set', '', 'users-login' );
+	if ( 'random' !== $set ) {
+		$ark   = array_keys( $sets );
+		$set   = $set && isset( $sets[ $set ] ) ? $set : reset( $ark );
+	}
+	$ar_texts  = secupress_get_emojiset( $set );
+	$ar_emojis = array_combine( array_keys( $ar_texts ), array_fill( 0, 5, '' ) );
+	$i         = 0;
+	$ar_emojis = secupress_shuffle_assoc( $ar_emojis );
+	foreach( $ar_emojis as $_emoji => $dummy ) {
+		$seed  = $i ? $i : $_SESSION['captcha-timer'];
+		$ar_emojis[ $_emoji ] = secupress_captcha_key( $seed );
+		$i++;
+	}
+	$find_text       = $ar_texts[ array_key_first( $ar_emojis) ];
+	$check_the_pic   = sprintf( _x( 'Select the %s.', 'emoji item', 'secupress' ), $find_text );
+
+	$ar_emojis       = secupress_shuffle_assoc( $ar_emojis );
+	$i               = 0;
+
+	$session_expired = apply_filters( 'secupress.plugins.login-captcha.error.text', __( 'Too late, please try again.', 'secupress' ) );
+	?>
+	<div id="secupress-areyouhuman-challenge">
+		<div><strong><?php echo $check_the_pic; ?></strong></div>
+
+		<input type="hidden" name="captcha-timer" value="<?php echo $_SESSION['captcha-timer'] ?? 0; ?>">
+		<input type="radio"  name="captcha-key" class="secupress-screen-reader-text" id="emoji0" value="0" checked="checked" required aria-labelledby="emoji0-label">
+		<label for="emoji0" class="emoji-label" aria-label="🚫"><span class="secupress-pie"></span></label>
+
+		<?php
+		foreach ($ar_emojis as $_emoji => $_label ) {
+			$i++;
+			?>
+			<nobr>
+				<input type="radio" class="secupress-screen-reader-text" id="emoji<?php echo $i; ?>" name="captcha-key" value="<?php echo $ar_emojis[ $_emoji ]; ?>" required aria-labelledby="emoji<?php echo $i; ?>-label">
+				<label for="emoji<?php echo $i; ?>" class="emoji-label" aria-label="<?php echo $_emoji; ?>">
+					<?php echo $_emoji; ?>
+				</label>
+			</nobr>
+			<?php
+		}
+		?>
+		<div id="secupress-msg-session"><?php echo $session_expired; ?></div>
+	</div>
+	<?php
+}
+
+add_action( 'login_footer', 'secupress_login_captcha_scripts' );
 add_action( 'after_signup_form', 'secupress_login_captcha_scripts' );
 /**
  * Enqueue captcha styles and scripts.
  *
  * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_login_captcha_scripts() {
 	if ( ! secupress_can_display_captcha() ) {
@@ -66,114 +239,89 @@ function secupress_login_captcha_scripts() {
 	$ver      = $is_debug ? time() : SECUPRESS_VERSION;
 	$min      = $is_debug ? ''     : '.min';
 	$url      = SECUPRESS_FREE_URL . 'modules/users-login/plugins/inc/';
-
 	wp_enqueue_style( 'secupress-captcha', $url . 'css/captcha' . $min . '.css', array(), $ver, 'all' );
 	wp_print_styles( 'secupress-captcha' );
-
-	wp_enqueue_script( 'secupress-captcha', $url . 'js/captcha' . $min . '.js', array( 'jquery' ), $ver, true );
-	wp_localize_script( 'secupress-captcha', 'spCaptchaL10n', array(
-		'ajaxurl'  => esc_url( admin_url( 'admin-ajax.php' ) ),
-		'hPotText' => __( 'Do not fill in this field.', 'secupress' ),
-	) );
-	wp_print_scripts( 'secupress-captcha' );
 }
 
-
-add_action( 'wp_ajax_captcha_check',        'secupress_captcha_check' );
-add_action( 'wp_ajax_nopriv_captcha_check', 'secupress_captcha_check' );
-/**
- * Check the captcha via ajax.
- *
- * @since 1.0
- */
-function secupress_captcha_check() {
-	if ( ! empty( $_POST['captcha_key'] ) || ! isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) || 'XMLHttpRequest' !== $_SERVER['HTTP_X_REQUESTED_WITH'] ) { // WPCS: CSRF ok. A "real" ajax request.
-		if ( ! headers_sent() ) {
-			status_header( 400 );
-		}
-		wp_send_json_error();
-	}
-
-	$t            = time();
-	$token        = wp_generate_password( 12, false );
-	$captcha_keys = get_site_option( 'secupress_captcha_keys', array() );
-	$captcha_keys[ $token ] = $t;
-
-	foreach ( $captcha_keys as $key => $value ) {
-		if ( $t > $value ) {
-			unset( $captcha_keys[ $key ] );
-		}
-	}
-
-	if ( ! secupress_wp_version_is( '4.2.0-alpha' ) ) {
-		delete_site_option( 'secupress_captcha_keys' );
-		add_site_option( 'secupress_captcha_keys', $captcha_keys, false );
-	} else {
-		update_site_option( 'secupress_captcha_keys', $captcha_keys, false );
-	}
-
-	wp_send_json_success( $token );
-}
-
-
-add_action( 'authenticate', 'secupress_manage_captcha', SECUPRESS_INT_MAX - 20, 2 );
+add_filter( 'authenticate', 'secupress_manage_captcha', SECUPRESS_INT_MAX - 20 );
+add_filter( 'registration_errors', 'secupress_manage_captcha', SECUPRESS_INT_MAX - 20 );
+add_filter( 'wpmu_validate_user_signup', 'secupress_manage_captcha', SECUPRESS_INT_MAX - 20 );
 /**
  * Process the captcha test on user log-in.
  *
+ * @since 2.2.6 Captcha v2 revamp
+ * @author Julio Potier
+ * 
  * @since 1.0
+ * @author Grégory Viguier
  *
- * @param (null|object) $raw_user WP_User if the user is authenticated.
- *                                WP_Error or null otherwise.
- * @param (string)      $username Username or email address.
+ * @param (null|object) $object   (Filter authenticate) (WP_User) if the user is authenticated. (WP_Error) or null otherwise.
+ *                                (Filter registration_errors) (WP_Error) with no errors or our error.
+ *                                (Filter wpmu_validate_user_signup) (array) of $result or (WP_Error) with our error.
  *
  * @return (null|object)
  */
-function secupress_manage_captcha( $raw_user, $username ) {
+function secupress_manage_captcha( $object ) {
 	static $running = false;
 
 	if ( $running ) {
-		return $raw_user;
+		return $object;
 	}
 	$running = true;
 
 	if ( defined( 'XMLRPC_REQUEST' ) || defined( 'APP_REQUEST' ) ) {
 		$running = false;
-		return $raw_user;
+		return $object;
 	}
 
 	// Make sure to process only credentials provided by the login form.
-	if ( empty( $_POST['log'] ) ) { // WPCS: CSRF ok.
-		$running = false;
-		return $raw_user;
+	switch ( current_filter() ) {
+		case 'authenticate':
+			if ( empty( $_POST['log'] ) ) { // WPCS: CSRF ok.
+				$running = false;
+				return $object;
+			}
+		break;
+		case 'registration_errors':
+			if ( ! isset( $_POST['user_login'], $_POST['user_email'] ) ) { // WPCS: CSRF ok.
+				$running = false;
+				return $object;
+			}
+		break;
+		case 'wpmu_validate_user_signup':
+			if ( ! isset( $_POST['user_name'], $_POST['user_email'], $_POST['stage'] ) || 'validate-user-signup' !== $_POST['stage'] ) { // WPCS: CSRF ok.
+				$running = false;
+				return $object;
+			}
+		break;
+		default: // Should not happen, if so, just return the given parameter
+			$running = false;
+			return $object;
+		break;
 	}
 
 	$fallback_wp_error = new WP_Error( 'authentication_failed', __( '<strong>Error</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
 
-	$captcha_key  = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null; // WPCS: CSRF ok.
-	$captcha_keys = get_site_option( 'secupress_captcha_keys', array() );
-
-	if ( ! isset( $captcha_keys[ $captcha_key ] ) ||
-		time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
-		time() < $captcha_keys[ $captcha_key ] + 2
-	) {
-		$running = false;
-		return $fallback_wp_error;
+	$captcha_key   = $_POST['captcha-key'] ?? ''; // WPCS: CSRF ok.
+	$captcha_timer = $_POST['captcha-timer'] ?? false; // WPCS: CSRF ok.
+	$hash_equals   = hash_equals( secupress_captcha_key( $captcha_timer ), $captcha_key );
+	$real_timer    = (int) ( time() - $captcha_timer );
+	$timer_equals  = $real_timer >= 3 && $real_timer <= 60;
+	$running       = false;
+	session_destroy();
+	secupress_captcha_session();
+	if ( $hash_equals && $timer_equals ) {
+		return $object;
 	}
-
-	unset( $captcha_keys[ $captcha_key ] );
-
-	delete_site_option( 'secupress_captcha_keys' );
-	add_site_option( 'secupress_captcha_keys', $captcha_keys, false );
-
-	$running = false;
-	return $raw_user;
+	return $fallback_wp_error;
 }
 
 
-add_filter( 'registration_errors', 'secupress_manage_registration_captcha', SECUPRESS_INT_MAX - 20 );
 /**
  * Process the captcha test on user registration.
  *
+ * @since 2.2.6 Captcha v2 revamp
+ * @author Julio Potier
  * @since 1.3
  * @author Grégory Viguier
  *
@@ -200,36 +348,23 @@ function secupress_manage_registration_captcha( $errors ) {
 		return $errors;
 	}
 
-	$captcha_key  = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null; // WPCS: CSRF ok.
-	$captcha_keys = get_site_option( 'secupress_captcha_keys', array() );
-
-	if ( ! isset( $captcha_keys[ $captcha_key ] ) ||
-		time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
-		time() < $captcha_keys[ $captcha_key ] + 2
-	) {
-		$errors->add( 'authentication_failed', __( '<strong>Error</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
+	$captcha_key  = isset( $_POST['captchemoji'] ) ? $_POST['captchemoji'] : null; // WPCS: CSRF ok.
+	if ( hash_equals( secupress_captcha_key( 0 ), $_POST['captchemoji'] ) ) {
 		$running = false;
+		secupress_update_captcha_seed();
 		return $errors;
 	}
-
-	unset( $captcha_keys[ $captcha_key ] );
-
-	if ( ! secupress_wp_version_is( '4.2.0-alpha' ) ) {
-		delete_site_option( 'secupress_captcha_keys' );
-		add_site_option( 'secupress_captcha_keys', $captcha_keys, false );
-	} else {
-		update_site_option( 'secupress_captcha_keys', $captcha_keys, false );
-	}
-
 	$running = false;
-	return $errors;
+	return $fallback_wp_error;
 }
 
 
-add_filter( 'wpmu_validate_user_signup', 'secupress_manage_ms_registration_captcha', SECUPRESS_INT_MAX - 20 );
+
 /**
  * Process the captcha test on user registration on multisite.
  *
+ * @since 2.2.6 Captcha v2 revamp
+ * @author Julio Potier
  * @since 1.3
  * @author Grégory Viguier
  *
@@ -258,130 +393,13 @@ function secupress_manage_ms_registration_captcha( $result ) {
 		return $result;
 	}
 
-	$captcha_key  = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null; // WPCS: CSRF ok.
-	$captcha_keys = get_site_option( 'secupress_captcha_keys', array() );
-
-	if ( ! isset( $captcha_keys[ $captcha_key ] ) ||
-		time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
-		time() < $captcha_keys[ $captcha_key ] + 2
-	) {
-		$result['errors']->add( 'authentication_failed', __( '<strong>Error</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
+	$captcha_key  = isset( $_POST['captchemoji'] ) ? $_POST['captchemoji'] : null; // WPCS: CSRF ok.
+	if ( hash_equals( secupress_captcha_key( 0 ), $_POST['captchemoji'] ) ) {
 		$running = false;
+		secupress_update_captcha_seed();
 		return $result;
 	}
-
-	unset( $captcha_keys[ $captcha_key ] );
-
-	if ( ! secupress_wp_version_is( '4.2.0-alpha' ) ) {
-		delete_site_option( 'secupress_captcha_keys' );
-		add_site_option( 'secupress_captcha_keys', $captcha_keys, false );
-	} else {
-		update_site_option( 'secupress_captcha_keys', $captcha_keys, false );
-	}
-
 	$running = false;
-	return $result;
-}
+	return $fallback_wp_error;
 
-
-add_filter( 'login_message', 'secupress_login_form_nojs_error' );
-/**
- * Display a message when the user disabled JavaScript on his/her browser.
- *
- * @since 1.0
- *
- * @param (string) $message Messages.
- *
- * @return (string)
- */
-function secupress_login_form_nojs_error( $message ) {
-	if ( secupress_can_display_captcha() ) {
-		$message .= '<noscript><p class="message">' . __( 'You need to enable JavaScript to send this form correctly.', 'secupress' ) . '</p></noscript>';
-	}
-	return $message;
-}
-
-
-add_action( 'signup_extra_fields', 'secupress_print_login_form_nojs_error', 1 );
-/**
- * On multisite, print the "The human verification is incorrect" message and a message when the user disabled JavaScript on his/her browser.
- *
- * @since 1.3
- * @author Grégory Viguier
- *
- * @param (array) $errors An array possibly containing 'user_name' or 'user_email' errors.
- */
-function secupress_print_login_form_nojs_error( $errors ) {
-	if ( $errmsg = $errors->get_error_message( 'authentication_failed' ) ) {
-		echo '<p class="error">' . $errmsg . '</p>';
-	}
-
-	if ( secupress_can_display_captcha() ) {
-		echo '<noscript><p class="error">' . __( 'You need to enable JavaScript to send this form correctly.', 'secupress' ) . '</p></noscript>';
-	}
-}
-
-
-/**
- * Tell if the captcha UI should be displayed in the page.
- *
- * @since 1.3
- *
- * @return (bool)
- */
-function secupress_can_display_captcha() {
-	global $pagenow;
-
-	if ( ! is_multisite() ) {
-		// Only on the login form and the registration form.
-		return ! isset( $_GET['action'] ) || 'login' === $_GET['action'] || 'register' === $_GET['action'];
-	}
-
-	if ( is_super_admin() ) {
-		// Network admins have a free pass.
-		return false;
-	}
-
-	if ( is_user_logged_in() ) {
-		// Logged in users don't see the form.
-		return false;
-	}
-
-	if ( 'wp-signup.php' !== $pagenow ) {
-		// Login page, only on the login form.
-		return ! isset( $_GET['action'] ) || 'login' === $_GET['action'];
-	}
-
-	// Registrations page.
-	$active_signup = get_site_option( 'registration', 'none' );
-	/**
-	 * This filter is documented in wp-signup.php.
-	 * Possible values are 'none', 'user', 'blog' and 'all'.
-	 */
-	$active_signup = apply_filters( 'wpmu_active_signup', $active_signup );
-
-	switch ( $active_signup ) {
-		case 'user':
-		case 'all':
-			// Deal only with the "user" form.
-			return true;
-		default:
-			return false;
-	}
-}
-
-
-add_filter( 'secupress.options.load_plugins_network_options', 'secupress_captcha_autoload_options' );
-/**
- * Add the option(s) we use in this plugin to be autoloaded on multisite.
- *
- * @since 1.0
- *
- * @param (array) $option_names An array of network option names.
- *
- * @return (array)
- */
-function secupress_captcha_autoload_options( $option_names ) {
-	$option_names[] = 'secupress_captcha_keys';
-	return $option_names;
 }

@@ -40,13 +40,13 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	protected function init() {
 		$current_user = wp_get_current_user();
 
-		$this->title = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
-		$this->more  = __( 'It is important to protect the famous <em>admin</em> account to prevent simple brute-force attacks on it. This account is usually the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
+		$this->title = sprintf( __( 'Check if the %s account is correctly protected.', 'secupress' ), secupress_tag_me( 'admin', 'em' ) );
+		$this->more  = sprintf( __( 'It is important to protect the famous %s account to prevent simple brute-force attacks on it. This account is usually the first one created when you install WordPress, and it is well known by attackers.', 'secupress' ), secupress_tag_me( 'admin', 'em' ) );
 
 		if ( 'admin' === $current_user->user_login ) {
 			$this->more_fix = __( 'You will be asked for a new username and your account will be renamed.', 'secupress' );
 		} else {
-			$this->more_fix = __( 'Remove all roles and capabilities from the <em>admin</em> account if it exists. If it does not exist and user subscriptions are open, the account will be created with no role nor capabilities.', 'secupress' );
+			$this->more_fix = sprintf( __( 'Remove all roles and capabilities from the %s account if it exists. If it does not exist and user subscriptions are open, the account will be created with no role nor capabilities.', 'secupress' ), secupress_tag_me( 'admin', 'em' ) );
 		}
 	}
 

@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name: {{PLUGIN_NAME}} Salt Keys
- * Description: Good Security Keys for each of your blogs of your network (multisite only), auto-reseting each month.
- * Version: 2.0
+ * Description: Great Security Keys for your site
+ * Version: 2.2.6
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
- * Copyright 2012-2021 SecuPress
+ * Copyright 2012-2025 SecuPress
  */
 
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
@@ -16,8 +16,6 @@ if ( ! get_site_option( 'secupress_active_submodule_wp-config-constant-saltkeys'
 }
 
 define( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE', true );
-
-global $blog_id;
 
 $hash_1     = '{{HASH1}}';
 $hash_2     = '{{HASH2}}';
@@ -35,3 +33,10 @@ foreach ( $main_keys as $main_key ) {
 }
 
 unset( $file_str, $main_key, $main_keys, $hash_1, $hash_2, $hash_key, $sp_setup );
+
+if ( ! function_exists( 'wp_salt' ) ) {
+	function wp_salt( $scheme = 'auth' ) {
+		/** This filter is documented in wp-includes/pluggable.php */
+		return apply_filters( 'salt', constant( strtoupper( "{$scheme}_KEY" ) ) . constant( strtoupper( "{$scheme}_SALT" ) ), $scheme );
+	}
+}

@@ -57,7 +57,7 @@ if ( $new_scans ) {
 			<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
 				<?php
 				if ( $is_there_something_new && $scanned_items ) {
-					$page_title  = sprintf( __( 'Update %s:<br/>Discover the new security items to check.', 'secupress' ), SECUPRESS_VERSION );
+					$page_title  = __( 'Discover the new security items to check.', 'secupress' );
 				} else {
 					$page_title  = __( 'List of the security items already analyzed', 'secupress' );
 				}
@@ -92,9 +92,9 @@ if ( $new_scans ) {
 						?>
 						<div class="hidden" id="secupress-scan-speed">
 							<ul>
-								<li><label><input type="radio" name="secupress-scan-speed" value="max" <?php checked( $value, 0 ); ?>> <?php _e( 'Max Speed (def.)', 'secupress' ); ?></label></li>
-								<li><label><input type="radio" name="secupress-scan-speed" value="normal" <?php checked( $value, 250 ); ?>> <?php _e( 'Normal Speed', 'secupress' ); ?></label></li>
-								<li><label><input type="radio" name="secupress-scan-speed" value="low" <?php checked( $value, 1000 ); ?>> <?php _e( 'Low Speed', 'secupress' ); ?></label></li>
+								<li><label><input type="radio" name="secupress-scan-speed" value="max" <?php checked( $value, 0 ); ?>> <?php _ex( 'Max Speed (def.)', 'scanner', 'secupress' ); ?></label></li>
+								<li><label><input type="radio" name="secupress-scan-speed" value="normal" <?php checked( $value, 250 ); ?>> <?php _ex( 'Normal Speed', 'scanner', 'secupress' ); ?></label></li>
+								<li><label><input type="radio" name="secupress-scan-speed" value="low" <?php checked( $value, 1000 ); ?>> <?php _ex( 'Low Speed', 'scanner', 'secupress' ); ?></label></li>
 							<span class="dashicons dashicons-editor-help"></span>
 							<a href="<?php _e( 'https://docs.secupress.me/article/156-whats-this-speed-thing', 'secupress' ); ?>" target="_blank"><?php _e( 'What’s this speed thing?', 'secupress' ); ?></a>
 							</ul>

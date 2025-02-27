@@ -257,52 +257,75 @@ jQuery( document ).ready( function( $ ) {
 
 		if ( $.isEmptyObject( secupressChart ) ) {
 			// The charts are not created yet.
-			chartData = [
-				{
-					value:     SecuPressi18nChart.good.value,
-					color:     "#26B3A9",
-					highlight: "#2BCDC1",
-					label:     SecuPressi18nChart.good.text,
-					status:    "good",
-				},
-				{
-					value:     SecuPressi18nChart.bad.value,
-					color:     "#CB234F",
-					highlight: "#F2295E",
-					label:     SecuPressi18nChart.bad.text,
-					status:    "bad",
-				},
-				{
-					value:     SecuPressi18nChart.warning.value,
-					color:     "#F7AB13",
-					highlight: "#F1C40F",
-					label:     SecuPressi18nChart.warning.text,
-					status:    "warning",
-				}
-			];
+			if (Chart && Chart.hasOwnProperty('version')) { 
+				const chartData = {
+					datasets: [{
+					data: [SecuPressi18nChart.good.value, SecuPressi18nChart.bad.value, SecuPressi18nChart.warning.value],
+					backgroundColor: [
+						'#26B3A9', '#CB234F', '#F7AB13'
+					],
+					borderWidth: 0,
+					cutout: 78,
+					}]
+				};
+				$.each( secupressChartEls, function( i, chartEl ) {
+					var elID = chartEl.id;
+					secupressChart[ elID ] = new Chart( chartEl.getContext( "2d" ), {
+						type: 'doughnut',
+						data: chartData,
+						options: {
+							plugins: { tooltip: { enabled: false } }
+						}
+					} );
+				} );
+			} else {
+				chartData = [
+					{
+						value:     SecuPressi18nChart.good.value,
+						color:     "#26B3A9",
+						highlight: "#2BCDC1",
+						label:     SecuPressi18nChart.good.text,
+						status:    "good",
+					},
+					{
+						value:     SecuPressi18nChart.bad.value,
+						color:     "#CB234F",
+						highlight: "#F2295E",
+						label:     SecuPressi18nChart.bad.text,
+						status:    "bad",
+					},
+					{
+						value:     SecuPressi18nChart.warning.value,
+						color:     "#F7AB13",
+						highlight: "#F1C40F",
+						label:     SecuPressi18nChart.warning.text,
+						status:    "warning",
+					}
+				];
 
-			if ( SecuPressi18nChart.notscannedyet.value > 0 ) {
-				chartData.push( {
-					value:     SecuPressi18nChart.notscannedyet.value,
-					color:     "#5A626F",
-					highlight: "#888888",
-					label:     SecuPressi18nChart.notscannedyet.text,
-					status:    "notscannedyet",
+				if ( SecuPressi18nChart.notscannedyet.value > 0 ) {
+					chartData.push( {
+						value:     SecuPressi18nChart.notscannedyet.value,
+						color:     "#5A626F",
+						highlight: "#888888",
+						label:     SecuPressi18nChart.notscannedyet.text,
+						status:    "notscannedyet",
+					} );
+				}
+
+				$.each( secupressChartEls, function( i, chartEl ) {
+					var elID = chartEl.id;
+
+					secupressChart[ elID ] = new Chart( chartEl.getContext( "2d" ) ).Doughnut( chartData, {
+						animationEasing:       "easeInOutQuart",
+						showTooltips:          false,
+						segmentShowStroke:     false,
+						percentageInnerCutout: 93,
+						tooltipEvents:         [] // remove tooltips
+					} );
+
 				} );
 			}
-
-			$.each( secupressChartEls, function( i, chartEl ) {
-				var elID = chartEl.id;
-
-				secupressChart[ elID ] = new Chart( chartEl.getContext( "2d" ) ).Doughnut( chartData, {
-					animationEasing:       "easeInOutQuart",
-					showTooltips:          true,
-					segmentShowStroke:     false,
-					percentageInnerCutout: 93,
-					tooltipEvents:         [] // remove tooltips
-				} );
-
-			} );
 		} else {
 			// Update existing charts.
 			$.each( secupressChartEls, function( i, chartEl ) {

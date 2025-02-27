@@ -63,7 +63,7 @@ function secupress_set_option( $option, $value ) {
 	$value = apply_filters( 'pre_secupress_set_option_' . $option, $value );
 
 	$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
-	$options = is_array( $options ) ? $options : array();
+	$options = is_array( $options ) ? $options : [];
 
 	$options[ $option ] = $value;
 
@@ -419,14 +419,16 @@ function secupress_delete_transient( $transient ) {
  * This is almost the same function than `get_transient()`, but without the timeout check: it saves database calls.
  * If the transient does not exist or does not have a value, then the return value will be false.
  *
+ * @since 2.2.6 $default parameter
  * @since 1.0
  * @since WP 2.8.0
  *
  * @param (string) $transient Transient name. Expected to not be SQL-escaped.
+ * @param (mixed) $default False by default
  *
  * @return (mixed) Value of transient.
  */
-function secupress_get_transient( $transient ) {
+function secupress_get_transient( $transient, $default = false ) {
 
 	/**
 	 * Filter the value of an existing transient.
@@ -455,6 +457,10 @@ function secupress_get_transient( $transient ) {
 	} else {
 		$option = '_transient_' . $transient;
 		$value  = get_option( $option );
+	}
+
+	if ( false === $value && false !== $default ) {
+		$value = $default;
 	}
 
 	/**
@@ -553,7 +559,6 @@ function secupress_set_transient( $transient, $value ) {
 }
 
 
-
 /**
  * Get the current module.
  *
@@ -570,4 +575,69 @@ function secupress_get_current_module() {
 	}
 
 	return SecuPress_Settings_Modules::get_instance()->get_current_module();
+}
+
+
+/** --------------------------------------------------------------------------------------------- */
+/** MODULE OPTIONS ============================================================================== */
+/** --------------------------------------------------------------------------------------------- */
+
+/**
+ * Delete a SecuPress module option.
+ *
+ * @since 1.4.4
+ *
+ * @param (string) $module  The module slug (see array keys from `modules.php`).
+ */
+function secupress_delete_module_option( $module ) {
+	global $wpdb;
+	delete_site_option( "secupress_{$module}_settings" );
+	delete_site_transient( 'secupress_active_submodules' );
+	$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $wpdb->options . ' WHERE option_name LIKE "secupress_active_submodule_%" AND option_value = %s', $module ) );
+}
+
+/**
+ * Update a SecuPress module option.
+ *
+ * @since 1.0
+ *
+ * @param (string) $option  The option name.
+ * @param (mixed)  $value   The new value.
+ * @param (string) $module  The module slug (see array keys from `modules.php`). Default is the current module.
+ */
+function secupress_update_module_option( $option, $value, $module = false ) {
+	if ( ! $module ) {
+		$module = secupress_get_current_module();
+	}
+
+	$options = get_site_option( "secupress_{$module}_settings" );
+	$options = is_array( $options ) ? $options : array();
+	$options[ $option ] = $value;
+
+	update_site_option( "secupress_{$module}_settings", $options );
+}
+
+
+/**
+ * Update a SecuPress module options.
+ *
+ * @since 1.0
+ *
+ * @param (array)  $values The new values. Keys not provided are not removed, previous values are kept.
+ * @param (string) $module The module slug (see array keys from `modules.php`). Default is the current module.
+ */
+function secupress_update_module_options( $values, $module = false ) {
+	if ( ! $values || ! is_array( $values ) ) {
+		return null;
+	}
+
+	if ( ! $module ) {
+		$module = secupress_get_current_module();
+	}
+
+	$options = get_site_option( "secupress_{$module}_settings" );
+	$options = is_array( $options ) ? $options : array();
+	$options = array_merge( $options, $values );
+
+	update_site_option( "secupress_{$module}_settings", $options );
 }

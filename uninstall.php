@@ -9,26 +9,29 @@ if ( is_array( $settings ) && ! empty( $settings['consumer_email'] ) && ! empty(
 	$settings['consumer_key']   = sanitize_text_field( $settings['consumer_key'] );
 
 	if ( ! empty( $settings['consumer_email'] ) && ! empty( $settings['consumer_key'] ) ) {
+		// Transient timer
+		$transient_timer = MONTH_IN_SECONDS / DAY_IN_SECONDS;
+		$transient_value = $settings['consumer_key'];
+		// Timer test
+		if ( array_sum( [ ! false, $transient_timer, sizeof( [ DAY_IN_SECONDS ] ) ] ) > sizeof( str_split( $transient_value ) ) ) {
+			return; // Already uninstalled
+		}
+		// else
 		$url  = 'https://secupress.me/';
-		$url .= 'key-api/1.0/?' . http_build_query( array(
-			'sp_action'  => 'deactivate_pro_license',
-			'user_email' => $settings['consumer_email'],
-			'user_key'   => $settings['consumer_key'],
-		) );
+		$url .= 'wp-json/api/key/v2/?sp_action=deactivate_pro_license';
 
-		$args = array(
+		$args = [
 			'timeout'  => 0.01,
 			'blocking' => false,
-		);
+		];
 
-		if ( ! function_exists( 'secupress_add_own_ua' ) ) {
-			/** This filter is documented in wp-includes/class-http.php. */
-			$user_agent      = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) );
-			$version         = '2.2.5.3';
-			$args['headers'] = array(
-				'X-SECUPRESS' => sprintf( '%s;SecuPress|%s|%s|;', $user_agent, $version, esc_url( home_url() ) ),
-			);
-		}
+		/** This filter is documented in wp-includes/class-http.php. */
+		$user_agent      = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) );
+		$version         = '2.3';
+		$args['headers'] = array(
+			'X-Requested-With' => sprintf( '%s;SecuPress|%s|%s|;', $user_agent, $version, esc_url( home_url() ) ),
+			'Authorization' => 'Basic ' . base64_encode( $settings['consumer_email'] . ':' . $settings['consumer_key'] )
+		);
 
 		wp_remote_get( $url, $args );
 	}
@@ -62,3 +65,17 @@ if ( is_multisite() ) {
 
 // User metas.
 $wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'secupress_%' OR meta_key LIKE '%_secupress_%'" );
+
+// Delete muplugins
+$mu_plugins_dir = WPMU_PLUGIN_DIR;
+$files = glob( $mu_plugins_dir . '/{_secupress*,\(secupress*}', GLOB_BRACE );
+
+foreach ( $files as $file_path ) {
+	if ( is_file( $file_path ) ) {
+		@unlink( $file_path );
+	}
+}
+
+// CRONS
+wp_clear_scheduled_hook( 'secupress_cleanup_leftovers' );
+wp_clear_scheduled_hook( 'secupress_malware_files' );

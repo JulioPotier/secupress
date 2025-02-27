@@ -747,21 +747,6 @@ button.secupress-virgin {
 }
 
 /**
- * === Bad Theme
- */
-.secupress-bad-theme {
-	line-height: 2em !important;
-	height: 256px !important;
-}
-.secupress-bad-theme a{
-	font-weight: bold;
-	color: white
-}
-.secupress-bad-theme:before{
-	content: "\f334" !important;
-}
-
-/**
  * === Get Pro marks
  */
 .secupress-get-pro-version-div {
@@ -830,3 +815,13 @@ span.secupress-get-pro-version {
 .secupress_disable_select + p.description {
 	display:none;
 }
+
+.dashicons.secupress-otp {
+	font-size: xx-large;
+}
+.dashicons.dashicons-lock.secupress-otp {
+	color:#2271b1;
+}	
+.dashicons.dashicons-unlock.secupress-otp {
+	color:#b32d2e;
+}	

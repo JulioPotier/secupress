@@ -11,7 +11,7 @@ $this->add_section( __( 'Settings Manager', 'secupress' ), array( 'with_save_but
 
 $this->add_field( array(
 	'title'        => __( 'Settings Exporter', 'secupress' ),
-	'description'  => __( 'Export your settings so you can import them into another website or keep them as backup.', 'secupress' ),
+	'description'  => __( 'Export your settings to import them into another website or keep them as a backup.', 'secupress' ),
 	'name'         => $this->get_field_name( 'export_settings' ),
 	'type'         => 'export_form',
 ) );
@@ -19,7 +19,7 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'        => __( 'Settings Importer', 'secupress' ),
-	'description'  => __( 'Import previously exported settings from another website or from a previous save.', 'secupress' ),
+	'description'  => __( 'Import previously exported settings from another website or from a previous backup.', 'secupress' ),
 	'label_for'    => 'upload',
 	'name'         => $this->get_field_name( 'import_settings' ),
 	'type'         => 'import_upload_form',
@@ -27,7 +27,7 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'        => __( 'Reset All Settings', 'secupress' ),
-	'description'  => __( 'Set the settings like a fresh install.', 'secupress' ),
+	'description'  => __( 'Reset the settings to default, like a fresh install.', 'secupress' ),
 	'label_for'    => 'reset_all_settings',
 	'name'         => $this->get_field_name( 'reset_all_settings' ),
 	'type'         => 'reset_settings_button',

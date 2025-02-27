@@ -13,7 +13,7 @@ $this->add_field( array(
 	'label_for'         => $this->get_field_name( 'admin-bar' ),
 	'type'              => 'checkbox',
 	'value'             => secupress_get_module_option( 'advanced-settings_admin-bar', true ),
-	'label'             => sprintf( __( 'Yes, display the %s admin bar menu', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+	'label'             => sprintf( __( 'Yes, show the %s admin bar menu', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 ) );
 
 $this->add_field( array(
@@ -21,7 +21,7 @@ $this->add_field( array(
 	'label_for'         => $this->get_field_name( 'grade-system' ),
 	'type'              => 'checkbox',
 	'value'             => secupress_get_module_option( 'advanced-settings_grade-system', true ),
-	'label'             => sprintf( __( 'Yes, use and display the Grade system in %s', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+	'label'             => sprintf( __( 'Yes, enable and show the Grade system in %s', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 ) );
 
 $this->add_field( array(
@@ -29,5 +29,5 @@ $this->add_field( array(
 	'label_for'         => $this->get_field_name( 'expert-mode' ),
 	'type'              => 'checkbox',
 	'value'             => secupress_get_module_option( 'advanced-settings_expert-mode', false ),
-	'label'             => sprintf( __( 'Yes, hide all the contextual helps in %s', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+	'label'             => sprintf( __( 'Yes, hide all contextual help in %s', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 ) );

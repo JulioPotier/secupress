@@ -9,28 +9,77 @@
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
-add_filter( 'robots_txt', 'secupress_blackhole_robots_txt' );
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_blackhole_activate_write_robotstxt' );
+add_action( 'secupress.modules.activation', 'secupress_blackhole_activate_write_robotstxt' );
+/**
+ * Add our content to the robots.txt if does exist
+ *
+ * @author Julio Potier
+ * @since 2.2.6
+ */
+function secupress_blackhole_activate_write_robotstxt() {
+	$filesystem = secupress_get_filesystem();
+	$filename   = ABSPATH . 'robots.txt';
+
+	if ( ! file_exists( $filename ) ) { // We do not create it, the hook it enough
+		return;
+	}
+	$contents   = $filesystem->get_contents( $filename );
+	$contents   = secupress_blackhole_robotstxt_content( $contents, true );
+	$filesystem->put_contents( $filename, $contents );
+}
+
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_blackhole_deactivate_write_robotstxt' );
+add_action( 'secupress.modules.deactivation', 'secupress_blackhole_deactivate_write_robotstxt' );
+/**
+ * Add our content to the robots.txt if does exist
+ *
+ * @author Julio Potier
+ * @since 2.2.6
+ */
+function secupress_blackhole_deactivate_write_robotstxt() {
+	$filesystem = secupress_get_filesystem();
+	$filename   = ABSPATH . 'robots.txt';
+
+	if ( ! file_exists( $filename ) ) { // We do not create it, the hook it enough
+		return;
+	}
+	$contents   = $filesystem->get_contents( $filename );
+	$contents   = secupress_blackhole_robotstxt_content( $contents, true );
+	$dirname    = secupress_get_hashed_folder_name( basename( __FILE__, '.php' ) );
+
+	if ( false !== strpos( $contents, "User-agent: *\nDisallow: $dirname\n" ) ) {
+		$contents  = str_replace( "User-agent: *\nDisallow: $dirname\n", "User-agent: *\n", $output );
+		$filesystem->put_contents( $filename, $contents );
+	}
+}
+
+add_filter( 'robots_txt', 'secupress_blackhole_robotstxt_content', 20 );
 /**
  * Add forbidden URI in `robots.txt` file.
  *
- * @author Grégory Viguier
+ * @since 2.2.6 Add the rule on line 1 if not present
+ * @author Julio Potier
+ *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $output File content.
+ * @param (bool) $forced True to bypass the loggedin+whitelist
  *
  * @return (string) File content.
  */
-function secupress_blackhole_robots_txt( $output ) {
-	if ( is_user_logged_in() || secupress_blackhole_is_whitelisted() ) {
+function secupress_blackhole_robotstxt_content( $output, $forced = false ) {
+	if ( ! $forced && ( is_user_logged_in() || secupress_blackhole_is_whitelisted() ) ) {
 		return $output;
 	}
 
-	$dirname = secupress_get_hashed_folder_name( 'blackhole' );
+	$dirname = secupress_get_hashed_folder_name( basename( __FILE__, '.php' ) );
 
 	if ( false !== strpos( $output, "User-agent: *\n" ) ) {
 		$output  = str_replace( "User-agent: *\n", "User-agent: *\nDisallow: $dirname\n", $output );
 	} else {
-		$output .= "\nUser-agent: *\nDisallow: $dirname\n";
+		$output = "User-agent: *\nDisallow: $dirname\n\n" . $output;
 	}
 
 	return $output;
@@ -41,7 +90,7 @@ add_filter( 'template_include', 'secupress_blackhole_please_click_me', 1 );
 /**
  * Use a custom template for our trap.
  *
- * @since 2.2.5.2 Manage the ban from here with a nonce now
+ * @since 2.2.6 Manage the ban from here with a nonce now
  * @author Julio Potier
  *
  * @since 1.0
@@ -57,10 +106,10 @@ function secupress_blackhole_please_click_me( $template ) {
 	}
 
 	$url     = trailingslashit( secupress_get_current_url() );
-	$dirname = secupress_get_hashed_folder_name( 'blackhole' );
+	$dirname = secupress_get_hashed_folder_name( basename( __FILE__, '.php' ) );
 
 	if ( isset( $_GET['token'] ) && wp_verify_nonce( $_GET['token'], 'ban_me_please-' . date( 'ymdhi' ) ) ) {
-		$ip      = secupress_get_ip();
+		$ip      = secupress_get_ip( 'REMOTE_ADDR' );
 		$ban_ips = get_site_option( SECUPRESS_BAN_IP );
 
 		if ( ! is_array( $ban_ips ) ) {
@@ -79,9 +128,8 @@ function secupress_blackhole_please_click_me( $template ) {
 		wp_die( 'Something went wrong.' ); // Do not use secupress_die() here.
 	}
 
-
 	if ( substr( $url, - strlen( $dirname ) ) === $dirname ) {
-		add_filter( 'nonce_user_logged_out', 'secupress_modify_userid_for_nonces', 10, 2 );
+		add_filter( 'nonce_user_logged_out', 'secupress_modify_userid_for_nonces' );
 		return dirname( __FILE__ ) . '/inc/php/blackhole/warning-template.php';
 	}
 
@@ -115,6 +163,10 @@ function secupress_blackhole_is_whitelisted() {
 		return true;
 	}
 
+	$return = apply_filters( 'secupress.plugin.blackhole.is_allowed', false, $ip, $ua );
+	if ( has_filter( 'secupress.plugin.blackhole.is_allowed' ) ) {
+		_deprecated_hook( 'secupress.plugin.blackhole.is_allowed', '2.2.6', 'secupress.plugins.blackhole.is_allowed' );
+	}
 	/**
 	 * Filter the "whitelist".
 	 *
@@ -124,5 +176,5 @@ function secupress_blackhole_is_whitelisted() {
 	 * @param (string) $ip The user's IP.
 	 * @param (string) $ua The user's User-Agent.
 	 */
-	return apply_filters( 'secupress.plugin.blackhole.is_allowed', false, $ip, $ua );
+	return apply_filters( 'secupress.plugins.blackhole.is_allowed', $return, $ip, $ua );
 }

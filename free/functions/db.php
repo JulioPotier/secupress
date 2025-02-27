@@ -125,10 +125,14 @@ function secupress_change_db_prefix( $new_prefix, $tables ) {
 
 	return $new_prefix;
 }
+
 /**
  * Check a privilege for the DB_USER@DB_NAME on DB_HOST.
  *
+ * @since 2.2.6 Compat PHP 8.1
+ * @author Julio Potier
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (bool)
  */
@@ -137,16 +141,15 @@ function secupress_db_access_granted() {
 
 	// Get privilege for the WP user.
 	$host    = preg_replace( '/:\d+$/', '', DB_HOST );
-	$results = $wpdb->get_results( 'SHOW GRANTS FOR ' . DB_USER . '@' . $host ); // WPCS: unprepared SQL ok.
+	$results = $wpdb->get_results( 'SHOW GRANTS FOR ' . DB_USER . '@' . $host, ARRAY_A ); // WPCS: unprepared SQL ok.
 
 	// We got something.
-	if ( ! isset( $results[0]->{'Grants for ' . DB_USER . '@' . $host} ) ) {
+	if ( ! isset( $results[0]['Grants for ' . DB_USER . '@' . $host] ) ) {
 		return false;
 	}
 
 	$access_granted = false;
 	$quoted_db_name = str_replace( '_', '\\\*_', preg_quote( DB_NAME, '/' ) );
-
 	foreach ( $results as $result ) {
 		$result = reset( $result );
 		// USAGE only is not enought.
@@ -161,7 +164,7 @@ function secupress_db_access_granted() {
 		}
 	}
 
-	return $access_granted;
+	return (bool) $access_granted;
 }
 
 
@@ -169,6 +172,7 @@ function secupress_db_access_granted() {
  * Create a unique and new DB prefix without modifing `wp-config.php`.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (string)
  */
@@ -192,6 +196,7 @@ function secupress_create_unique_db_prefix() {
  * Return no WP tables, filtered.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (array) An array of DB tables.
  */
@@ -240,6 +245,7 @@ function secupress_get_non_wp_tables() {
  * Used as callback for `array_filter()`: keep rows where the value is greater than 1.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $value The value to test.
  *
@@ -254,6 +260,7 @@ function secupress_filter_greater_than_1( $value ) {
  * Return correct WP tables.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (array) An array of DB tables.
  */

@@ -669,7 +669,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 			'deleted_user_meta'       => __( 'User meta %2$s deleted for %1$s', 'secupress' ),
 			'wpmu_new_blog'           => __( 'Blog %1$s created with %2$s as Administrator', 'secupress' ),
 			'delete_blog'             => __( 'Blog %s deleted', 'secupress' ),
-			'phpmailer_init'          => __( 'E-mail sent from %1$s to %2$s', 'secupress' ),
+			'phpmailer_init'          => __( 'Email sent from %1$s to %2$s', 'secupress' ),
 			'http_api_debug'          => __( 'External request to %s', 'secupress' ),
 		);
 
@@ -812,18 +812,18 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		$messages = array(
 			/** Translators: 1 is the plugin name, 2 is an URL, 3 is an IP address, 4 is an identifier, 5 and 6 are some code. */
 			'secupress.block'         => sprintf( __( '%1$s prevented a request at %2$s from the IP %3$s. Block ID: %4$s. The server configuration at the moment: %5$s Data posted: %6$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', '%1$s', '%2$s', '%3$s', '%4$s', '%5$s' ),
-			'secupress.ban.ip_banned' => __( 'IP banned: %s.', 'secupress' ),
-			'switch_theme'            => __( 'Theme activated: %s.', 'secupress' ),
-			'wp_login'                => __( 'Administrator %s logged in.', 'secupress' ),
-			'delete_user'             => __( 'User deleted: %1$s. Posts assigned to: %2$s.', 'secupress' ),
+			'secupress.ban.ip_banned' => __( 'IP banned: %s', 'secupress' ),
+			'switch_theme'            => __( 'Theme activated: %s', 'secupress' ),
+			'wp_login'                => __( 'Administrator %s logged in', 'secupress' ),
+			'delete_user'             => __( 'User deleted: %1$s. Posts assigned to: %2$s', 'secupress' ),
 			'profile_update'          => __( '%1$s’s user data changed from: %2$s To: %3$s', 'secupress' ),
-			'user_register'           => __( 'New user %s created.', 'secupress' ),
+			'user_register'           => __( 'New user %s created', 'secupress' ),
 			'added_user_meta'         => __( 'User meta %2$s added to %1$s with the value %3$s', 'secupress' ),
 			'updated_user_meta'       => __( 'User meta %2$s updated for %1$s with the value %3$s Previous value was: %3$s', 'secupress' ),
 			'deleted_user_meta'       => __( 'User meta %2$s deleted for %1$s.', 'secupress' ),
-			'wpmu_new_blog'           => __( 'Blog %1$s created with %2$s as Administrator.', 'secupress' ),
-			'delete_blog'             => __( 'Blog %s deleted.', 'secupress' ),
-			'phpmailer_init'          => __( 'E-mail sent from %1$s to %2$s with the following subject: %3$s', 'secupress' ),
+			'wpmu_new_blog'           => __( 'Blog %1$s created with %2$s as Administrator', 'secupress' ),
+			'delete_blog'             => __( 'Blog %s deleted', 'secupress' ),
+			'phpmailer_init'          => __( 'Email sent from %1$s to %2$s with the following subject: %3$s', 'secupress' ),
 			'http_api_debug'          => __( 'External request to: %1$s with the following arguments: %2$s The response was: %3$s', 'secupress' ),
 		);
 
@@ -913,13 +913,13 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	/** Tools =================================================================================== */
 
 	/**
-	 * Get a user login followed by his/her ID.
+	 * Get a user login followed by their ID.
 	 *
 	 * @since 1.0
 	 *
 	 * @param (int|object) $user_id A user ID or a WP_User object.
 	 *
-	 * @return (string) This user login followed by his ID.
+	 * @return (string) This user login followed by their ID.
 	 */
 	protected static function format_user_login( $user_id ) {
 		if ( $user_id && is_numeric( $user_id ) ) {

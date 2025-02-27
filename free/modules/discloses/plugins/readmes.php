@@ -1,10 +1,10 @@
 <?php
 /**
- * Module Name: Protect Readme Files
- * Description: Deny access to all <code>readme</code> and <code>changelog</code> files.
+ * Module Name: Protect Readme Disclosures
+ * Description: Deny access to all <code>readme</code>, <code>changelog</code> and <code>debug</code> files.
  * Main Module: discloses
  * Author: SecuPress
- * Version: 1.0
+ * Version: 2.2.6
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
@@ -13,150 +13,143 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 /** ACTIVATION / DEACTIVATION =================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-add_action( 'secupress.modules.activation', 'secupress_protect_readmes_activation' );
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_readme_discloses_activate' );
+add_filter( 'secupress.plugins.activation.write_rules',                             'secupress_readme_discloses_activate' );
 /**
  * On module activation, maybe write the rules.
  *
+ * @since 2.2.6 
+ * @author Julio Potier
  * @since 1.0
+ * @author Grégory Viguier
  */
-function secupress_protect_readmes_activation() {
-	global $is_apache, $is_nginx, $is_iis7;
-
-	// Apache.
-	if ( $is_apache ) {
-		$rules = secupress_protect_readmes_apache_rules();
-	}
-	// IIS7.
-	elseif ( $is_iis7 ) {
-		$rules = secupress_protect_readmes_iis7_rules();
-	}
-	// Nginx.
-	elseif ( $is_nginx ) {
-		$rules = secupress_protect_readmes_nginx_rules();
-	}
-	// Not supported.
-	else {
-		$rules = '';
-	}
-
-	secupress_add_module_rules_or_notice( array(
-		'rules'  => $rules,
-		'marker' => 'readme_discloses',
-		'title'  => __( 'Protect Readme Files', 'secupress' ),
-	) );
-}
-
-
-add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_protect_readmes_activation_file' );
-function secupress_protect_readmes_activation_file() {
-	secupress_protect_readmes_activation();
-	secupress_scanit( 'Readme_Discloses', 3 );
-}
-
-add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_protect_readmes_deactivate' );
-/**
- * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
- *
- * @since 1.0
- */
-function secupress_protect_readmes_deactivate() {
-	secupress_remove_module_rules_or_notice( 'readme_discloses', __( 'Protect Readme Files', 'secupress' ) );
-	secupress_scanit( 'Readme_Discloses', 3 );
-}
-
-
-add_filter( 'secupress.plugins.activation.write_rules', 'secupress_protect_readmes_plugin_activate', 10, 2 );
-/**
- * On SecuPress activation, add the rules to the list of the rules to write.
- *
- * @since 1.0
- *
- * @param (array) $rules Other rules to write.
- *
- * @return (array) Rules to write.
- */
-function secupress_protect_readmes_plugin_activate( $rules ) {
-	global $is_apache, $is_nginx, $is_iis7;
+function secupress_readme_discloses_activate() {
 	$marker = 'readme_discloses';
+	$rules  = [];
 
-	if ( $is_apache ) {
-		$rules[ $marker ] = secupress_protect_readmes_apache_rules();
-	} elseif ( $is_iis7 ) {
-		$rules[ $marker ] = array( 'nodes_string' => secupress_protect_readmes_iis7_rules() );
-	} elseif ( $is_nginx ) {
-		$rules[ $marker ] = secupress_protect_readmes_nginx_rules();
-	}
+	$rules[ $marker ] = call_user_func( secupress_get_function_name_by_server_type( 'secupress_readme_discloses_rules_for_' ) );
+
+	secupress_add_module_rules_or_notice( [
+		'marker' => $marker,
+		'rules'  => $rules[ $marker ],
+		'title'  => esc_html__( 'Protect Readme Files', 'secupress' ),
+	] );
+
+	secupress_scanit( $marker, 3 );
 
 	return $rules;
 }
 
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_readme_discloses_deactivate' );
+/**
+ * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
+ *
+ * @since 1.0
+ * @author Grégory Viguier
+ */
+function secupress_readme_discloses_deactivate() {
+	secupress_remove_module_rules_or_notice( 'readme_discloses', __( 'Protect Readme Files', 'secupress' ) );
+	secupress_scanit( 'readme_discloses', 3 );
+}
 
 /** --------------------------------------------------------------------------------------------- */
 /** RULES ======================================================================================= */
 /** --------------------------------------------------------------------------------------------- */
 
 /**
- * Protect Readme Files: get rules for apache.
+ * Returns the regex for txt files that should not be read.
  *
+ * @since 2.2.6
+ * @author Julio Potier
+ * 
+ * @param (string) $base
+ * 
+ * @return (string)
+ */
+function secupress_readme_discloses_get_pattern( $base ) {
+	return '^' . $base . '(.*/)?(readme|changelog|debug)\.(txt|md|log|html?)$';
+}
+
+/**
+ * Get rules for apache.
+ *
+ * @since 2.2.6 Custom 404
+ * @author Julio Potier
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (string)
  */
-function secupress_protect_readmes_apache_rules() {
+function secupress_readme_discloses_rules_for_apache() {
 	$bases   = secupress_get_rewrite_bases();
 	$base    = $bases['base'];
-	$pattern = '^' . $bases['site_from'] . '(.*/)?(readme|changelog|debug)\.(txt|md|html|log)$';
+	$pattern = secupress_readme_discloses_get_pattern( $bases['site_from'] ) . ' [NC]';
 
-	$rules  = "<IfModule mod_rewrite.c>\n";
-	$rules .= "    RewriteEngine On\n";
-	$rules .= "    RewriteBase $base\n";
-	$rules .= "    RewriteRule $pattern - [R=404,L,NC]\n";
-	$rules .= "</IfModule>\n";
-
-	return $rules;
-}
-
-
-/**
- * Protect Readme Files: get rules for iis7.
- *
- * @since 1.0
- *
- * @return (string)
- */
-function secupress_protect_readmes_iis7_rules() {
-	$marker  = 'readme_discloses';
-	$spaces  = str_repeat( ' ', 8 );
-	$bases   = secupress_get_rewrite_bases();
-	$pattern = '^' . $bases['site_from'] . '(.*/)?(readme|changelog|debug)\.(txt|md|html|log)$';
-
-	$rules  = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
-	$rules .= "$spaces  <match url=\"$pattern\"/ ignoreCase=\"true\">\n";
-	$rules .= "$spaces  <action type=\"CustomResponse\" statusCode=\"404\"/>\n";
-	$rules .= "$spaces</rule>";
+	$rules   = "<IfModule mod_rewrite.c>\n";
+	$rules  .= "    RewriteEngine On\n";
+	$rules  .= "    RewriteBase $base\n";
+	$rules  .= "    RewriteRule ^ - [E=REDIRECT_PHP404:0]\n";
+	$rules  .= "\n";
+	$rules  .= "    RewriteCond %{REQUEST_URI} $pattern\n";
+	$rules  .= "    RewriteRule ^ - [E=REDIRECT_PHP404:files]\n";
+	$rules  .= "\n";
+	$rules  .= "    RewriteCond %{ENV:REDIRECT_PHP404} !=0\n";
+	$rules  .= "    " . secupress_get_404_rule_for_rewrites() . "\n";
+	$rules  .= "</IfModule>\n";
 
 	return $rules;
 }
 
 
 /**
- * Protect Readme Files: get rules for nginx.
+ * Get rules for iis7.
  *
+ * @since 2.2.6 Custom 404
+ * @author Julio Potier
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (string)
  */
-function secupress_protect_readmes_nginx_rules() {
+function secupress_readme_discloses_rules_for_iis7() {
 	$marker  = 'readme_discloses';
 	$bases   = secupress_get_rewrite_bases();
-	$pattern = '^' . $bases['site_from'] . '(.+/)?(readme|changelog|debug)\.(txt|md|html|log)$';
+	$pattern = secupress_readme_discloses_get_pattern( $bases['site_from'] );
+	$path    = str_replace( ABSPATH, '', SECUPRESS_INC_PATH );
 
-	// - http://nginx.org/en/docs/http/ngx_http_core_module.html#location
-	$rules  = "
+	$rules   = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
+	$rules  .= "    <match url=\"$pattern\"/ ignoreCase=\"true\">\n";
+	$rules  .= "    <serverVariables>\n";
+    $rules  .= "    	<set name=\"REDIRECT_PHP404\" value=\"files\" />\n";
+    $rules  .= "    </serverVariables>\n";
+    $rules  .= "    " . secupress_get_404_rule_for_rewrites() . "\n";
+	$rules  .= "</rule>\n";
+
+	return $rules;
+}
+
+/**
+ * Get rules for nginx.
+ *
+ * @since 2.2.6 Custom 404
+ * @author Julio Potier
+ * @since 1.0
+ * @author Grégory Viguier
+ *
+ * @return (string)
+ */
+function secupress_readme_discloses_rules_for_nginx() {
+	$marker  = 'readme_discloses';
+	$bases   = secupress_get_rewrite_bases();
+	$pattern = secupress_readme_discloses_get_pattern( $bases['site_from'] );
+	$path    = str_replace( ABSPATH, '', SECUPRESS_INC_PATH );
+	$rule404 = secupress_get_404_rule_for_rewrites();
+	$rules   = "
 server {
-	# BEGIN SecuPress $marker
-	location ~* $pattern {
-		return 404;
+	# BEGIN SecuPress {$marker}
+	location ~* {$pattern} {
+		set $"."REDIRECT_PHP404 \"files\";
+		{$rule404}
 	}
 	# END SecuPress
 }";

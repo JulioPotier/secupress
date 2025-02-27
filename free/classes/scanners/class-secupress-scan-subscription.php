@@ -52,7 +52,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	protected function init() {
 		global $wp_roles;
 		$this->role_minimum      = apply_filters( 'secupress.scan.' . __CLASS__ . '.role_minimum', 'subscriber' );
-		$this->role_minimum_i18n = isset( $wp_roles->role_names[ $this->role_minimum ] ) ? translate_user_role( $wp_roles->role_names[ $this->role_minimum ] ) : _x( 'None', 'a WP role', 'secupress' );
+		$this->role_minimum_i18n = isset( $wp_roles->role_names[ $this->role_minimum ] ) ? secupress_translate_user_role( $wp_roles->role_names[ $this->role_minimum ] ) : _x( 'None', 'user role', 'secupress' );
 		$this->title             = __( 'Check if the subscription settings are set correctly.', 'secupress' );
 
 		if ( ! is_multisite() || is_network_admin() ) {
@@ -182,7 +182,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 
 			if ( 'administrator' === $role ) {
 				// "bad"
-				$role = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'a WP role', 'secupress' );
+				$role = isset( $wp_roles->role_names[ $role ] ) ? secupress_translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'user role', 'secupress' );
 				$this->add_message( 200, array( $role, $this->role_minimum_i18n ) );
 			}
 		}
@@ -294,7 +294,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			foreach ( $roles as $blog_id => $role ) {
 				if ( 'administrator' === $role ) {
 					$is_bad = true;
-					$role   = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'a WP role', 'secupress' );
+					$role   = isset( $wp_roles->role_names[ $role ] ) ? secupress_translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'user role', 'secupress' );
 					$data   = array( $role, $this->role_minimum_i18n );
 					// Add a scan message for each sub-site with wrong role.
 					$this->add_subsite_message( 200, $data, 'scan', $blog_id );

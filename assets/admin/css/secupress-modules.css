@@ -80,6 +80,19 @@ p.secupress-sh-subtitle {
 	font-size: 11px;
 }
 
+.secupress-new-module{
+	background-color: #fbfb73;
+	color: #000;
+	padding: 1px 6px;
+	border-radius: 10px;
+	position: absolute;
+	left: 150px;
+	font-size: smaller;
+	font-weight: 600;
+	transform: rotate(-5deg);
+	box-shadow: 4px 3px 4px 1px rgba(255, 255, 255, 0.2);
+	margin-top: 4px;
+}
 .secupress-modules-list-links {
 	margin: 0; padding: 0;
 	list-style: none;
@@ -206,7 +219,7 @@ p.secupress-sh-subtitle {
 }
 .secupress-tab-content-header {
 	position: relative;
-	padding: 15px 175px 18px 20px;
+	padding: 15px 18px 18px 20px;
 	background: #F2F2F6;
 	color: #5A626F; /*#393E46*/
 	border-bottom: 2px solid #393E46;
@@ -531,6 +544,8 @@ input[type="text"]:required:invalid {
 	letter-spacing: 0.075em;
 }
 .secupress-module-options-block .secupress-button-primary,
+.secupress-module-options-block .secupress-button-secondary,
+.secupress-module-options-block .secupress-button-tertiary,
 .secublock + .submit input,
 .secublock + .submit button {
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
@@ -565,6 +580,9 @@ input[type="text"]:required:invalid {
 .secupress-show-pro {
 	background: url("../images/logo-pro-mini.png") top right no-repeat transparent;
 }
+p.secupress-show-pro {
+/*	background-size: contain;*/
+}
 
 /**
  * Module User Agent List
@@ -584,21 +602,23 @@ input[type="text"]:required:invalid {
 	display: inline;
 }
 .secupress-expand-trigger-container {
-	text-align: center;
+	text-align: right;
 }
 .secupress-textarea-container + .secupress-expand-trigger-container {
 	position: absolute;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	margin: 0 0 0 -14px;
+	margin: 0 20px 10px 0;
 }
 label .secupress-textarea-container + .secupress-expand-trigger-container {
-	margin-bottom: -14px;
+	margin: -14px;
 }
 .secupress-boxed-group + .secupress-expand-trigger-container {
 	position: relative;
 	margin-top: -33px;
+	display: table;
+	float: right;
 }
 .secupress-expand-trigger {
 	display: inline-block;
@@ -1001,17 +1021,19 @@ fieldset.secupress-boxed-group > b {
 	display: -webkit-flex;
 	display: -ms-flexbox;
 	display: flex;
+	flex-wrap: wrap;
 }
 [id="secupress-settings-module_services--"] .secupress-setting-row {
-	flex-basis: 50%;
+	flex-basis: 48%;
 	flex-grow: 0;
 	flex-shrink: 1;
 	display: flex;
 	flex-direction: row;
-	margin: 25px 15px;
+	margin: 25px 15px 0 0;
 	border-top: 0;
-	background: #23282d url("../images/bg-logo-sp.png") 50% 50% no-repeat;
+	background: #23282d url("../images/bg-logo-sp.png") left 15px center no-repeat;
 	text-align: center;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 [id="secupress-settings-module_services--"] .secupress-setting-row:first-child {
 	margin-left: 0;
@@ -1026,6 +1048,10 @@ fieldset.secupress-boxed-group > b {
 }
 [id="secupress-settings-module_services--"] .secupress-setting-row .secupress-flex {
 	flex-direction: column;
+	flex-grow: 1;
+}
+[id="secupress-settings-module_services--"] .secupress-setting-row-title {
+	font-size: 1.5em;
 }
 [id="secupress-settings-module_services--"] .description {
 	margin: 1.5em auto 2em;
@@ -1035,7 +1061,7 @@ fieldset.secupress-boxed-group > b {
 	width: 100%;
 	padding: 7px 15px;
 	margin-top: auto;
-	background: #5A626F;
+	background: #26B3A9;
 	font-size: 11px;
 	letter-spacing: 0.1em;
 }
@@ -1312,8 +1338,12 @@ label {
 	        transform: rotate(90deg);
 }
 
-.description.warning strong {
+.description.warning strong, .description.warning .dashicons {
 	color: #CB234F;
+}
+
+.description.help strong, .description.help .dashicons {
+	color: #26B3A9;
 }
 
 .secupress-logs li {
@@ -1505,4 +1535,37 @@ p > .secupress-inline-alert:before {
 }
 .secupress-flex .plugin-card .button {
 	font-weight: 400;
+}
+#secupress-group-content-spam li strong{
+	color: #c00;
+}
+#secupress-group-content-spam-allowed li strong{
+	color: #008f08;
+}
+.secupress-setting-row_file-scanner_file-scanner .dashicons {
+	vertical-align: middle;
+}
+/*CAPTCHA*/
+.secupress-setting-row_captcha_emoji-set select{
+	font-size: x-large;
+}
+li.secupress-status-fail:before{
+	content:"\f153";
+	font-family: 'dashicons';
+	vertical-align: bottom;
+	padding-right: 5px;
+}
+li.secupress-status-fail{
+	font-weight: 600;
+	color: #d63638;
+}
+li.secupress-status-success:before{
+	content:"\f12a";
+	font-family: 'dashicons';
+	vertical-align: bottom;
+	padding-right: 5px;
+}
+li.secupress-status-success{
+	font-weight: 600;
+	color: #26B3A9;
 }

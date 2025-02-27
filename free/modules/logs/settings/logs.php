@@ -14,7 +14,7 @@ $main_field_name = $this->get_field_name( 'action-logs-activated' );
 
 $this->add_field( array(
 	'title'             => __( 'WordPress action logs', 'secupress' ),
-	'description'       => __( 'What happened on your WordPress website? By activating this module, most sensitive actions will be logged.', 'secupress' ),
+	'description'       => __( 'What occurred on your WordPress website? Activating this module will log most sensitive actions.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'type'              => 'activate_action_logs',
 	'label'             => __( 'Yes, log WordPress actions', 'secupress' ),
@@ -56,7 +56,7 @@ if ( class_exists( 'SecuPress_Action_Logs' ) ) :
 
 	$this->add_field( array(
 		'title'        => '',
-		'description'  => __( 'What happened on your WordPress website?', 'secupress' ),
+		'description'  => __( 'What occured on your WordPress website?', 'secupress' ),
 		'depends'      => $main_field_name,
 		'name'         => $this->get_field_name( 'logs-action' ),
 		'type'         => 'html',
@@ -73,7 +73,7 @@ $main_field_name = $this->get_field_name( '404-logs-activated' );
 
 $this->add_field( array(
 	'title'             => __( '404 Error Pages Log', 'secupress' ),
-	'description'       => __( '404 Error pages are common, but it can also be some bots trying to find insecure content on your website. You may want to know that.', 'secupress' ),
+	'description'       => __( '404 error pages are common but may also indicate bots searching for insecure content on your website.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'type'              => 'activate_404_logs',
 	'label'             => __( 'Yes, log WordPress 404s', 'secupress' ),
@@ -95,7 +95,7 @@ if ( class_exists( 'SecuPress_404_Logs' ) ) :
 
 	$this->add_field( array(
 		'title'        => '',
-		'description'  => __( 'What happened on your WordPress website?', 'secupress' ),
+		'description'  => __( 'What occured on your WordPress website?', 'secupress' ),
 		'depends'      => $main_field_name,
 		'name'         => $this->get_field_name( 'logs-err404' ),
 		'type'         => 'html',

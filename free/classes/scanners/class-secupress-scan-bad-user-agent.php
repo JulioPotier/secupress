@@ -39,10 +39,10 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 	 */
 	protected function init() {
 		$this->title    = __( 'Check if bad User Agents can visit your website.', 'secupress' );
-		$this->more     = __( 'Bad User Agents are bots that provide no value to the website. They include scrapers, spambots, email harvesters and more bots that you don’t want on your site. Those bots that are crawling with a malicious purpose, have no desire to follow any <code>robots.txt</code> or meta tag.', 'secupress' );
+		$this->more     = sprintf( __( 'Bad User Agents are bots that provide no value to the website. They include scrapers, spambots, email harvesters and more bots that you don’t want on your site. Those bots that are crawling with a malicious purpose, have no desire to follow any %s or meta tag.', 'secupress' ), secupress_code_me( 'robots.txt' ) );
 		$this->more_fix = sprintf(
 			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
-			'<em>' . __( 'Block bad User Agents', 'secupress' ) . '</em>',
+			'<em>' . __( 'Block Bad User Agents', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_user-agents-header">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}

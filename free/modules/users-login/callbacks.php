@@ -33,10 +33,12 @@ function secupress_users_login_settings_callback( $settings ) {
 	secupress_move_login_settings_callback( $modulenow, $settings, $activate );
 
 	// Double authentication.
-	secupress_double_auth_settings_callback( $modulenow, $settings, $activate );
+	if ( function_exists( 'secupress_pro_double_auth_settings_callback' ) ) {
+		secupress_pro_double_auth_settings_callback( $modulenow, $settings, $activate );
+	}
 
 	// Captcha.
-	secupress_captcha_settings_callback( $modulenow, $activate );
+	secupress_captcha_settings_callback( $modulenow, $settings, $activate );
 
 	// Login protection.
 	secupress_login_protection_settings_callback( $modulenow, $settings, $activate );
@@ -45,13 +47,13 @@ function secupress_users_login_settings_callback( $settings ) {
 	secupress_password_policy_settings_callback( $modulenow, $settings, $activate );
 
 	// Logins blacklist.
-	secupress_logins_blacklist_settings_callback( $modulenow, $activate );
+	secupress_logins_blacklist_settings_callback( $modulenow, $settings, $activate );
 
 	// Stop User Enumeration.
 	secupress_stopuserenumeration_settings_callback( $modulenow, $activate );
 
 	// Prevent User Creation
-	secupress_preventusercreation_settings_callback( $modulenow, $activate );
+	secupress_preventusercreation_settings_callback( $modulenow, $settings, $activate );
 
 	// Lock Default Role
 	secupress_lock_default_role_settings_callback( $modulenow, $settings, $activate );
@@ -78,7 +80,7 @@ function secupress_users_login_settings_callback( $settings ) {
 
 
 /**
- * Double authentication plugins.
+ * Captcha plugin.
  *
  * @since 1.0
  *
@@ -86,31 +88,16 @@ function secupress_users_login_settings_callback( $settings ) {
  * @param (array)      $settings  The module settings, passed by reference.
  * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
-function secupress_double_auth_settings_callback( $modulenow, &$settings, $activate ) {
-
-	if ( ! empty( $activate['double-auth_type'] ) && ! secupress_is_submodule_active( 'users-login', 'passwordless' ) ) {
-		secupress_manage_submodule( $modulenow, 'passwordless', '1' === $activate['double-auth_type'] && secupress_is_pro() );
-	} elseif ( ! isset( $activate['double-auth_type'] ) && secupress_is_submodule_active( 'users-login', 'passwordless' ) ) {
-		secupress_deactivate_submodule( $modulenow, array( 'passwordless' ) );
-	}
-
-	// Affected roles.
-	secupress_manage_affected_roles( $settings, $modulenow, 'double-auth' );
-}
-
-
-/**
- * Captcha plugin.
- *
- * @since 1.0
- *
- * @param (string)     $modulenow Current module.
- * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
- */
-function secupress_captcha_settings_callback( $modulenow, $activate ) {
+function secupress_captcha_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'login-captcha', ! empty( $activate['captcha_activate'] ) );
+		if ( 'challenge' === $settings['captcha_captcha-style'] ) {
+			$sets = secupress_get_emojiset( 'all' );
+			$settings['captcha_emoji-set'] = 'random' || isset( $sets[ $settings['captcha_emoji-set'] ] ) ? $settings['captcha_emoji-set'] : reset( $sets );
+		}
+	} else {
+		unset( $settings['captcha_emoji-set'] );
 	}
 }
 
@@ -130,6 +117,7 @@ function secupress_login_protection_settings_callback( $modulenow, &$settings, $
 		$activate['login-protection_type'] = array_flip( $activate['login-protection_type'] );
 	}
 	secupress_manage_submodule( $modulenow, 'limitloginattempts', isset( $activate['login-protection_type']['limitloginattempts'] ) );
+	secupress_manage_submodule( $modulenow, 'passwordspraying', isset( $activate['login-protection_type']['passwordspraying'] ) );
 	secupress_manage_submodule( $modulenow, 'bannonexistsuser',   isset( $activate['login-protection_type']['bannonexistsuser'] ) );
 	secupress_manage_submodule( 'discloses', 'login-errors-disclose', ! empty( $activate['login-protection_login_errors'] ) );
 
@@ -139,7 +127,7 @@ function secupress_login_protection_settings_callback( $modulenow, &$settings, $
 
 	// (De)Activation.
 	if ( false !== $activate ) {
-		secupress_manage_submodule( $modulenow, 'only-one-connection', ! empty( $activate['login-protection_only-one-connection'] ) );
+		secupress_manage_submodule( $modulenow, 'only-one-connection', ! empty( $activate['login-protection_only-one-connection'] ) ); // Old module
 		secupress_manage_submodule( $modulenow, 'sessions-control', ! empty( $activate['login-protection_sessions_control'] ) );
 	}
 }
@@ -180,13 +168,16 @@ function secupress_password_policy_settings_callback( $modulenow, &$settings, $a
  * @since 1.0
  *
  * @param (string)     $modulenow Current module.
+ * @param (array)      $settings  The module settings, passed by reference.
  * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
-function secupress_logins_blacklist_settings_callback( $modulenow, $activate ) {
+function secupress_logins_blacklist_settings_callback( $modulenow, $settings, $activate ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
+		$settings['blacklist-logins_admin']  = (int) ! empty( $settings['blacklist-logins_admin'] );
 		secupress_manage_submodule( $modulenow, 'blacklist-logins', ! empty( $activate['blacklist-logins_activated'] ) );
 	}
+	return $settings;
 }
 
 
@@ -209,15 +200,33 @@ function secupress_stopuserenumeration_settings_callback( $modulenow, $activate 
 /**
  * (De)Activate prevent user creation plugin.
  *
- * @since 1.4.5.9
+ * @since 2.2.6
  *
  * @param (string)     $modulenow Current module.
  * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
-function secupress_preventusercreation_settings_callback( $modulenow, $activate ) {
+function secupress_preventusercreation_settings_callback( $modulenow, &$settings, $activate ) {
+	if ( false === $activate ) {
+		return;
+	}
+	$db_opt             = secupress_get_module_option( 'user_protection_confirm', false, $modulenow );
+	$confirmed          = $db_opt || isset( $settings['blacklist-logins_confirm'] );
+	$user_prot_activate = isset( $activate['blacklist-logins_user-creation-protection'] ) && $activate['blacklist-logins_user-creation-protection'];
+
 	// (De)Activation.
-	if ( false !== $activate && secupress_is_pro() ) {
-		secupress_manage_submodule( $modulenow, 'prevent-user-creation', ! empty( $activate['blacklist-logins_prevent-user-creation'] ) );
+	//secupress_manage_submodule( $modulenow, 'prevent-reset-password', isset( $activate['blacklist-logins_prevent-reset-password'] ) );
+	secupress_manage_submodule( $modulenow, 'same-email-domain', isset( $activate['blacklist-logins_same-email-domain'] ) );
+	if ( secupress_is_pro() ) {
+		secupress_manage_submodule( $modulenow, 'user-creation-protection', $confirmed && $user_prot_activate );
+		secupress_manage_submodule( $modulenow, 'prevent-user-creation',    $user_prot_activate && isset( $activate['blacklist-logins_prevent-user-creation'] ) );
+		secupress_manage_submodule( $modulenow, 'bad-email-domains',        isset( $activate['blacklist-logins_bad-email-domains'] ) );
+	}
+
+	if ( ! secupress_is_submodule_active( $modulenow, 'user-creation-protection' ) ) {
+		secupress_deactivate_submodule( $modulenow, 'prevent-user-creation' );
+		unset( $settings['user_protection_confirm'] );
+	} else {
+		$settings['user_protection_confirm'] = 1;
 	}
 }
 
@@ -239,7 +248,7 @@ function secupress_lock_default_role_settings_callback( $modulenow, $settings, $
 			$valid_role = ! empty( $activate['blacklist-logins_default-role-activated'] ) && in_array( $settings['blacklist-logins_default-role'], array_keys( $roles ) ) && ! isset( secupress_get_forbidden_default_roles()[ $settings['blacklist-logins_default-role'] ] );
 			secupress_manage_submodule( $modulenow, 'default-role', $valid_role );
 		} else {
-			secupress_manage_submodule( $modulenow, 'default-role', false );
+			secupress_manage_submodule( $modulenow, 'default-role', isset( $activate['blacklist-logins_default-role-activated'] ) );
 		}
 	}
 
@@ -359,7 +368,7 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 	if ( false !== $activate && ! empty( $activate['move-login_activated'] ) ) {
 		if ( empty( $settings['move-login_slug-login'] ) ) {
 			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
-			$message .= __( 'Please choose your login URL.', 'secupress' );
+			$message .= __( 'Please select your login page.', 'secupress' );
 			secupress_add_settings_error( "secupress_{$modulenow}_settings", 'forbidden-slugs', $message, 'error' );
 		}
 
@@ -381,7 +390,8 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 		if ( empty( $settings['move-login_slug-login'] ) ) {
 			secupress_deactivate_submodule( $modulenow, array( 'move-login' ) );
 		} else {
-			secupress_manage_submodule( $modulenow, 'move-login', ! empty( $activate['move-login_activated'] ) );
+			secupress_manage_submodule( $modulenow, 'move-login',   ! empty( $activate['move-login_activated'] ) );
+			secupress_manage_submodule( $modulenow, 'singlesignon', ! empty( $activate['move-login_singlesignon'] ) );
 		}
 	}
 	if ( isset( $activate['move-login_activated'] ) ) {

@@ -17,7 +17,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.2';
+	const VERSION = '2.2.6';
 
 
 	/** Properties. ============================================================================= */
@@ -33,6 +33,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 * Constants to test, with values to test against.
 	 *
 	 * @var (array)
+	 * @since 2.2.6 CONCATENATE_SCRIPTS
 	 */
 	protected $constants = array(
 		'ALLOW_UNFILTERED_UPLOADS' => false,
@@ -44,6 +45,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		'WP_ALLOW_REPAIR'          => false,
 		'WP_DEBUG'                 => false,
 		'WP_DEBUG_DISPLAY'         => false,
+		'CONCATENATE_SCRIPTS'      => false,
 	);
 
 
@@ -128,7 +130,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			300 => __( 'Some PHP constants could not be set correctly: %s.', 'secupress' ),
 			/** Translators: %s is a constant name. */
 			301 => sprintf( __( 'Impossible to create a <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> but the default value for %s needs to be changed.', 'secupress' ), '<code>COOKIEHASH</code>' ),
-			302 => sprintf( __( 'The <code>%s</code> file is not writable, the constants could not be changed.', 'secupress' ), secupress_get_wpconfig_filename() ),
+			302 => sprintf( __( 'The %s file is not writable, the constants could not be changed.', 'secupress' ), secupress_code_me( secupress_get_wpconfig_filename() ) ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -375,6 +377,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			'WP_DEBUG_DISPLAY'         => 'debugging',
 			'WP_HOME'                  => 'locations',
 			'WP_SITEURL'               => 'locations',
+			'CONCATENATE_SCRIPTS'      => 'script-concat',
 		);
 
 		if ( empty( $has_plugin[ $constant ] ) ) {

@@ -84,6 +84,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$modules = static::get_modules();
 		$module  = $module ? $module : $this->modulenow;
 
+		if ( ! empty( $modules[ $module ]['title-alt'] ) ) {
+			return $modules[ $module ]['title-alt'];
+		}
 		if ( ! empty( $modules[ $module ]['title'] ) ) {
 			return $modules[ $module ]['title'];
 		}
@@ -132,6 +135,23 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		}
 
 		return '';
+	}
+
+
+	/**
+	 * Get if a module is new
+	 *
+	 * @since 2.2.6
+	 *
+	 * @param (string) $module The desired module.
+	 *
+	 * @return (bool)
+	*/
+	final public function is_new_module( $module = false ) {
+		$modules = static::get_modules();
+		$module  = $module ? $module : $this->modulenow;
+
+		return isset( $modules[ $module ]['new'] ) && $this->modulenow !== $module;
 	}
 
 
@@ -249,10 +269,13 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	protected function print_tabs() {
 		foreach ( static::get_modules() as $key => $module ) {
 			$icon   = isset( $module['icon'] ) ? $module['icon'] : 'secupress-simple';
+			$icon   = secupress_is_white_label() ? '' : $icon;
 			$class  = $this->get_current_module() === $key ? 'active' : '';
 			$class .= ! empty( $module['mark_as_pro'] ) ? ' secupress-pro-module' : '';
+			$new    = $this->is_new_module( $key ) ? '<span class="secupress-new-module">' . _x( 'New!', 'module', 'secupress' ) . '</span>' : '';
 			?>
 			<li>
+				<?php echo $new; ?>
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="<?php echo $class; ?> module-<?php echo sanitize_key( $key ); ?>">
 					<span class="secupress-tab-name"><?php echo $module['title']; ?></span>
 					<span class="secupress-tab-summary">
@@ -263,6 +286,17 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 					?>
 					</span>
 					<i class="secupress-icon-<?php echo $icon; ?>" aria-hidden="true"></i>
+				</a>
+			</li>
+			<?php
+		}
+		if ( ! secupress_is_pro() && ! secupress_is_white_label() ) {
+			?>
+			<li>
+				<a href="<?php echo esc_url( secupress_admin_url( 'get-pro' ) ); ?>" class="module-get-pro">
+					<span class="secupress-tab-name"><?php _e( 'Unlock all PRO features', 'secupress' ); ?></span>
+					<span class="secupress-tab-summary"><?php _e( 'Buy SecuPress Pro now', 'secupress' ); ?></span>
+					<i class="icon-secupress-simple" aria-hidden="true"></i>
 				</a>
 			</li>
 			<?php
@@ -335,11 +369,8 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		if ( ! $this->display_module_reset_box() ) {
 			return;
 		}
-		// //// Todo save settings with history.
 		$this->set_current_section( 'reset' );
 		$this->set_section_description( __( 'When you need to reset this module’s settings to the default.', 'secupress' ) );
-		// For now, remove the reset button since settings are linked to module activation, I don't want to deactivate all in one click :s
-		// $this->add_section( __( 'Module settings', 'secupress' ), array( 'with_save_button' => false ) );
 
 		$this->set_current_plugin( 'reset' );
 
@@ -482,7 +513,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			echo '<label for="secupress-ban-ip" class="screen-reader-text">' . __( 'Specify an IP to ban.', 'secupress' ) . '</label><br/>';
 			echo '<p class="description">' . __( 'You can use <a href="https://docs.secupress.me/article/161-ip-range">IP ranges</a>.', 'secupress' ) . '</p>';
 			echo '<textarea cols="50" id="secupress-ban-ip" name="ip"></textarea> ';
-			echo '<button type="submit" class="secupress-button secupress-button-mini">' . __( 'Ban IP', 'secupress' ) . '</button>';
+			echo '<button type="submit" class="secupress-button secupress-button-mini">' . _x( 'Ban IP', 'verb', 'secupress' ) . '</button>';
 		echo "</form>\n";
 
 		// Search.
@@ -531,7 +562,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 					$href   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip );
 
 					printf( __( '<strong>%s</strong> <em>(Banned until %s)</em>', 'secupress' ), esc_html( $ip ), $time );
-					printf( '<span><a class="a-unban-ip" href="%s">%s</a> <span class="spinner secupress-inline-spinner hide-if-no-js"></span></span>', esc_url( $href ), __( 'Remove', 'secupress' ) );
+					printf( '<span><a class="a-unban-ip" href="%s">%s</a> <span class="spinner secupress-inline-spinner hide-if-no-js"></span></span>', esc_url( $href ), _x( 'Remove', 'verb', 'secupress' ) );
 				echo "</li>\n";
 			}
 			if ( $count_ips > $limit ) {
@@ -547,10 +578,10 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		echo '<p id="secupress-banned-ips-actions">';
 			// Display a button to unban all IPs.
 			$clear_href = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-clear-ips' . $referer_arg ), 'secupress-clear-ips' );
-			echo '<a class="secupress-button secupress-button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-ips-button" href="' . esc_url( $clear_href ) . '" data-loading-i18n="' . esc_attr__( 'Clearing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
+			echo '<a class="secupress-button secupress-button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-ips-button" href="' . esc_url( $clear_href ) . '" data-loading-i18n="' . esc_attr__( 'Clearing&hellip;', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
 			echo '<span class="spinner secupress-inline-spinner' . ( $ban_ips || $is_search ? ' hide-if-no-js' : ' hidden' ) . '"></span>';
 			// For JS: ban a IP.
-			echo '<button type="button" class="secupress-button secupress-button-primary hide-if-no-js" id="secupress-ban-ip-button" data-loading-i18n="' . esc_attr__( 'Ban in progress&hellip;', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Disallow', 'secupress' ) . '">' . __( 'Disallow', 'secupress' ) . "</button>\n";
+			echo '<button type="button" class="secupress-button secupress-button-primary hide-if-no-js" id="secupress-ban-ip-button" data-loading-i18n="' . esc_attr__( 'Ban in progress&hellip;', 'secupress' ) . '" data-original-i18n="' . esc_attr_x( 'Disallow', 'verb', 'secupress' ) . '">' . _x( 'Disallow', 'verb', 'secupress' ) . "</button>\n";
 			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
 		echo "</p>\n";
 	}
@@ -578,7 +609,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			echo '<label for="secupress-whitelist-ip" class="screen-reader-text">' . __( 'Specify an IP to add to the allowed list.', 'secupress' ) . '</label><br/>';
 			echo '<p class="description">' . __( 'You can use <a href="https://docs.secupress.me/article/161-ip-range">IP ranges</a>.', 'secupress' ) . '</p>';
 			echo '<textarea cols="50" id="secupress-whitelist-ip" name="ip"></textarea> ';
-			echo '<button type="submit" class="secupress-button secupress-button-mini">' . __( 'Allow IP', 'secupress' ) . '</button>';
+			echo '<button type="submit" class="secupress-button secupress-button-mini">' . _x( 'Allow IP', 'verb', 'secupress' ) . '</button>';
 		echo "</form>\n";
 
 		// Search.
@@ -599,9 +630,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		echo '<form action="' . esc_url_raw( $page_url ) . '" id="form-search-whitelist-ip"' . ( $ban_ips || $is_search ? '' : ' class="hidden"' ) . ' method="post">';
 			echo '<label for="secupress-search-whitelist-ip" class="screen-reader-text">' . __( 'Search IP', 'secupress' ) . '</label><br/>';
 			echo '<input type="search" id="secupress-search-whitelist-ip" name="secupress-search-whitelist-ip" value="' . esc_attr( wp_unslash( $search_val ) ) . '"/> ';
-			echo '<button type="submit" class="secupress-button secupress-button-primary" data-loading-i18n="' . esc_attr__( 'Searching...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Search IP', 'secupress' ) . '">' . __( 'Search IP', 'secupress' ) . '</button> ';
+			echo '<button type="submit" class="secupress-button secupress-button-primary" data-loading-i18n="' . esc_attr__( 'Searching&hellip;', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Search IP', 'secupress' ) . '">' . __( 'Search IP', 'secupress' ) . '</button> ';
 			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
-			echo '<a class="secupress-button secupress-button-secondary' . ( $search_val ? '' : ' hidden' ) . '" href="' . esc_url( $page_url ) . '" data-loading-i18n="' . esc_attr__( 'Reset in progress...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Reset', 'secupress' ) . '">' . __( 'Cancel search', 'secupress' ) . '</a> ';
+			echo '<a class="secupress-button secupress-button-secondary' . ( $search_val ? '' : ' hidden' ) . '" href="' . esc_url( $page_url ) . '" data-loading-i18n="' . esc_attr__( 'Reset in progress&hellip;', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Reset', 'secupress' ) . '">' . __( 'Cancel search', 'secupress' ) . '</a> ';
 		echo "</form>\n";
 
 		// Slice the list a bit: limit last results.
@@ -644,7 +675,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			echo '<a class="secupress-button secupress-button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-whitelist-ips-button" href="' . esc_url( $clear_href ) . '" data-loading-i18n="' . esc_attr__( 'Clearing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
 			echo '<span class="spinner secupress-inline-spinner' . ( $ban_ips || $is_search ? ' hide-if-no-js' : ' hidden' ) . '"></span>';
 			// For JS: ban a IP.
-			echo '<button type="button" class="secupress-button secupress-button-primary hide-if-no-js" id="secupress-whitelist-ip-button" data-loading-i18n="' . esc_attr__( 'Adding to allowed list&hellip;', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Allow', 'secupress' ) . '">' . __( 'Allow', 'secupress' ) . "</button>\n";
+			echo '<button type="button" class="secupress-button secupress-button-primary hide-if-no-js" id="secupress-whitelist-ip-button" data-loading-i18n="' . esc_attr__( 'Adding to allowed list&hellip;', 'secupress' ) . '" data-original-i18n="' . esc_attr_x( 'Allow', 'verb', 'secupress' ) . '">' . _x( 'Allow', 'verb', 'secupress' ) . "</button>\n";
 			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
 		echo "</p>\n";
 	}
@@ -684,7 +715,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<p class="description desc">
 				<?php _e( 'Post creation or update will not be logged, but rather password and profile update, email changes, new administrator user, important role has logged in...', 'secupress' ); ?>
 			</p>
-			<p class="submit"><button type="submit" class="secupress-button secupress-button-primary"><?php _e( 'Submit' ); ?></button></p>
+			<p class="submit"><button type="submit" class="secupress-button secupress-button-primary"><?php _ex( 'Submit', 'verb', 'secupress' ); ?></button></p>
 		</form>
 		<?php
 	}

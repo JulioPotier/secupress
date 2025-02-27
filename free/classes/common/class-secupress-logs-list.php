@@ -184,25 +184,24 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	public function screen_title_or_tabs() {
 		global $title, $wp_list_table;
 
-		$title_tag = secupress_wp_version_is( '4.3-alpha' ) ? 'h1' : 'h2';
 		$log_types = SecuPress_Logs::get_log_types();
 
 		// No tabs, somebody messed it up. Fallback.
 		if ( ! $log_types || ! is_array( $log_types ) ) {
-			echo "<$title_tag>$title</$title_tag>\n";
+			echo "<h1>$title</h1>\n";
 			return;
 		}
 
 		// Only 1 tab, no need to go further.
 		if ( 1 === count( $log_types ) ) {
-			echo "<$title_tag>" . get_post_type_object( $log_types[ $this->log_type ]['post_type'] )->label . "</$title_tag>\n";
+			echo "<h1>" . get_post_type_object( $log_types[ $this->log_type ]['post_type'] )->label . "</h1>\n";
 			return;
 		}
 
 		$i        = 0;
 		$page_url = secupress_admin_url( 'logs' );
 
-		echo "<$title_tag class=\"nav-tab-wrapper\">";
+		echo "<h1 class=\"nav-tab-wrapper\">";
 
 		foreach ( $log_types as $log_type => $atts ) {
 			$current_url = $i ? add_query_arg( 'tab', $log_type, $page_url ) : $page_url;
@@ -212,7 +211,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			++$i;
 		}
 
-		echo "</$title_tag>\n";
+		echo "</h1>\n";
 	}
 
 

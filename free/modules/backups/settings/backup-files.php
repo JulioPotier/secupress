@@ -6,7 +6,7 @@ $this->add_section( __( 'Files Backup', 'secupress' ), array( 'with_save_button'
 
 
 $this->add_field( array(
-	'title'        => __( 'Run a Files Backup', 'secupress' ),
+	'title'        => __( 'Execute a Files Backup', 'secupress' ),
 	'name'         => $this->get_field_name( 'backup-file' ),
 	'type'         => 'backup_files',
 ) );

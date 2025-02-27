@@ -81,6 +81,7 @@ function secupress_move_login_get_slugs() {
 	$slugs['passwordless_autologin']  = 'passwordless_autologin';
 	$slugs['confirmaction']           = 'confirmaction';
 	$slugs['confirm_admin_email']     = 'confirm_admin_email';
+	$slugs['lostpassword']            = 'lostpassword';
 
 	return $slugs;
 }
@@ -302,6 +303,9 @@ function secupress_move_login_set_path( $path ) {
  * Set the URL: `login?action=logout -> /logout`.
  * If the action is not present when we try to build the new URL, we fallback to `/login`. Then we can use this function after the action is added.
  *
+ * @since 2.2.6 Create a placeholder to prevent the homeurl to be replaced if the new page contains a piee of the homeurl, yep, it happened.
+ * @author Julio Potier
+ *
  * @since 1.0
  * @author Grégory Viguier
  *
@@ -311,18 +315,22 @@ function secupress_move_login_set_path( $path ) {
  * @return (string) The new URL, with our custom slug.
  */
 function secupress_move_login_login_to_action( $link, $action ) {
-	$slugs = secupress_move_login_get_slugs();
+	$rnd      = wp_generate_password( 6, false, false );
+	$link     = str_replace( home_url(), "###$rnd###", $link );
+	$slugs    = secupress_move_login_get_slugs();
 	if ( isset( $slugs[ $action ] ) ) {
 		$slug = $slugs[ $action ];
 		$link = str_replace( array( '/' . $slugs['login'], '?amp;' ), array( '/' . $slug, '?' ), remove_query_arg( 'action', $link ) );
 	} else {
 		$slug = $slugs['login'];
 	}
+	$link     = str_replace( "###$rnd###", home_url(), $link );
 
 	$link = add_query_arg( 'action', $action, $link );
 
 	return $link;
 }
+
 
 add_action( 'login_head', 'secupress_hack_global_error' );
 /**
@@ -408,8 +416,14 @@ add_action( 'secure_auth_redirect', 'secupress_move_login_maybe_deny_login_page'
  * @author Grégory Viguier
  */
 function secupress_move_login_maybe_deny_login_page( $secure = true ) {
-	// If the user is logged in, do nothing, let WP redirect this user to the administration area.
-	if ( is_user_logged_in() ) {
+	/**
+	 * Bypass or not the denied page
+	 * 
+	 * @since 2.2.6
+	 * @param (bool) Default: is_user_logged_in()
+	 */
+	$bypass = apply_filters( 'secupress.plugins.move_login.deny_bypass', is_user_logged_in() );
+	if ( $bypass ) {
 		return $secure;
 	}
 	$parsed = wp_parse_url( $_SERVER['REQUEST_URI'] );
@@ -427,9 +441,15 @@ function secupress_move_login_maybe_deny_login_page( $secure = true ) {
 
 	if ( isset( $slugs[ $parsed ] ) ) {
 		// Display the login page.
+		// Tell cache plugins not to cache the login page.
 		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
-			// Tell cache plugins not to cache the login page.
 			define( 'DONOTCACHEPAGE', true );
+		}
+		if ( ! defined( 'DONOTCACHEOBJECT' ) ) {
+			define( 'DONOTCACHEOBJECT', true );
+		}
+		if ( ! defined( 'DONOTCACHEDB' ) ) {
+			define( 'DONOTCACHEDB', true );
 		}
 
 		return $secure;
@@ -443,13 +463,17 @@ function secupress_move_login_maybe_deny_login_page( $secure = true ) {
 /**
  * Perform the action set for the login page: die or redirect.
  *
- * @since 1.0
- * @author Grégory Viguier
- *
  * @since 1.3.1 Only redirect choice left
  * @author Julio Potier
+ *
+ * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_move_login_deny_login_access() {
+	if ( has_action( 'secupress.plugin.move-login.deny_login_access' ) ) {
+		_deprecated_hook( 'secupress.plugin.move-login.deny_login_access', '2.2.6', 'secupress.plugins.move_login.deny_login_access' );
+	}
+	do_action( 'secupress.plugins.move-login.deny_login_access' );
 	/**
 	 * If you want to trigger a custom action (redirect, message, die...), add it here.
 	 * Don't forget to exit/die.
@@ -457,15 +481,14 @@ function secupress_move_login_deny_login_access() {
 	 * @since 1.0
 	 * @author Grégory Viguier
 	 */
-	do_action( 'secupress.plugin.move-login.deny_login_access' );
+	do_action( 'secupress.plugins.move_login.deny_login_access' );
 
 	secupress_die( secupress_check_ban_ips_form( [
 													'content'  => '<p>' . __( 'This page does not exist, has moved or you are not allowed to access it.', 'secupress' ) . '</p>',
 													'time_ban' => -1,
 													'id'       => __FUNCTION__,
 													'ip'       => 'admin', // use for nonce check, see action below v.
-													'action'   => 'action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unlock_admin' ), 'secupress-unban-ip-admin' ) . '"',
-													] ), '', array( 'force_die' => true )
+													] ), '', [ 'force_die' => true, 'attack_type' => 'move_login' ]
 	);
 }
 

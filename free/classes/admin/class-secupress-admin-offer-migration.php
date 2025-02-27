@@ -267,7 +267,7 @@ abstract class SecuPress_Admin_Offer_Migration extends SecuPress_Singleton {
 	 */
 	public static function get_account_url() {
 		/** Translators: this is the slug (part of the URL) of the account page on secupress.me, like in https://secupress.me/account/, it must not be translated if the page doesn't exist. */
-		return SECUPRESS_WEB_MAIN . _x( 'account', 'URL slug', 'secupress' ) . '/';
+		return trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . _x( 'account', 'link to website (Only FR or EN!)', 'secupress' ) . '/';
 	}
 
 
@@ -545,8 +545,6 @@ abstract class SecuPress_Admin_Offer_Migration extends SecuPress_Singleton {
 	 *                                  enpty string: meant for a one-shot use. The notice is dismissible but the "dismissed" state is not stored, it will popup again. This is the exact same behavior than the WordPress dismissible notices.
 	 */
 	protected static function add_notice( $message, $error_code = 'updated', $notice_id = '' ) {
-		$message = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ' . $message;
-
 		secupress_add_notice( $message, $error_code, $notice_id );
 	}
 
@@ -565,8 +563,6 @@ abstract class SecuPress_Admin_Offer_Migration extends SecuPress_Singleton {
 	 *                                  enpty string: meant for a one-shot use. The notice is dismissible but the "dismissed" state is not stored, it will popup again. This is the exact same behavior than the WordPress dismissible notices.
 	 */
 	protected static function add_transient_notice( $message, $error_code = 'updated', $notice_id = '' ) {
-		$message = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ' . $message;
-
 		secupress_add_transient_notice( $message, $error_code, $notice_id );
 	}
 }

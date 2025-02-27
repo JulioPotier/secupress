@@ -64,12 +64,12 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			// "good"
 			0   => __( 'Your database tables prefix is correct.', 'secupress' ),
 			// "bad"
-			200 => __( 'The database tables prefix should not be %s. Choose something else besides <code>wp_</code> or <code>wordpress_</code>, they are too easy to guess.', 'secupress' ),
+			200 => sprintf( __( 'The database tables prefix should not be %1$s. Choose something else besides %2$s or %3$s, they are too easy to guess.', 'secupress' ), '%s', secupress_code_me( 'wp_' ), secupress_code_me( 'wordpress_' ) ),
 			// "cantfix"
 			301 => __( 'The database user cannot alter tables and so the database tables prefix could not be changed.', 'secupress' ),
-			302 => sprintf( __( 'The <code>%s</code> file is not writable, so the database tables prefix cannot be changed.', 'secupress' ), secupress_get_wpconfig_filename( 'db' ) ),
+			302 => sprintf( __( 'The %s file is not writable, so the database tables prefix cannot be changed.', 'secupress' ), secupress_code_me( secupress_get_wpconfig_filename( 'db' ) ) ),
 			303 => __( 'The database user seems to have to correct rights, but the database tables prefix could still not be changed.', 'secupress' ),
-			304 => __( 'Too many database tables found, so which ones to rename?!', 'secupress' ), // Trinity! Help me!
+			304 => __( 'Too many database tables found, which ones to rename?', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

@@ -29,6 +29,13 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 	 */
 	protected static $_instance;
 
+	/**
+	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
+	 *
+	 * @var (bool|string)
+	 */
+	protected $fixable = 'pro';
+
 
 	/** Init and messages. ====================================================================== */
 
@@ -149,8 +156,6 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		$bads     = array();
 		$warnings = array();
 		$urls     = array(
-			home_url( 'php.ini' ),
-			site_url( 'wp-config.php' ),
 			admin_url( 'install.php' ),
 			admin_url( 'network/menu.php' ),
 			admin_url( 'user/menu.php' ),

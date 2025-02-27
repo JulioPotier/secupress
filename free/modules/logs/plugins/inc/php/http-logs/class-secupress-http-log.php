@@ -1,6 +1,6 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
-
+return;////
 /**
  * HTTPs Log class.
  *
@@ -54,7 +54,7 @@ class SecuPress_HTTP_Log extends SecuPress_Log {
 	 */
 	protected function set_title( $post = null ) {
 		if ( isset( $post->post_parent ) && $post->post_parent > 0 ) {
-			$this->title = __( 'HTTP query on %s', 'secupress' ); //// GP?
+			$this->title = __( 'HTTP query on %s', 'secupress' );
 		} else {
 			$this->title = __( 'Main domain %s', 'secupress' );
 		}
@@ -239,7 +239,7 @@ class SecuPress_HTTP_Log extends SecuPress_Log {
 				}
 				$methods    = array_diff( [ 'GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'TRACE', 'CONNECT' ], $methods );
 				if ( ! empty( $methods ) ) {
-					echo '<a href="#" id="more-methods" class="hide-if-nojs">' . __( 'More Methods&hellip;', 'secupress' ) . '</a>';
+					echo '<a href="#" id="more-methods" class="hide-if-no-js">' . __( 'More Methods&hellip;', 'secupress' ) . '</a>';
 					echo '<div id="more_methods" class="hide-if-js">';
 					foreach ( $methods as $value ) {
 						$class = ! $this->is_param_recommended( $value, 'methods' ) ? 'secupress-recommended' : '';
@@ -255,7 +255,7 @@ class SecuPress_HTTP_Log extends SecuPress_Log {
 			<hr>
 			<button id="save_http_log" class="secupress-button secupress-button-primary secupress-button-mini">
 				<span class="text">
-					<?php _e( 'Save', 'secupress' ); ?>
+					<?php _ex( 'Save', 'verb', 'secupress' ); ?>
 				</span>
 			</button>
 			<span class="spinner secupress-inline-spinner"></span>
@@ -271,7 +271,7 @@ class SecuPress_HTTP_Log extends SecuPress_Log {
 			$current_offset = get_option( 'gmt_offset' );
 			foreach ( $history as $time => $arr ) {
 				$id_hash = md5( $time );
-				printf( '<li><strong>%s</strong>%s<br><code>%s</code></li>', sprintf( __( '%s ago', 'secupress' ), secupress_readable_duration( time() - $time ) ), ' <a name="' . __( 'HTTP Response Details', 'secupress' ) . '" class="hide-if-nojs thickbox" href="#TB_inline?height=400&width=600&inlineId=' . $id_hash . '">' . __( 'Open Details', 'secupress' ) . '</a>', esc_html( $arr['url'] ) );
+				printf( '<li><strong>%s</strong>%s<br><code>%s</code></li>', sprintf( __( '%s ago', 'secupress' ), secupress_readable_duration( time() - $time ) ), ' <a name="' . __( 'HTTP Response Details', 'secupress' ) . '" class="hide-if-no-js thickbox" href="#TB_inline?height=400&width=600&inlineId=' . $id_hash . '">' . __( 'Open Details', 'secupress' ) . '</a>', esc_html( $arr['url'] ) );
 				echo '<div id="' . $id_hash . '" class="hide-if-js">';
 				echo '<h4>$args</h4>';
 				var_dump( $arr['parsed_args'] );
@@ -393,11 +393,11 @@ class SecuPress_HTTP_Log extends SecuPress_Log {
 						'user_key'           => true,
 					];
 
-		$checked['https://secupress.me/api/plugin/vulns.php'] =
-					[
-						'items'              => true,
-						'type'               => true,
-					];
+		// $checked['https://secupress.me/api/plugin/vulns.php'] =
+		// 			[
+		// 				'items'              => true,
+		// 				'type'               => true,
+		// 			];
 
 		$checked = apply_filters( 'secupress.logs.http_params', $checked, $key, $url );
 

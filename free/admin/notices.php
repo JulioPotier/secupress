@@ -28,10 +28,10 @@ function secupress_http_block_external_notice() {
 	}
 
 	$message  = '<div>';
-		$message .= '<p><strong>' . sprintf( __( '%s: External HTTP requests are blocked!', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . '</strong></p>';
-		$message .= '<p>' . sprintf( __( 'You defined the <code>WP_HTTP_BLOCK_EXTERNAL</code> constant in the <code>%s</code> to block all external HTTP requests.', 'secupress' ), secupress_get_wpconfig_filename() ) . '</p>';
+		$message .= '<p><strong>' . __( 'External HTTP requests are blocked!', 'secupress' ) . '</strong></p>';
+		$message .= '<p>' . sprintf( __( 'You defined the %1$s constant in the %2$s to block all external HTTP requests.', 'secupress' ), secupress_code_me( 'WP_HTTP_BLOCK_EXTERNAL' ), secupress_code_me( secupress_get_wpconfig_filename() ) ) . '</p>';
 		$message .= '<p>';
-			$message .= sprintf( __( 'To make %s work well, you have to either remove the PHP constant, or add the following code in your <code>%s</code> file.', 'secupress' ), SECUPRESS_PLUGIN_NAME, secupress_get_wpconfig_filename() ) . '<br/>';
+			$message .= sprintf( __( 'To make %s work well, you have to either remove the PHP constant, or add the following code in your %s file.', 'secupress' ), SECUPRESS_PLUGIN_NAME, secupress_code_me( secupress_get_wpconfig_filename() ) ) . '<br/>';
 			$message .= __( 'Click on the field and press Ctrl+A or Cmd+A to select all.', 'secupress' );
 		$message .= '</p>';
 		$message .= '<p><textarea readonly="readonly" class="large-text readonly" rows="1">define( \'WP_ACCESSIBLE_HOSTS\', \'*.secupress.me\' );</textarea></p>';
@@ -64,8 +64,7 @@ function secupress_plugins_to_deactivate() {
 	$plugins_to_deactivate = array_filter( array_keys( $plugins_to_deactivate ), 'is_plugin_active' );
 
 	if ( $plugins_to_deactivate ) {
-		$message = '<p>' . sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
-		$message .= _n( 'The following plugin has been deactivated because we already included its features:', 'The following plugins has been deactivated because we already included its features:', count( $plugins_to_deactivate ), 'secupress' );
+		$message  = _n( 'The following plugin has been deactivated because we already included its features:', 'The following plugins has been deactivated because we already included its features:', count( $plugins_to_deactivate ), 'secupress' );
 		$message .= '</p><ul>';
 		foreach ( $plugins_to_deactivate as $plugin ) {
 			$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
@@ -83,11 +82,11 @@ function secupress_plugins_to_deactivate() {
 
 	$plugins_to_warn = [ // deactivation not mandatory, dismissable
 		'all-in-one-wp-security-and-firewall/wp-security.php', // repo
-		'better-wp-security/better-wp-security.php', // iTheme Security Free repo
+		'better-wp-security/better-wp-security.php', // Solid Security Free repo
+		'ithemes-security-pro/ithemes-security-pro.php', // Solid Security Pro
 		'bulletproof-security/bulletproof-security.php', // repo
 		'getastra/astra-security.php', // repo
 		'gotmls/index.php', // repo
-		'ithemes-security-pro/ithemes-security-pro.php',
 		'ninjafirewall/ninjafirewall.php', // repo
 		'malcare-security/malcare.php', // repo
 		'security-ninja/security-ninja.php', // repo
@@ -98,6 +97,10 @@ function secupress_plugins_to_deactivate() {
 		'wp-cerber/wp-cerber.php', // repo
 		'wp-defender/wp-defender.php', // repo
 		'wp-simple-firewall/icwp-wpsf.php', // repo
+		'user-name-security/user-name-security.php', // repo
+		'sf-author-url-control/sf-author-url-control.php', // repo
+		'really-simple-ssl/really-simple-ssl.php', // repo
+		'really-simple-ssl-pro/really-simple-ssl-pro.php',
 	];
 
 	$plugins_to_warn = array_filter( $plugins_to_warn, 'is_plugin_active' );
@@ -109,8 +112,7 @@ function secupress_plugins_to_deactivate() {
 			return;
 		}
 
-		$message = '<p>' . sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
-		$message .= _n( 'The following plugin is not compatible with us and will lead to conflicts:', 'The following plugins are not compatible with us and will lead to conflicts:', count( $plugins_to_warn ), 'secupress' );
+		$message  = _n( 'The following plugin is not compatible with us and may cause conflicts:', 'The following plugins are not compatible with us and may cause conflicts:', count( $plugins_to_warn ), 'secupress' );
 		$message .= '</p><ul>';
 		foreach ( $plugins_to_warn as $plugin ) {
 			$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
@@ -118,7 +120,7 @@ function secupress_plugins_to_deactivate() {
 			$page        = isset( $_GET['pages'] ) ? '&amp;paged=' . $_GET['paged'] : '';
 			$search      = isset( $_GET['s'] ) ? '&amp;s=' . $_GET['s'] : '';
 			$url         = wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=' . $plugin . $context . $page . $search, 'deactivate-plugin_' . $plugin );
-			$message    .= '<li>• ' . $plugin_data['Name'] . '</span> <a href="' . esc_url( $url ) . '" class="button-secondary alignright">' . __( 'Deactivate' ) . '</a></li>';
+			$message    .= '<li>• ' . $plugin_data['Name'] . '</span> <a href="' . esc_url( $url ) . '" class="button-secondary alignright">' . _x( 'Deactivate', 'plugin', 'secupress' ) . '</a></li>';
 		}
 		$message .= '</ul>';
 
@@ -147,7 +149,7 @@ function secupress_add_packed_plugins_notice() {
 	 * @param (array) $plugins A list of plugin paths, relative to the plugins folder. The "file name" of the packed plugin is used as key.
 	 *                         Example: array( 'move-login' => 'sf-move-login/sf-move-login.php' )
 	 */
-	$plugins = apply_filters( 'secupress.plugins.packed-plugins', array() );
+	$plugins = apply_filters( 'secupress.packed-plugins', array() );
 	$plugins = array_filter( $plugins, 'is_plugin_active' );
 
 	if ( ! $plugins || secupress_notice_is_dismissed( 'deactivate-packed-plugins' ) ) {
@@ -163,7 +165,7 @@ function secupress_add_packed_plugins_notice() {
 	$message .= '</p><ul>';
 	foreach ( $plugins as $plugin ) {
 		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
-		$message .= '<li>' . $plugin_data['Name'] . '</span> <a href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=deactivate&plugin=' . urlencode( $plugin ) ), 'deactivate-plugin_' . $plugin ) ) . '" class="button-secondary alignright">' . __( 'Deactivate' ) . '</a></li>';
+		$message .= '<li>' . $plugin_data['Name'] . '</span> <a href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=deactivate&plugin=' . urlencode( $plugin ) ), 'deactivate-plugin_' . $plugin ) ) . '" class="button-secondary alignright">' . _x( 'Deactivate', 'plugin', 'secupress' ) . '</a></li>';
 	}
 	$message .= '</ul>';
 
@@ -185,7 +187,7 @@ function secupress_reset_packed_plugins_notice_on_plugins_activation( $plugin ) 
 	}
 
 	/** This action is documented in inc/admin/notices.php */
-	$plugins = apply_filters( 'secupress.plugins.packed-plugins', array() );
+	$plugins = apply_filters( 'secupress.packed-plugins', array() );
 
 	if ( ! $plugins ) {
 		return;
@@ -209,9 +211,13 @@ add_action( 'secupress.modules.activate_submodule', 'secupress_deactivate_standa
  */
 function secupress_deactivate_standalone_plugin_on_packed_plugin_activation( $plugin ) {
 	/** This action is documented in inc/admin/notices.php */
-	$plugins = apply_filters( 'secupress.plugins.packed-plugins', array() );
+	$plugins = apply_filters( 'secupress.plugins.packed-plugins', [] );
+	if ( has_filter( 'secupress.plugins.packed-plugins' ) ) {
+		_deprecated_hook( 'secupress.plugins.packed-plugins', '2.2.6', 'secupress.packed-plugins' );
+	}
+	$plugins = apply_filters( 'secupress.packed-plugins', $plugins );
 
-	if ( isset( $plugins[ $plugin ] ) && is_plugin_active( $plugins[ $plugin ] ) ) {
+	if ( isset( $plugins[ $plugin ] ) && secupress_is_plugin_active( $plugins[ $plugin ] ) ) {
 		deactivate_plugins( $plugins[ $plugin ] );
 	}
 }
@@ -223,7 +229,7 @@ add_action( 'admin_init', 'secupress_warning_module_activity' );
  * @since 1.0
  */
 function secupress_warning_module_activity() {
-	if ( defined( 'DOING_AJAX' ) ) {
+	if ( wp_doing_ajax() ) {
 		return;
 	}
 
@@ -237,8 +243,7 @@ function secupress_warning_module_activity() {
 	$deactivated_modules = secupress_get_site_transient( 'secupress_module_deactivation_' . $current_user_id );
 
 	if ( false !== $activated_modules ) {
-		$message  = '<p>' . sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
-		$message .= _n( 'This module has been activated:', 'These modules have been activated:', count( $activated_modules ), 'secupress' );
+		$message  = _n( 'This module has been activated:', 'These modules have been activated:', count( $activated_modules ), 'secupress' );
 		$message .= sprintf( '</p><ul><li>%s</li></ul>', implode( '</li><li>', $activated_modules ) );
 
 		secupress_add_notice( $message );
@@ -246,8 +251,7 @@ function secupress_warning_module_activity() {
 	}
 
 	if ( false !== $deactivated_modules ) {
-		$message  = '<p>' . sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
-		$message .= _n( 'This module has been deactivated:', 'These modules have been deactivated:', count( $deactivated_modules ), 'secupress' );
+		$message  = _n( 'This module has been deactivated:', 'These modules have been deactivated:', count( $deactivated_modules ), 'secupress' );
 		$message .= sprintf( '</p><ul><li>%s</li></ul>', implode( '</li><li>', $deactivated_modules ) );
 
 		secupress_add_notice( $message );
@@ -292,7 +296,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 		</div>
 		<div class="secupress-col-2-4 secupress-col-text">
 			<p class="secupress-text-medium"><?php printf( __( '%s is activated, let’s improve the security of your website!', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></p>
-			<p><?php esc_html_e( 'Scan your website for security issues, right now.', 'secupress' ); ?></p>
+			<p><?php esc_html_e( 'Scan website for security issues, right now.', 'secupress' ); ?></p>
 		</div>
 		<div class="secupress-col-1-4 secupress-col-cta">
 			<a class="secupress-button secupress-button-primary secupress-button-scan" href="<?php echo esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1'; ?>">
@@ -300,12 +304,12 @@ function secupress_warning_no_oneclick_scan_yet() {
 					<i class="secupress-icon-radar" aria-hidden="true"></i>
 				</span>
 				<span class="text">
-					<?php _e( 'Scan my website', 'secupress' ); ?>
+					<?php _e( 'Scan website', 'secupress' ); ?>
 				</span>
 			</a>
 			<a class="secupress-close-notice" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=oneclick-scan&_wp_http_referer=' . $referer ), 'secupress-notices' ); ?>">
 				<i class="secupress-icon-squared-cross" aria-hidden="true"></i>
-				<span class="screen-reader-text"><?php _e( 'Close' ); ?></span>
+				<span class="screen-reader-text"><?php _ex( 'Close', 'verb', 'secupress' ); ?></span>
 			</a>
 		</div>
 	</div><!-- .secupress-section-dark -->

@@ -1,11 +1,15 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
-
 /**
  * Admin notices class.
  *
  * @package SecuPress
+ * 
+ * @author Julio Potier
+ * @since 1.3
+ * 
+ * @author Grégory Viguier
  * @since 1.0
  */
 class SecuPress_Admin_Notices extends SecuPress_Singleton {
@@ -63,9 +67,13 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 * @param (string|bool) $notice_id  A unique identifier to tell id the notice is dismissible.
 	 *                                  false: the notice is not dismissible.
 	 *                                  string: the notice is dismissible and send an ajax call to store the "dismissed" state into a user meta to prevent it to popup again.
-	 *                                  enpty string: meant for a one-shot use. The notice is dismissible but the "dismissed" state is not stored, it will popup again. This is the exact same behavior than the WordPress dismissible notices.
-	 */
-	public function add( $message, $error_code = 'updated', $notice_id = false ) {
+	 *                                  empty string: meant for a one-shot use. The notice is dismissible but the "dismissed" state is not stored, it will popup again. This is the exact same behavior than the WordPress dismissible notices.
+	 * @param (null|string) $capa       A WordPress capability or role. "null" = secupress_get_capability()
+ 	 */
+	public function add( $message, $error_code = 'updated', $notice_id = false, $capa = null ) {
+		if ( is_null( $capa ) ) {
+			$capa = secupress_get_capability( false, 'notice' );
+		}
 		if ( false !== $notice_id ) {
 			if ( $notice_id && self::is_dismissed( $notice_id ) ) {
 				return;
@@ -81,22 +89,22 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		$notice_id  = $notice_id ? sanitize_title( $notice_id ) : $notice_id;
 
 		if ( ! isset( $this->notices[ $error_code ] ) ) {
-			$this->notices[ $error_code ] = array(
-				'permanent'      => array(),
-				'wp-dismissible' => array(),
-				'sp-dismissible' => array(),
-			);
+			$this->notices[ $error_code ] = [
+				'permanent'      => [],
+				'wp-dismissible' => [],
+				'sp-dismissible' => [],
+			];
 		}
 
 		if ( false === $notice_id ) {
 			// The notice is not dismissible.
-			$this->notices[ $error_code ]['permanent'][] = $message;
+			$this->notices[ $error_code ]['permanent'][ $capa ][]                  = $message;
 		} elseif ( $notice_id ) {
 			// The notice is dismissible, with a custom ajax call.
-			$this->notices[ $error_code ]['sp-dismissible'][ $notice_id ] = $message;
-		} else {
+			$this->notices[ $error_code ]['sp-dismissible'][ $capa ][ $notice_id ] = $message;
+		} else { // Empty string case
 			// The notice is dismissible.
-			$this->notices[ $error_code ]['wp-dismissible'][] = $message;
+			$this->notices[ $error_code ]['wp-dismissible'][ $capa ][]             = $message;
 		}
 	}
 
@@ -113,12 +121,13 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 *                                  false: the notice is not dismissible.
 	 *                                  string: the notice is dismissible and send an ajax call to store the "dismissed" state into a user meta to prevent it to popup again.
 	 *                                  enpty string: meant for a one-shot use. The notice is dismissible but the "dismissed" state is not stored, it will popup again. This is the exact same behavior than the WordPress dismissible notices.
+	 * @param (null|string) $capa       A WordPress capability or role. "null" = secupress_get_capability()
 	 */
-	public function add_temporary( $message, $error_code = 'updated', $notice_id = false ) {
+	public function add_temporary( $message, $error_code = 'updated', $notice_id = false, $capa = null ) {
 		$error_code = 'error' === $error_code ? 'error' : 'updated';
 		$notices    = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
 		$notices    = is_array( $notices ) ? $notices : array();
-		$notices[]  = compact( 'message', 'error_code', 'notice_id' );
+		$notices[]  = compact( 'message', 'error_code', 'capa', 'notice_id' );
 
 		secupress_set_transient( 'secupress-notices-' . get_current_user_id(), $notices );
 	}
@@ -222,8 +231,9 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		self::$version = self::$suffix ? SECUPRESS_VERSION : time();
 
 		add_action( 'all_admin_notices',                   array( $this, 'print_notices' ), 20 );
-		add_action( 'wp_ajax_secupress_dismiss-notice',    array( __CLASS__, 'ajax_dismiss' ) );
-		add_action( 'admin_post_secupress_dismiss-notice', array( __CLASS__, 'admin_dismiss' ) );
+		add_action( 'admin_footer',                        array( $this, 'print_notices' ), 20 );
+		add_action( 'wp_ajax_secupress_dismiss-notice',    array( __CLASS__, 'dismiss_admin_ajax_cb' ) );
+		add_action( 'admin_post_secupress_dismiss-notice', array( __CLASS__, 'dismiss_admin_ajax_cb' ) );
 	}
 
 
@@ -244,7 +254,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 
 		wp_enqueue_script( 'secupress-notices', SECUPRESS_ADMIN_JS_URL . 'secupress-notices' . self::$suffix . '.js', array( 'jquery' ), self::$version, true );
 		wp_localize_script( 'secupress-notices', 'SecuPressi18nNotices', array(
-			'dismiss' => __( 'Dismiss', 'secupress' ),
+			'dismiss' => _x( 'Dismiss', 'verb', 'secupress' ),
 			'nonce'   => wp_create_nonce( 'secupress-notices' ),
 		) );
 	}
@@ -272,17 +282,21 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	/**
 	 * Add notices added by `$this->add_temporary()`.
 	 *
+	 * @since 2.2.6 Get the CRON notifications too
 	 * @since 1.3
 	 * @see Was previously called `secupress_display_transient_notices()`.
 	 */
 	public function add_transient_notices() {
-		$notices = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
+		$notices      = secupress_get_transient( 'secupress-notices-' . get_current_user_id(), [] );
+		$notices_cron = secupress_get_transient( 'secupress-notices-0', [] ); // 0 = CRON user ID, WP default
+		$notices      = array_merge( $notices, $notices_cron );
 
 		if ( ! $notices ) {
 			return;
 		}
 
 		delete_transient( 'secupress-notices-' . get_current_user_id() );
+		delete_transient( 'secupress-notices-0' ); // CRON
 
 		if ( is_array( $notices ) ) {
 			foreach ( $notices as $notice ) {
@@ -300,6 +314,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 * All not dismissible ones are grouped into one notice. Same thing for the "dismissible like WP" ones.
 	 * Only the "dismissible with state stored" are printed separately, so the user can dismiss some and not others.
 	 *
+	 * @since 2.2.6 Use $capa
 	 * @since 1.0
 	 */
 	public function print_notices() {
@@ -307,50 +322,62 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 
 		if ( ! $this->notices ) {
 			return;
-		}
+		}		
 
-		$compat  = secupress_wp_version_is( '4.2-beta4' ) ? '' : ' secupress-compat-notice';
 		$referer = urlencode( esc_url_raw( secupress_get_current_url( 'raw' ) ) );
 
 		foreach ( $this->notices as $error_code => $types ) {
 			$types = array_filter( $types, 'count' );
-
 			if ( ! $types ) {
 				continue;
 			}
 
-			foreach ( $types as $type => $messages ) {
-				if ( 'sp-dismissible' === $type ) {
-					foreach ( $messages as $notice_id => $message ) {
-						$button = admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=' . $notice_id . '&_wp_http_referer=' . $referer );
-						$button = wp_nonce_url( $button, 'secupress-notices' );
-						$button = '<a href="' . esc_url( $button ) . '" class="notice-dismiss"><span class="screen-reader-text">' . __( 'Dismiss', 'secupress' ) . '</span></a>';
-						$message = strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
+			foreach ( $types as $type => $roles ) {
+				foreach( $roles as $capa => $messages ) {
+					if ( ! current_user_can( $capa ) ) {
+						continue;
+					}
+					$plugin_name = SECUPRESS_PLUGIN_NAME . ( secupress_has_pro() && ! secupress_is_white_label() ? ' Pro' : '' );
+					$label       = secupress_is_expert_mode() ? '' : '<label class="plugin-title">' . esc_html( $plugin_name ) . '</label>';
+					$lab_class   = secupress_is_expert_mode() ? '' : ' has-plugin-title';
+					if ( 'sp-dismissible' === $type ) {
+						foreach ( $messages as $notice_id => $message ) {
+							$button = admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=' . $notice_id . '&_wp_http_referer=' . $referer );
+							$button = wp_nonce_url( $button, 'secupress-notices' );
+							$button = '<a href="' . esc_url( $button ) . '" class="notice-dismiss"><span class="screen-reader-text">' . __( 'Dismiss', 'secupress' ) . '</span></a>';
+							$message = strpos( $message, '<p>' ) === false && trim( $message ) ? '<p>' . $message . '</p>' : $message;
+							?>
+							<div class="<?php echo $error_code . $lab_class; ?> notice secupress-notice secupress-is-dismissible" data-id="<?php echo $notice_id; ?>">
+								<?php echo $label; ?>
+								<?php echo $message; ?>
+								<?php echo $button; ?>
+							</div>
+							<?php
+				    		unset( $this->notices[ $error_code ][ $type ][ $capa ][ $notice_id ] );
+						}
+					} elseif ( 'wp-dismissible' === $type ) {
 						?>
-						<div class="<?php echo $error_code . $compat; ?> notice secupress-notice secupress-is-dismissible" data-id="<?php echo $notice_id; ?>">
-							<?php echo $message; ?>
-							<?php echo $button; ?>
+						<div class="<?php echo $error_code . $lab_class; ?> notice secupress-notice secupress-is-dismissible">
+							<?php echo $label; ?>
+							<?php
+							$message = implode( '<br class="separator"/>', $messages );
+							echo strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
+				    		unset( $this->notices[ $error_code ][ $type ] );
+							?>
+						</div>
+						<?php
+					} else {
+						?>
+						<div class="<?php echo $error_code . $lab_class; ?> notice secupress-notice">
+							<?php echo $label; ?>
+							<?php
+							$message = implode( '<br class="separator"/>', $messages );
+							echo strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
+				    		unset( $this->notices[ $error_code ][ $type ] );
+							?>
 						</div>
 						<?php
 					}
-				} elseif ( 'wp-dismissible' === $type ) {
-					?>
-					<div class="<?php echo $error_code . $compat; ?> notice secupress-notice secupress-is-dismissible">
-						<?php
-						$message = implode( '<br class="separator"/>', $messages );
-						echo strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
-						?>
-					</div>
-					<?php
-				} else {
-					?>
-					<div class="<?php echo $error_code; ?> notice secupress-notice">
-						<?php
-						$message = implode( '<br class="separator"/>', $messages );
-						echo strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
-						?>
-					</div>
-					<?php
 				}
 			}
 		}
@@ -360,71 +387,45 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	/**
 	 * Ajax callback that stores the "dismissed" state.
 	 *
+	 * @since 2.2.6 Usage of the $capa param
 	 * @since 1.0
 	 */
-	public static function ajax_dismiss() {
-		if ( empty( $_POST['notice_id'] ) ) { // WPCS: CSRF ok.
+	public static function dismiss_admin_ajax_cb() {
+		if ( empty( $_REQUEST['notice_id'] ) ) { // WPCS: CSRF ok.
 			wp_die( -1 );
 		}
+		if ( wp_doing_ajax() ) {
+			secupress_check_admin_referer( 'secupress-notices' );
+		} else {
+			secupress_check_admin_referer( 'secupress-notices' );
+		}
 
-		secupress_check_admin_referer( 'secupress-notices' );
-
-		$notice_id = $_POST['notice_id'];
+		$notice_id = $_REQUEST['notice_id'];
 		$notice_id = $notice_id ? sanitize_title( $notice_id ) : $notice_id;
 
 		/**
-		 * Filter the capability needed to dismiss the notice.
-		 *
 		 * @since 1.0
-		 *
-		 * @param (string) $capability Capability or user role.
-		 * @param (string) $notice_id  The notice Identifier.
+		 * @since 2.2.6 Deprecated filter
 		 */
-		$capability = apply_filters( 'secupress.notices.dismiss_capability', secupress_get_capability(), $notice_id );
+		if ( has_filter( 'secupress.notices.dismiss_capability' ) ) {
+			_deprecated_hook( 'secupress.notices.dismiss_capability', '2.2.6', '(none)', 'A 4th parameter $capa has been added to secupress_add_notice()' );
+		}
 
-		if ( ! current_user_can( $capability ) ) {
+		if ( wp_doing_ajax() ) {
+			if ( self::dismiss( $notice_id ) ) {
+				wp_die( 1 );
+			}
+		} else {
+			if ( self::dismiss( $notice_id ) ) {
+				wp_safe_redirect( esc_url_raw( wp_get_referer() ) );
+				die();
+			}
+		}
+
+		if ( wp_doing_ajax() ) {
 			wp_die( -1 );
-		}
-
-		if ( self::dismiss( $notice_id ) ) {
-			wp_die( 1 );
-		}
-		wp_die( -1 );
-	}
-
-
-	/**
-	 * Admin post callback that stores the "dismissed" state without JS.
-	 *
-	 * @since 1.0
-	 */
-	public static function admin_dismiss() {
-		if ( empty( $_GET['notice_id'] ) ) {
+		} else {
 			secupress_admin_die();
 		}
-
-		secupress_check_admin_referer( 'secupress-notices' );
-
-		$notice_id = $_GET['notice_id'];
-
-		/**
-		 * Filter the capability needed to dismiss the notice.
-		 *
-		 * @since 1.0
-		 *
-		 * @param (string) $capability Capability or user role.
-		 * @param (string) $notice_id  The notice Identifier.
-		 */
-		$capability = apply_filters( 'secupress.notices.dismiss_capability', secupress_get_capability(), $notice_id );
-
-		if ( ! current_user_can( $capability ) ) {
-			secupress_admin_die();
-		}
-
-		if ( self::dismiss( $notice_id ) ) {
-			wp_safe_redirect( esc_url_raw( wp_get_referer() ) );
-			die();
-		}
-		secupress_admin_die();
 	}
 }

@@ -8,7 +8,6 @@
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
-
 add_action( 'authenticate', 'secupress_bannonexistsuser_auth', 100, 2 );
 /**
  * Ban users who try to log in with a non existing username.
@@ -35,6 +34,7 @@ function secupress_bannonexistsuser_auth( $raw_user, $username ) {
 		$errors = array_flip( $errors );
 
 		if ( isset( $errors['invalid_username'] ) || isset( $errors['invalid_email'] ) ) {
+			secupress_log_attack( 'loginattempts' );
 			secupress_block( 'NOUSER', [ 'code' => 403, 'b64' => [ 'data' => $username ] ] );
 		}
 	}

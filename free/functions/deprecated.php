@@ -48,8 +48,8 @@ function secupress_send_support_request( $summary, $description, $data ) {
 
 	// Message.
 	$data = array_merge( array(
-		'license_email'  => sprintf( __( 'License email: %s', 'secupress' ), secupress_get_consumer_email() ),
-		'license_key'    => sprintf( __( 'License key: %s', 'secupress' ), secupress_get_consumer_key() ),
+		'license_email'  => sprintf( __( 'License Email: %s', 'secupress' ), secupress_get_consumer_email() ),
+		'license_key'    => sprintf( __( 'License Key: %s', 'secupress' ), secupress_get_consumer_key() ),
 		'sp_pro_version' => secupress_has_pro() ? sprintf( __( 'Version of SecuPress Pro: %s', 'secupress' ), SECUPRESS_PRO_VERSION ) : __( 'Version of SecuPress Pro: inactive', 'secupress' ),
 	), $data );
 
@@ -122,9 +122,8 @@ function secupress_warning_no_license() {
 		return;
 	}
 
-	$message  = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
 	/** Translators: %s is a link to the "plugin settings page". */
-	$message .= sprintf(
+	$message = sprintf(
 		__( 'Your Pro license is not valid or is not set yet. If you want to activate all the Pro features, premium support and updates, take a look at %s.', 'secupress' ),
 		'<a href="' . esc_url( secupress_admin_url( 'settings' ) ) . '">' . __( 'the plugin settings page', 'secupress' ) . '</a>'
 	);
@@ -241,7 +240,7 @@ function secupress_get_active_plugins() {
 
 	if ( $plugins ) {
 		foreach ( $plugins as $plugin ) {
-			$active_plugins[] = $plugin['Name'] . ' ' . $plugin['Version'] . ' (' . __( 'Must-Use plugin', 'secupress' ) . ')';
+			$active_plugins[] = $plugin['Name'] . ' ' . $plugin['Version'] . ' (' . __( 'Must-Use Plugin', 'secupress' ) . ')';
 		}
 	}
 

@@ -6,7 +6,7 @@
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
- * Copyright 2012-2016 SecuPress
+ * Copyright 2012-2024 SecuPress
  */
 
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
@@ -28,7 +28,7 @@ function secupress_mup_notice_{{PLUGIN_ID}}() {
 	$port = (int) $_SERVER['SERVER_PORT'];
 	$port = 80 !== $port && 443 !== $port ? ( ':' . $port ) : '';
 	$url  = ! empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) ? $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] : ( ! empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '' );
-	$url  = 'http' . ( is_ssl() ? 's' : '' ) . '://' . $_SERVER['HTTP_HOST'] . $port . $url;
+	$url  = 'http' . ( is_ssl() ? 's' : '' ) . '://' . $_SERVER['HTTP_HOST'] . $port . $url; // do not use "secupress_is_ssl()" here
 	$url  = urlencode( esc_url_raw( $url ) );
 	$url  = admin_url( 'admin-post.php?action=secupress_kill_mu_notice_{{PLUGIN_ID}}&_wp_http_referer=' . $url );
 	$url  = wp_nonce_url( $url, 'secupress-mup-notice-{{PLUGIN_ID}}-{{USER_ID}}' );

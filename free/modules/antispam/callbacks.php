@@ -25,6 +25,31 @@ function secupress_antispam_settings_callback( $settings ) {
 	}
 	$settings['sanitized'] = 1;
 
+	/*
+	 * Each submodule has its own sanitization function.
+	 * The `$settings` parameter is passed by reference.
+	 */
+
+	// Antispam.
+	secupress_antispam_module_settings_callback( $modulenow, $settings, $activate );
+
+	// Antiphishing.
+	secupress_antiphishing_module_settings_callback( $modulenow, $settings, $activate );
+
+	/**
+	 * Filter the settings before saving.
+	 *
+	 * @since 1.4.9
+	 *
+	 * @param (array)      $settings The module settings.
+	 * @param (array\bool) $activate Contains the activation rules for the different modules
+	 */
+	$settings = apply_filters( "secupress_{$modulenow}_settings_callback", $settings, $activate );
+
+	return $settings;
+}
+
+function secupress_antispam_module_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
 		$activate = isset( $activate['antispam_antispam'] ) && is_array( $activate['antispam_antispam'] ) ? array_flip( $activate['antispam_antispam'] ) : array();
@@ -41,17 +66,11 @@ function secupress_antispam_settings_callback( $settings ) {
 	$settings['antispam_forbid-pings-trackbacks']  = (int) ! empty( $settings['antispam_forbid-pings-trackbacks'] );
 	$settings['antispam_comment-delay']            = (int) ! empty( $settings['antispam_comment-delay'] );
 
-	/**
-	 * Filter the settings before saving.
-	 *
-	 * @since 1.4.9
-	 *
-	 * @param (array)      $settings The module settings.
-	 * @param (array\bool) $activate Contains the activation rules for the different modules
-	 */
-	$settings = apply_filters( "secupress_{$modulenow}_settings_callback", $settings, $activate );
+}
 
-	return $settings;
+function secupress_antiphishing_module_settings_callback( $modulenow, &$settings, $activate ) {
+	// (De)Activation.
+	secupress_manage_submodule( $modulenow, 'antiphishing', isset( $settings['antiphishing_activated'] ) );
 }
 
 
@@ -59,7 +78,7 @@ function secupress_antispam_settings_callback( $settings ) {
 /** NOTICES ===================================================================================== */
 /** ----------------------------------------------------------------------------------------------*/
 
-add_filter( 'secupress.plugins.packed-plugins', 'secupress_remove_comment_feature_add_packed_plugin' );
+add_filter( 'secupress.packed-plugins', 'secupress_remove_comment_feature_add_packed_plugin' );
 /**
  * Display a notice if the standalone version of Remove Comment Feature is used.
  *

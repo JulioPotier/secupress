@@ -66,8 +66,7 @@ function secupress_minor_updates_activation() {
 	} else {
 		$message = sprintf(
 			/** Translators: 1 is the plugin name, 2 is a file name, 3 is some code. */
-			_n( '%1$s couldn’t remove a constant definition from the %2$s file. Please remove the following line from the file: %3$s', '%1$s couldn’t remove some constant definitions from the %2$s file. Please remove the following lines from the file: %3$s', $count, 'secupress' ),
-			SECUPRESS_PLUGIN_NAME,
+			_n( 'Cannot remove a constant definition from the %1$s file. Please remove the following line from the file: %2$s', 'Cannot remove some constant definitions from the %1$s file. Please remove the following lines from the file: %2$s', $count, 'secupress' ),
 			'<code>' . secupress_get_wpconfig_filename() . '</code>',
 			"<pre>$failed</pre>"
 		);

@@ -16,7 +16,7 @@ $is_plugin_active = secupress_is_submodule_active( 'users-login', 'move-login' )
 */
 $override_plugins = apply_filters( 'secupress.move-login.override-plugins', [ 'wps-hide-login/wps-hide-login.php' => 'options-general.php#whl_page' ] );
 foreach ( $override_plugins as $plugin_path => $plugin_page) {
-	if ( is_plugin_active( $plugin_path ) ) {
+	if ( secupress_is_plugin_active( $plugin_path ) ) {
 		$this->add_field( array(
 			'title'             => __( 'Move the login and admin pages', 'secupress' ),
 			'label_for'         => $main_field_name,
@@ -120,6 +120,7 @@ $this->add_field( [
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'whattodo' ),
 	'type'         => 'radio',
+	// 'default'      => 'sperror', //
 	'options'      => [
 		'sperror'      => __( 'Standard Error Message', 'secupress' ),
 		'custom_error' => __( 'Custom Error Message', 'secupress' ),
@@ -165,6 +166,25 @@ $this->add_field( [
 		),
 	),
 ] );
+
+
+if ( is_multisite() ) {
+	$this->add_field( array(
+		'title'             => __( 'Single Sign-On (SSO)', 'secupress' ),
+		'label_for'         => $this->get_field_name( 'singlesignon' ),
+		'depends'           => $main_field_name,
+		'plugin_activation' => true,
+		'type'              => 'checkbox',
+		'value'             => secupress_is_submodule_active( 'users-login', 'singlesignon' ),
+		'label'             => __( 'Yes, I need a Single Sign-On (SSO) on my multisite', 'secupress' ),
+		'helpers'           => array(
+			array(
+				'type'        => 'description',
+				'description' => __( 'A SSO will allow any user to be automatically connected on any site of your multiste where they are already a member when they use the admin menu.', 'secupress' ),
+			),
+		),
+	) );
+}
 
 /**
  * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for Move Login.

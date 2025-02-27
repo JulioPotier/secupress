@@ -9,8 +9,11 @@ $this->add_section( __( 'WordPress Database', 'secupress' ) );
 global $wpdb;
 $button_id = secupress_is_pro() ? '' : '#';
 $disabled  = secupress_is_pro() ? '' : 'disabled="disabled" ';
+$need_fix  = 'wp_' === $wpdb->prefix || 'wordpress_' === $wpdb->prefix;
+$more_help = $need_fix ? [ 'type' => 'warning', 'description' => sprintf( __( 'Incorrect Database Prefix %s, please change it!', 'secupress' ), secupress_code_me( $wpdb->prefix ) ) ] : '';
+
 $this->add_field( array(
-	'title'             => __( 'Change WordPress Database Prefix', 'secupress' ),
+	'title'             => __( 'Change the WordPress Database Prefix', 'secupress' ),
 	'description'       => __( 'You may need to change it manually.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'db_prefix' ),
 	'type'              => 'text',
@@ -19,14 +22,15 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'help',
-			'description' => secupress_is_pro() ? __( 'Format rules:<ul><li>Only letters, numbers, and <code>_</code> allowed.</li><li>At least 1 letter or 1 number, 12 chars max.</li><li>Do not use <code>wp_</code> or <code>wordpress_</code>.</li><li>A <code>_</code> will be appended if not present.</li></ul>', 'secupress' ) : '',
+			'description' => secupress_is_pro() ? __( 'Format rules:<ul><li>Only letters, numbers, and <code>_</code> allowed.</li><li>At least 1 letter or 1 number, 12 chars max.</li><li>Do not use <code>wp_</code> or <code>wordpress_</code>.</li><li>If necessary, a <code>_</code> will be appended.</li></ul>', 'secupress' ) : '',
 		),
+		$more_help
 	),
 ) );
 
 if ( secupress_is_pro() ) {
 	$this->add_field( array(
-		'title'             => __( 'Which tables to rename?', 'secupress' ),
+		'title'             => __( 'Which tables should be rename?', 'secupress' ),
 		'label_for'         => $this->get_field_name( 'tables_selection' ),
 		'type'              => 'tables_selection',
 	) );

@@ -108,7 +108,7 @@ function secupress_manage_affected_roles( &$settings, $module, $plugin ) {
  * @return (string|null) Return null if the plugin is not activated.
  */
 function secupress_get_deactivate_plugin_string( $plugin_basename ) {
-	if ( ! is_plugin_active( $plugin_basename ) ) {
+	if ( ! secupress_is_plugin_active( $plugin_basename ) ) {
 		return null;
 	}
 
@@ -129,14 +129,14 @@ function secupress_get_deactivate_plugin_string( $plugin_basename ) {
  * @return (string|null) Return null if the plugin is not activated.
  */
 function secupress_plugin_in_usage_string( $plugin_basename, $settings_page = '' ) {
-	if ( ! is_plugin_active( $plugin_basename ) ) {
+	if ( ! secupress_is_plugin_active( $plugin_basename ) ) {
 		return null;
 	}
 
 	$plugin_basename = path_join( WP_PLUGIN_DIR, $plugin_basename );
 	$plugin = get_plugin_data( $plugin_basename, false, false );
 
-	$content = sprintf( __( 'You can not use this feature now because you are using the plugin %s. Please deactivate it.', 'secupress' ), '<strong>' . esc_html( $plugin['Name'] ) . '</strong>' );
+	$content = sprintf( __( 'You cannot use this feature now because you are using the plugin %s. Please deactivate it.', 'secupress' ), '<strong>' . esc_html( $plugin['Name'] ) . '</strong>' );
 	if ( $settings_page ) {
 		$content .= sprintf( '<br><a href="%s">' . __( 'Open the %s settings page', 'secupress' ) . '.</a>', esc_url( admin_url( $settings_page ) ), '<strong>' . esc_html( $plugin['Name'] ) . '</strong>' );
 	}

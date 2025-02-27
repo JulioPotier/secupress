@@ -176,7 +176,7 @@ class SecuPress_Log {
 	 */
 	public function get_time( $format = false ) {
 		if ( ! is_string( $format ) ) {
-			$format = __( 'Y/m/d g:i:s a' );
+			$format = _x( 'Y/m/d g:i:s a', 'date format', 'secupress' );
 		}
 
 		return mysql2date( $format, $this->time, true );

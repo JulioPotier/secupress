@@ -2,9 +2,9 @@
 /**
  * Module Name: Force FTP for Plugins and Themes Upload
  * Description: Restrict plugins and themes upload by FTP.
- * Main Module: plugins&themes
+ * Main Module: plugins_themes
  * Author: Julio Potier
- * Version: 1.0
+ * Version: 2.2
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );

@@ -7,13 +7,13 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
  * @since 2.0
  * @author Julio Potier
  */
-function secupress_wpconfig_modules_activation( $marker ) {
+function secupress_wpconfig_modules_activation( $marker, $force_rewrite = false ) {
 
 	$constants         = secupress_get_constants_from_marker( $marker );
 	$wpconfig_filepath = secupress_is_wpconfig_writable();
 	$wpconfig_filename = secupress_get_wpconfig_filename();
 	if ( ! $wpconfig_filepath ) {
-		$message = sprintf( __( 'The <code>%s</code> file is not writable. Please apply <code>0644</code> rights on this file.', 'secupress' ), $wpconfig_filename );
+		$message = sprintf( __( 'The %1$s file is not writable. Please apply %2$s rights on this file.', 'secupress' ), secupress_code_me( $wpconfig_filename ), secupress_code_me( '0644' ) );
 		secupress_add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
 		return;
 	}
@@ -27,8 +27,7 @@ function secupress_wpconfig_modules_activation( $marker ) {
 		} else {
 			$check = defined( $constant ) ? constant( $constant ) : null;
 		}
-		if ( $correct_value !== $check ) {
-			$const_err[] = $constant;
+		if ( $correct_value !== $check || $force_rewrite ) {
 			// This will be printed in the wp-config file.
 			if ( is_bool( $correct_value ) ) {
 				$new_define[] = sprintf( "define( '%s', %s );", $constant, var_export( $correct_value, true ) );
@@ -37,9 +36,13 @@ function secupress_wpconfig_modules_activation( $marker ) {
 			} else {
 				$new_define[] = "define( '$constant', '" . $correct_value . "' );";
 			}
+			if ( $force_rewrite ) {
+				continue;
+			}
 			// Remove the constant we could have previously set, and comment old value.
 			$replaced = secupress_comment_constant( $constant, $wpconfig_filepath, $marker );
 			if ( ! $replaced ) {
+				$const_err[] = $constant;
 				// The constant couldn't be removed or commented: display an error message.
 				if ( is_bool( $check ) ) {
 					$error[] = sprintf( "define( '%s', %s );", $constant, var_export( $check, true ) );
@@ -53,17 +56,19 @@ function secupress_wpconfig_modules_activation( $marker ) {
 	}
 
 	if ( ! empty( $error ) ) {
-		$message  = sprintf(
-			/** Translators: 1 is the plugin name, 2 is a constant name, 3 is a file name, 4 and 5 are a small parts of code. */
-			__( '%1$s couldn’t change the value of the constant %2$s in the %3$s file. Please edit it and replace the lines that states: %4$s by: %5$s', 'secupress' ),
-			SECUPRESS_PLUGIN_NAME,
-			'<code>' . implode( '</code>, <code>', $const_err ) . '</code>',
-			"<code>$wpconfig_filename</code>",
-			'<code>' . implode( "\n", $error ) . '</code>',
-			"<pre># BEGIN SecuPress $marker\n" . implode( "\n", $new_define ) . "\n# END SecuPress</pre>"
-		);
-		secupress_add_settings_error( 'general', 'constant_not_removed', $message, 'error' );
-		return;
+		$messages  = '';
+		foreach( $error as $i => $err ) {
+			$messages .= sprintf(
+				/** Translators: 1 is a constant name, 2 is a file name, 4 and 5 are a small parts of code. */
+				__( 'Cannot change the value of the constant %1$s in the %2$s file. Please edit it and replace the lines that states: %3$s by: %4$s', 'secupress' ),
+				secupress_code_me( $const_err[ $i ] ),
+				secupress_code_me( $wpconfig_filename ),
+				secupress_code_me( $err ),
+				secupress_tag_me( $new_define[ $i ], 'pre' )
+			);
+		}
+		secupress_add_settings_error( 'general', 'constant_not_removed', $messages, 'error' );
+		// return false; // Do not return here, we can still ad the other constants.
 	}
 	// Add our constant now.
 	if ( ! empty( $new_define ) ) {
@@ -72,22 +77,21 @@ function secupress_wpconfig_modules_activation( $marker ) {
 		if ( ! secupress_put_contents( $wpconfig_filepath, implode( "\n", $new_define ), $args ) ) {
 			// The constant couldn't be added: display an error message.
 			$message = sprintf(
-				/** Translators: 1 is the plugin name, 2 is a constant name, 3 is a file name, 4 is a small part of code. */
-				__( '%1$s cannot add the constant %2$s to the %3$s file. Please edit it and add the following at the beginning: %4$s', 'secupress' ),
-				SECUPRESS_PLUGIN_NAME,
-				'<code>' . implode( '</code>, <code>', $const_err ) . '</code>',
-				"<code>$wpconfig_filename</code>",
+				/** Translators: 1 is a file name, 2 is a small part of code. */
+				__( 'Cannot add the constants to the %1$s file. Please edit it and add the following at the beginning: %2$s', 'secupress' ),
+				secupress_code_me( $wpconfig_filename ),
 				"<pre># BEGIN SecuPress $marker\n" . implode( "\n", $new_define ) . "\n# END SecuPress</pre>"
 			);
 			secupress_add_settings_error( 'general', 'constant_not_added', $message, 'error' );
-			return;
+			return false;
 		}
 	}
+	return true;
 }
 
 
 /**
- * On module deactivation, maybe put the constant back.
+ * On module deactivation, maybe set the constant back.
  *
  * @since 2.0
  * @author Julio Potier
@@ -104,7 +108,9 @@ function secupress_wpconfig_modules_deactivation( $marker ) {
 	foreach ( $constants as $constant => $correct_value ) {
 		secupress_uncomment_constant( $constant, $wpconfig_filepath );
 	}
-	define( 'SECUPRESS_NO_SANDBOX', true );
+	if ( ! defined( 'SECUPRESS_NO_SANDBOX' ) ) {
+		define( 'SECUPRESS_NO_SANDBOX', true );
+	}
 	if ( ! secupress_comment_constant( 'secupress_dummy_foobar', $wpconfig_filepath, $marker ) ) {
 		$new_define = [];
 		foreach ( $constants as $constant => $correct_value ) {
@@ -117,9 +123,8 @@ function secupress_wpconfig_modules_deactivation( $marker ) {
 			}
 		}
 		$message = sprintf(
-			/** Translators: 1 is the plugin name, 2 is a constant name, 3 is a file name, 4 is a small part of code. */
-			__( '%1$s cannot remove the constant %2$s from the %3$s file. Please edit it and remove the following lines: %4$s', 'secupress' ),
-			SECUPRESS_PLUGIN_NAME,
+			/** Translators: 1 is a constant name, 2 is a file name, 3 is a small part of code. */
+			__( 'Cannot remove the constant %1$s from the %2$s file. Please edit it and remove the following lines: %3$s', 'secupress' ),
 			'<code>' . implode( '</code>, <code>', array_keys( $constants ) ) . '</code>',
 			"<code>$wpconfig_filename</code>",
 			"<pre># BEGIN SecuPress $marker\n" . implode( "\n", $new_define ) . "\n# END SecuPress</pre>"
@@ -161,6 +166,10 @@ function secupress_get_constants_from_marker( $marker ) {
 			return [ 'DISALLOW_FILE_EDIT' => true ];
 		break;
 
+		case 'script_concat':
+			return [ 'CONCATENATE_SCRIPTS' => false ];
+		break;
+
 		case 'locations':
 			remove_all_filters( 'pre_option_siteurl' );
 			remove_all_filters( 'option_siteurl' );
@@ -168,7 +177,14 @@ function secupress_get_constants_from_marker( $marker ) {
 			remove_all_filters( 'pre_option_home' );
 			remove_all_filters( 'option_home' );
 			remove_all_filters( 'home_url' );
-			return [ 'RELOCATE' => false, 'WP_SITEURL' => get_site_url(), 'WP_HOME' => get_home_url() ];
+			return [    'RELOCATE'   => false, 
+						'WP_SITEURL' => get_option( 'siteurl' ), 
+						'WP_HOME'    => get_option( 'home' )
+					];
+		break;
+
+		case 'force_https':
+			return [ 'FORCE_SSL_ADMIN' => true, 'FORCE_SSL_LOGIN' => true ];
 		break;
 
 		case 'repair':
@@ -177,6 +193,10 @@ function secupress_get_constants_from_marker( $marker ) {
 
 		case 'unfiltered_uploads':
 			return [ 'ALLOW_UNFILTERED_UPLOADS' => false ];
+		break;
+
+		case 'skip_bundle':
+			return [ 'CORE_UPGRADE_SKIP_NEW_BUNDLED' => true ];
 		break;
 
 		default:

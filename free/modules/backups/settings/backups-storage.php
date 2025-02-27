@@ -23,7 +23,7 @@ if ( secupress_is_pro() ) {
 
 			$warning_cant_write  = sprintf(
 				/** Translators: %s is the path to a folder. */
-				__( 'it seems some folders and a file could not be created. Please make sure to create a folder %s that contains the following:', 'secupress' ),
+				__( 'It appears that some folders and a file could not be created. Please ensure that a folder named %s is created, containing the following:', 'secupress' ),
 				'<code>' . secupress_get_parent_backups_path( true ) . '</code>'
 			);
 			$warning_cant_write .= '</p><ul>';
@@ -48,7 +48,7 @@ if ( secupress_is_pro() ) {
 
 			$warning_cant_write  = sprintf(
 				/** Translators: 1 is a file name, 2 is the path to a folder, 3 and 4 are folder names. */
-				__( 'it seems some folders could not be created and/or your %1$s file is not writable. Please make sure to create a folder %2$s that contains these two folders: %3$s and %4$s. Then add the following rules in your %1$s file:', 'secupress' ),
+				__( 'It appears that some folders could not be created and/or the %1$s file is not writable. Please make sure that a folder %2$s is created, containing these two folders: %3$s and %4$s. Then add the following rules in the %1$s file:', 'secupress' ),
 				'<code>web.config</code>',
 				'<code>' . secupress_get_parent_backups_path( true ) . '</code>',
 				'<code>' . basename( secupress_get_local_backups_path() ) . '</code>',
@@ -60,7 +60,7 @@ if ( secupress_is_pro() ) {
 
 			$warning_cant_write  = sprintf(
 				/** Translators: 1 is the path to a folder, 2 and 3 are folder names, 4 is a file name. */
-				__( 'please make sure a folder %1$s has been created and it contains these two folders: %2$s and %3$s. Then add the following rules in your %4$s file:', 'secupress' ),
+				__( 'please make sure that a folder named %1$s is created, containing these two folders: %2$s and %3$s. Then add the following rules in the %4$s file:', 'secupress' ),
 				'<code>' . secupress_get_parent_backups_path( true ) . '</code>',
 				'<code>' . basename( secupress_get_local_backups_path() ) . '</code>',
 				'<code>' . basename( secupress_get_temporary_backups_path() ) . '</code>',

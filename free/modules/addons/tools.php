@@ -3,10 +3,12 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Render a plugin card.
+ * 
  * @since 2.0
  * @author Julio Potier
- * @return (string) The plugin card
+ * 
  * @param (object) $plugin The plugin informations from wp.org
+ * @return (string) The plugin card
  **/
 function secupress_render_plugin_card( $plugin ) {
 	// Quick sanity check.
@@ -40,9 +42,14 @@ function secupress_render_plugin_card( $plugin ) {
 		$active_installs_text = number_format_i18n( $plugin->active_installs ) . '+';
 	}
 	// Action button.
-	if ( current_user_can( 'install_plugins' ) || current_user_can( 'update_plugins' ) ) {
-		$status = install_plugin_install_status( $plugin );
-
+	$user_lang        = substr( get_user_locale(), 0, 2 ) . '.';
+	$user_lang        = $user_lang !== 'en.' ? $user_lang : '';
+	$action_link      = sprintf( '<a class="button" href="https://%swordpress.org/plugins/%s/">%s</a>', $user_lang, $plugin->slug, __( 'Visit plugin page', 'secupress' ) );
+	$more_details     = '';
+	if ( current_user_can( 'install_plugins' ) && current_user_can( 'update_plugins' ) ) {
+		$details_link = 'plugin-install.php?tab=plugin-information&amp;plugin=' . $plugin->slug . '&amp;TB_iframe=true&amp;width=600&amp;height=550';
+		$more_details = '<li><a href=' . esc_url( $details_link ) .'" class="thickbox open-plugin-details-modal" aria-label="' . esc_attr( sprintf( __( 'More information about %s', 'secupress' ), $plugin->name ) ) . '" data-title="' . esc_attr( $plugin->name ) . '">' . __( 'More Details', 'secupress' ) . '</a></li>';
+		$status       = install_plugin_install_status( $plugin );
 		switch ( $status['status'] ) {
 			case 'install':
 				if ( $status['url'] ) {
@@ -60,10 +67,10 @@ function secupress_render_plugin_card( $plugin ) {
 
 			case 'latest_installed':
 			case 'newer_installed':
-				if ( is_plugin_active( $status['file'] ) ) {
+				if ( secupress_is_plugin_active( $status['file'] ) ) {
 					$action_link = '<button type="button" class="button button-disabled" disabled="disabled">' . _x( 'Active', 'plugin', 'secupress' ) . '</button>';
 				} elseif ( current_user_can( 'activate_plugin', $status['file'] ) ) {
-					$button_text  = __( 'Activate', 'secupress' );
+					$button_text  = _x( 'Activate', 'verb', 'secupress' );
 					/* translators: %s: Plugin name */
 					$button_label = _x( 'Activate %s', 'plugin', 'secupress' );
 					$activate_url = add_query_arg( array(
@@ -73,7 +80,7 @@ function secupress_render_plugin_card( $plugin ) {
 					), network_admin_url( 'plugins.php' ) );
 
 					if ( is_network_admin() ) {
-						$button_text  = __( 'Network Activate', 'secupress' );
+						$button_text  = _x( 'Network Activate', 'plugin', 'secupress' );
 						/* translators: %s: Plugin name */
 						$button_label = _x( 'Network Activate %s', 'plugin', 'secupress' );
 						$activate_url = add_query_arg( array( 'networkwide' => 1 ), $activate_url );
@@ -91,7 +98,6 @@ function secupress_render_plugin_card( $plugin ) {
 				break;
 		}
 	}
-	$details_link = 'plugin-install.php?tab=plugin-information&amp;plugin=' . $plugin->slug . '&amp;TB_iframe=true&amp;width=600&amp;height=550';
 	ob_start();
 	?>
 	<div class="wp-list-table widefat plugin-card plugin-card-<?php echo sanitize_html_class( $plugin->slug ); ?>">
@@ -112,9 +118,7 @@ function secupress_render_plugin_card( $plugin ) {
 					<li>
 						<?php echo $action_link; ?>
 					</li>
-					<li>
-						<a href="<?php echo esc_url( $details_link ); ?>" class="thickbox open-plugin-details-modal" aria-label="<?php echo esc_attr( sprintf( __( 'More information about %s', 'secupress' ), $plugin->name ) ); ?>" data-title="<?php echo esc_attr( $plugin->name ); ?>"><?php _e( 'More Details', 'secupress' ); ?></a>
-					</li>
+					<?php echo $more_details; ?>
 				</ul>
 			</div>
 			<div class="desc plugin-description">

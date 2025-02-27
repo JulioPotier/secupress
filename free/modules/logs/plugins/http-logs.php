@@ -6,7 +6,7 @@
  * Author: SecuPress
  * Version: 2.1
  */
-return;
+return; ////
 defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */

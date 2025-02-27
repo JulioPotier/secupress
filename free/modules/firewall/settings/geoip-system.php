@@ -20,25 +20,25 @@ if ( secupress_is_pro() && secupress_is_submodule_active( 'firewall', 'geoip-sys
 
 $this->add_field( array(
 	'title'        => __( 'Use GeoIP Management', 'secupress' ),
-	'description'  => __( 'Country management is an effective way to stop attacks of any type and stop malicious activities that originate from a specific region of the world.', 'secupress' ),
+	'description'  => __( 'Country management helps prevent attacks and malicious activities from specific regions.', 'secupress' ),
 	'name'         => $main_field_name,
 	'type'         => 'radios',
 	'value'        => $geoip_value,
 	'default'      => '-1',
-	'label_screen' => __( 'Allow or disallow countries', 'secupress' ),
+	'label_screen' => _x( 'Allow or disallow countries', 'verb', 'secupress' ),
 	'options'      => array(
-		'-1'        => __( '<strong>Do not block</strong> countries from visiting my website', 'secupress' ),
-		'blacklist' => __( '<strong>Block</strong> the selected countries from visiting my website (disallowed list)', 'secupress' ),
-		'whitelist' => __( '<strong>Only allow</strong> the selected countries to visit my website (allowed list)', 'secupress' ),
+		'-1'        => __( '<strong>Do not block</strong> any countries from accessing my website', 'secupress' ),
+		'blacklist' => __( '<strong>Block</strong> the selected countries from accessing my website (disallowed list)', 'secupress' ),
+		'whitelist' => __( '<strong>Only allow</strong> the selected countries from accessing my website (allowed list)', 'secupress' ),
 	),
 	'helpers'      => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Remember that the detection of a visit is based on the IP address, so it’s effective for almost all automated attacks.', 'secupress' ),
+			'description' => __( 'Detection of visits is based on IP addresses, making it highly effective against automated attacks.', 'secupress' ),
 		),
 		array(
 			'type'        => 'warning',
-			'description' => __( 'This module will store GeoIP data in the database, raising it for about 25MB.', 'secupress' ),
+			'description' => secupress_is_pro() ? sprintf( __( 'This module will store GeoIP data in the database, incresing its size for approximately %dMB.', 'secupress' ), 40 ) : '',
 		),
 	),
 ) );

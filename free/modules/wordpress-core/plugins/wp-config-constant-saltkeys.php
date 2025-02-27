@@ -26,7 +26,7 @@ function secupress_wpconfig_saltkeys_activation() {
 	// So we just do it on activation, mu file present or not.
 	secupress_delete_db_salt_keys();
 
-	if ( defined( 'SECUPRESS_SALT_KEYS_MODULE_EXISTS' ) ) {
+	if ( defined( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE' ) ) {
 		return;
 	}
 

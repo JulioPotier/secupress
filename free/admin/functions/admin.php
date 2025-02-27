@@ -2,44 +2,6 @@
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
- * Display a small page, usually used to block a user until this user provides some info.
- *
- * @since 1.0
- *
- * @param (string) $title   The title tag content.
- * @param (string) $content The page content.
- * @param (array)  $args    Some more data:
- *                 - $head  Content to display in the document's head.
- */
-function secupress_action_page( $title, $content, $args = array() ) {
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		return;
-	}
-
-	$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-	$version = $suffix ? SECUPRESS_VERSION : time();
-
-	?><!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-	<head>
-		<meta charset="<?php echo esc_attr( strtolower( get_bloginfo( 'charset' ) ) ); ?>" />
-		<title><?php echo strip_tags( $title ); ?></title>
-		<meta content="initial-scale=1.0" name="viewport" />
-		<link href="<?php echo SECUPRESS_ADMIN_CSS_URL . 'secupress-action-page' . $suffix . '.css?ver=' . $version; ?>" media="all" rel="stylesheet" />
-		<?php echo ! empty( $args['head'] ) ? $args['head'] : ''; ?>
-	</head>
-	<body>
-		<div class="secupress-action-page-content">
-			<?php echo secupress_get_logo( array( 'alt' => SECUPRESS_PLUGIN_NAME, 'width' => 159, 'height' => 155, 'class' => 'logo' ) ); ?>
-			<?php echo $content; ?>
-		</div>
-	</body>
-</html><?php
-	die();
-}
-
-
-/**
  * Enqueue SweetAlert script and style.
  *
  * @since 1.0
@@ -123,8 +85,8 @@ function secupress_formate_latest_scans_list_item( $item, $last_percent = -1 ) {
 		</li>',
 		$icon,
 		$item['grade'],
-		sprintf( __( '%s ago' ), human_time_diff( $item['time'] ) ),
-		date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $item['time'] + $time_offset )
+		sprintf( _x( '%s ago', 'date', 'secupress' ), human_time_diff( $item['time'] ) ),
+		date_i18n( _x( 'M dS, Y \a\t h:ia', 'date', 'secupress' ), $item['time'] + $time_offset )
 	);
 }
 
@@ -254,7 +216,7 @@ function secupress_print_pro_advantages() {
 				<i class="secupress-icon-antispam" aria-hidden="true"></i>
 			</div>
 			<div class="secupress-col">
-				<p class="secupress-blob-title"><?php _e( 'Anti Spam', 'secupress' ); ?></p>
+				<p class="secupress-blob-title"><?php _e( 'Anti-Spam', 'secupress' ); ?></p>
 				<p class="secupress-blob-desc"><?php _e( 'Bots represent about 60% of internet traffic. Don’t let them add their spam to your site!', 'secupress' ); ?></p>
 			</div>
 		</div>

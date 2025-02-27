@@ -48,7 +48,6 @@ jQuery( function($) {
 		$('#input-' + sync_id).val( ui.value );
 	}
 
-	//// get value by i18n from options
 	$($(".secupress-slider").get().reverse()).each( function( i, el ) {
 		var v = $('#input-' + $(el).data('sync-id') ).val();
 		$(this).slider('value', v);
