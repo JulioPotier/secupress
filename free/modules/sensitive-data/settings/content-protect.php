@@ -177,7 +177,7 @@ $is_plugin_active = (int) secupress_is_submodule_active( 'sensitive-data', 'php-
 $this->add_field( array(
 	'title'             => __( 'PHP Disclosure', 'secupress' ),
 	/** Translators: here we speak about PHP modules, as in http://de2.php.net/manual/en/function.phpinfo.php */
-	'description'       => __( 'PHP contains a flaw that discloses sensitive information about installed modules, this is also known as "PHP Easter Egg". This is highly insecure and most hosts disable it by default. If this is not the case you can disable it here.', 'secupress' ),
+	'description'       => __( 'PHP contains a flaw that discloses sensitive information about installed modules, this is also known as «PHP Easter Egg». This is highly insecure and most hosts disable it by default. If this is not the case you can disable it here.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',

@@ -57,8 +57,8 @@ if ( ! secupress_get_module_option( 'user_protection_confirm', false, 'users-log
 		$message  = sprintf( _n( 'I confirm this site has <strong>%d</strong> legitimate "Administrator" user.', 'I confirm this site has <strong>%d</strong> legitimate "Administrator" users.', $u_admins, 'secupress' ), $u_admins );
 	} else {
 		$s_admins = count( get_super_admins() );
-		$message  = sprintf( _n( 'I confirm that this multisite has <strong>%d</strong> legitimate "Administrator" user', 'I confirm that this multisite has <strong>%d</strong> legitimate "Administrator" users', $u_admins, 'secupress' ), $u_admins ) . ' ';
-		$message .= sprintf( _n( 'and <strong>%d</strong> "Super Admin" user.', 'and <strong>%d</strong> "Super Admin" users.', $s_admins, 'secupress' ), $s_admins );
+		$message  = sprintf( _n( 'I confirm that this multisite has <strong>%d</strong> legitimate «Administrator» user', 'I confirm that this multisite has <strong>%d</strong> legitimate «Administrator» users', $u_admins, 'secupress' ), $u_admins ) . ' ';
+		$message .= sprintf( _n( 'and <strong>%d</strong> «Super Admin» user.', 'and <strong>%d</strong> «Super Admin» users.', $s_admins, 'secupress' ), $s_admins );
 	}
 	$this->add_field( array(
 		'title'             => __( 'Confirmation', 'secupress' ),
@@ -108,14 +108,14 @@ $this->add_field( array(
 
 $user_login   = wp_get_current_user()->user_login;
 $warning      = stripos( $user_login, 'admin' ) !== false && ! isset( apply_filters( 'secupress.plugins.allowed_usernames', [] )[ $user_login ] ) ? sprintf( __( 'Your username contains the word "%1$s": %2$s. You must rename your account after validation.', 'secupress' ), secupress_tag_me( 'admin', 'strong' ), secupress_code_me( $user_login ) ) : '';
-$admin_exists = username_exists( 'admin' ) ? sprintf( __( 'The existing account named "%s" is the only one allowed.', 'secupress' ), secupress_tag_me( 'admin', 'strong' ) ) : '';
+$admin_exists = username_exists( 'admin' ) ? sprintf( __( 'The existing account named «%s» is the only one allowed.', 'secupress' ), secupress_tag_me( 'admin', 'strong' ) ) : '';
 $this->add_field( array(
-	'title'             => sprintf( __( 'Forbid "%s" Usernames', 'secupress' ), 'admin' ),
+	'title'             => sprintf( __( 'Forbid «%s» Usernames', 'secupress' ), 'admin' ),
 	'label_for'         => $this->get_field_name( 'admin' ),
 	'type'              => 'checkbox',
 	'depends'           => $this->get_field_name( 'activated' ),
 	'default'           => false,
-	'label'             => sprintf( __( 'Yes, also prevent the word "%s" from being used in any username', 'secupress' ), secupress_tag_me( 'admin', 'strong' ) ),
+	'label'             => sprintf( __( 'Yes, also prevent the word «%s» from being used in any username', 'secupress' ), secupress_tag_me( 'admin', 'strong' ) ),
 	'helpers'           => [
 							[ 'type' => 'description',  'description' => $admin_exists, ],
 							[ 'type' => 'warning',      'description' => $warning, ],
@@ -196,7 +196,7 @@ if ( $usable ) {
 }
 $this->add_field( array(
 	'title'             => __( 'Lock the Membership Setting', 'secupress' ),
-	'description'       => __( 'Some attacks attempt to set the membership status to "Anyone can register". Lock the membership setting to "No" to prevent any future modifications.', 'secupress' ),
+	'description'       => __( 'Some attacks attempt to set the membership status to «Anyone can register». Lock the membership setting to «No» to prevent any future modifications.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',

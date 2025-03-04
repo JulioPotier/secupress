@@ -545,7 +545,7 @@ function secupress_global_settings_pro_license_deactivation_error_message( $mess
 
 	$secupress_message = sprintf(
 		/** Translators: %s is a link to the "SecuPress account". */
-		__( 'Please deactivate this site from your %s (the "Manage Sites" link in your license details).', 'secupress' ),
+		__( 'Please deactivate this site from your %s (the «Manage Sites» link in your license details).', 'secupress' ),
 		'<a target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '" href="' . esc_url( SecuPress_Admin_Offer_Migration::get_account_url() ) . '">' . __( 'SecuPress account', 'secupress' ) . '</a>'
 	);
 

@@ -4,7 +4,9 @@
  *
  * @package WP-Background-Processing
  */
-
+if ( class_exists( 'WP_Background_Process' ) ) {
+	return;
+}
 /**
  * Abstract WP_Background_Process class.
  *

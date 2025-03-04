@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2025-02-25 11:31+0100\n"
-"PO-Revision-Date: 2025-02-25 11:33+0100\n"
+"POT-Creation-Date: 2025-03-04 10:26+0100\n"
+"PO-Revision-Date: 2025-03-04 10:27+0100\n"
 "Last-Translator: Julio Potier <julio@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -31,7 +31,7 @@ msgid ""
 "error. We are pleased to report that the issue has been resolved and your "
 "website is now fully operational."
 msgstr ""
-"Pour votre information, votre site web a été indisponible en raison d'une "
+"Pour votre information, votre site Web a été indisponible en raison d'une "
 "erreur de base de données. Le problème a été résolu et votre site est de "
 "nouveau opérationnel."
 
@@ -556,8 +556,8 @@ msgstr ""
 "votre site, n’hésitez pas à nous contactez !"
 
 #: free/admin/modal.php:70 free/admin/settings.php:294
-#: free/classes/settings/class-secupress-settings.php:1719 pro/common.php:39
-#: pro/common.php:132
+#: free/classes/settings/class-secupress-settings.php:1719
+#: free/modules/welcome/callbacks.php:397 pro/common.php:39 pro/common.php:132
 msgctxt "link to website (Only FR or EN!)"
 msgid "support"
 msgstr "fr/support"
@@ -749,7 +749,7 @@ msgstr[1] ""
 "Les extensions suivantes ont été désactivées car leurs fonctionnalités sont "
 "déjà incluses :"
 
-#: free/admin/notices.php:114
+#: free/admin/notices.php:115
 msgid "The following plugin is not compatible with us and may cause conflicts:"
 msgid_plural ""
 "The following plugins are not compatible with us and may cause conflicts:"
@@ -759,12 +759,12 @@ msgstr[1] ""
 "Les extensions suivantes ne sont pas compatibles avec nous et entreront en "
 "conflit :"
 
-#: free/admin/notices.php:122 free/admin/notices.php:167
+#: free/admin/notices.php:123 free/admin/notices.php:168
 msgctxt "plugin"
 msgid "Deactivate"
 msgstr "Désactiver"
 
-#: free/admin/notices.php:161
+#: free/admin/notices.php:162
 #, php-format
 msgid ""
 "The features of the following plugins are included in %1$s. You can "
@@ -774,38 +774,38 @@ msgstr ""
 "pouvez les désactiver maintenant et activer ces fonctions plus tard dans "
 "%1$s :"
 
-#: free/admin/notices.php:245
+#: free/admin/notices.php:246
 msgid "This module has been activated:"
 msgid_plural "These modules have been activated:"
 msgstr[0] "Ce module a été activé :"
 msgstr[1] "Ces modules ont été activés :"
 
-#: free/admin/notices.php:253
+#: free/admin/notices.php:254
 msgid "This module has been deactivated:"
 msgid_plural "These modules have been deactivated:"
 msgstr[0] "Ce module a été désactivé :"
 msgstr[1] "Ces modules ont été désactivés :"
 
-#: free/admin/notices.php:297
+#: free/admin/notices.php:298
 #, php-format
 msgid "%s is activated, let’s improve the security of your website!"
 msgstr "%s est activé, améliorons la sécurité de votre site !"
 
-#: free/admin/notices.php:298
+#: free/admin/notices.php:299
 msgid "Scan website for security issues, right now."
 msgstr "Scanner les points de sécurité sur le site maintenant."
 
-#: free/admin/notices.php:306 free/admin/scanner-step-1.php:75
+#: free/admin/notices.php:307 free/admin/scanner-step-1.php:75
 msgid "Scan website"
 msgstr "Scanner le site"
 
-#: free/admin/notices.php:311 free/admin/settings.php:108
+#: free/admin/notices.php:312 free/admin/settings.php:108
 #: free/admin/settings.php:185
 msgctxt "verb"
 msgid "Close"
 msgstr "Fermer"
 
-#: free/admin/notices.php:367
+#: free/admin/notices.php:368
 #, php-format
 msgid "Please read these special notes for this update, version %1$s - %2$s"
 msgstr ""
@@ -1283,7 +1283,7 @@ msgstr ""
 "Cela va changer les 8 clés de sécurité de votre installation.<br/>Vous "
 "devrez peut-être vous reconnecter."
 
-#: free/admin/settings.php:214 free/functions/common.php:1871
+#: free/admin/settings.php:214 free/functions/common.php:1872
 msgctxt "scan result"
 msgid "Good"
 msgstr "Bon"
@@ -1293,7 +1293,7 @@ msgctxt "scan result"
 msgid "Warning"
 msgstr "En attente"
 
-#: free/admin/settings.php:216 free/functions/common.php:1870
+#: free/admin/settings.php:216 free/functions/common.php:1871
 msgctxt "scan result"
 msgid "Bad"
 msgstr "Mauvais"
@@ -1625,12 +1625,6 @@ msgstr "Quoi de neuf dans SecuPress %s"
 msgid "Or read full changelog on secupress.me"
 msgstr "Ou lisez tout le journal des modifications sur secupress.me"
 
-#: free/classes/admin/__class-secupress-admin-wp-background-process.php:424
-#: free/classes/admin/class-secupress-admin-wp-background-process.php:779
-#, php-format
-msgid "Every %d Minutes"
-msgstr "Toutes les %d minutes"
-
 #: free/classes/admin/class-secupress-admin-notices.php:257
 msgctxt "verb"
 msgid "Dismiss"
@@ -1642,6 +1636,7 @@ msgstr "Ignorer"
 
 #: free/classes/admin/class-secupress-admin-offer-migration.php:270
 #: free/modules/services/settings/services.php:48
+#: free/modules/welcome/callbacks.php:398
 #: free/modules/welcome/settings/api-key.php:168
 msgctxt "link to website (Only FR or EN!)"
 msgid "account"
@@ -1653,7 +1648,7 @@ msgstr "AU S’COURS !"
 
 #: free/classes/admin/class-secupress-admin-pointers.php:173
 msgid "New HTTP Logs Feature"
-msgstr "Nouveau module \"Journaux HTTP\""
+msgstr "Nouveau module «Journaux HTTP»"
 
 #: free/classes/admin/class-secupress-admin-pointers.php:174
 msgid "You can now filter the HTTP outputs"
@@ -1739,9 +1734,14 @@ msgstr ""
 msgid "Congratulations, your Pro version has been installed 🎉."
 msgstr "Félicitations, votre version Pro a été installée 🎉."
 
-#: free/classes/admin/class-secupress-admin-wp-background-process.php:777
+#: free/classes/admin/class-secupress-admin-wp-background-process.php:779
 msgid "Every Minute"
 msgstr "Toutes les minutes"
+
+#: free/classes/admin/class-secupress-admin-wp-background-process.php:781
+#, php-format
+msgid "Every %d Minutes"
+msgstr "Toutes les %d minutes"
 
 #: free/classes/common/class-secupress-log.php:179
 msgctxt "date format"
@@ -1760,8 +1760,8 @@ msgstr "Filtrer les journaux avec l’identifiant ID %d"
 
 #: free/classes/common/class-secupress-log.php:253
 #, php-format
-msgid "Filter logs with the user login \"%s\""
-msgstr "Filtrer les journaux avec l’identifiant \"%s\""
+msgid "Filter logs with the user login «%s»"
+msgstr "Filtrer les journaux avec l’identifiant «%s»"
 
 #: free/classes/common/class-secupress-log.php:265
 msgid "Profile"
@@ -3931,7 +3931,7 @@ msgid ""
 "privacy."
 msgstr ""
 "Aujourd’hui, une connexion HTTPS est nécessaire pour de nombreuses "
-"fonctionnalités sur le web. Cela améliore aussi la confiance des visiteurs "
+"fonctionnalités sur le Web. Cela améliore aussi la confiance des visiteurs "
 "en améliorant la protection de leur confidentialité en ligne."
 
 #: free/classes/scanners/class-secupress-scan-https.php:147
@@ -4315,11 +4315,11 @@ msgstr ""
 
 #: free/classes/scanners/class-secupress-scan-php-disclosure.php:43
 msgid ""
-"Check if your server lists the PHP modules <em>(known as \"PHP Easter "
-"Egg\")</em>."
+"Check if your server lists the PHP modules <em>(known as «PHP Easter Egg»)</"
+"em>."
 msgstr ""
 "Vérifie si votre serveur liste les modules de PHP <em>(connu sous le nom de "
-"\"PHP Easter Egg\")</em>."
+"«PHP Easter Egg»)</em>."
 
 #: free/classes/scanners/class-secupress-scan-php-disclosure.php:44
 msgid ""
@@ -5221,13 +5221,13 @@ msgid "Specify an IP to ban."
 msgstr "Spécifier une adresse IP à bannir."
 
 #: free/classes/settings/class-secupress-settings-modules.php:514
-#: free/classes/settings/class-secupress-settings-modules.php:610
-msgid ""
-"You can use <a href=\"https://docs.secupress.me/article/161-ip-range\">IP "
-"ranges</a>."
-msgstr ""
-"Vous pouvez utiliser des <a href=\"https://fr.docs.secupress.me/article/160-"
-"ip-range\">ranges d’IP</a>."
+#, php-format
+msgid "You can use %sIP ranges%s."
+msgstr "Vous pouvez utiliser %sdes plages d‘IP%s."
+
+#: free/classes/settings/class-secupress-settings-modules.php:514
+msgid "<a href=\"https://docs.secupress.me/article/161-ip-range\">"
+msgstr "Vous pouvez utiliser des %sranges d’IP%s."
 
 #: free/classes/settings/class-secupress-settings-modules.php:516
 msgctxt "verb"
@@ -5310,6 +5310,12 @@ msgstr "Vider la liste des IP autorisées"
 #: free/classes/settings/class-secupress-settings-modules.php:609
 msgid "Specify an IP to add to the allowed list."
 msgstr "Spécifier une adresse IP à autoriser."
+
+#: free/classes/settings/class-secupress-settings-modules.php:610
+msgid ""
+"You can use <a href=\"https://docs.secupress.me/article/161-ip-range\">IP "
+"ranges</a>."
+msgstr "Vous pouvez utiliser des %sranges d’IP%s."
 
 #: free/classes/settings/class-secupress-settings-modules.php:612
 msgctxt "verb"
@@ -5766,109 +5772,109 @@ msgstr "Raison : %s"
 msgid "Support ID: %s"
 msgstr "Support ID : %s"
 
-#: free/functions/common.php:1664
+#: free/functions/common.php:1665
 #, php-format
 msgid "SSL is not supported on HTTP PORT %s"
 msgstr "SSL n‘est pas supporté sur le port HTTP %s"
 
-#: free/functions/common.php:1670
+#: free/functions/common.php:1671
 msgid "SSL is not supported on this website."
 msgstr "SSL n‘est pas supporté sur ce site Web."
 
-#: free/functions/common.php:1825
+#: free/functions/common.php:1826
 msgctxt "User role"
 msgid "Administrator"
 msgstr "Administrateur"
 
-#: free/functions/common.php:1826
+#: free/functions/common.php:1827
 msgctxt "User role"
 msgid "Editor"
 msgstr "Éditeur"
 
-#: free/functions/common.php:1827
+#: free/functions/common.php:1828
 msgctxt "User role"
 msgid "Author"
 msgstr "Auteur"
 
-#: free/functions/common.php:1828
+#: free/functions/common.php:1829
 msgctxt "User role"
 msgid "Contributor"
 msgstr "Contributeur"
 
-#: free/functions/common.php:1829
+#: free/functions/common.php:1830
 msgctxt "User role"
 msgid "Subscriber"
 msgstr "Abonné"
 
-#: free/functions/common.php:1872
+#: free/functions/common.php:1873
 msgctxt "scan result"
 msgid "Pending"
 msgstr "En attente"
 
-#: free/functions/common.php:1873
+#: free/functions/common.php:1874
 msgctxt "scan result"
 msgid "Error"
 msgstr "Erreur"
 
-#: free/functions/common.php:1875
+#: free/functions/common.php:1876
 msgctxt "scanner item"
 msgid "New"
 msgstr "Nouveau"
 
-#: free/functions/common.php:1904
+#: free/functions/common.php:1905
 msgid "Fix done."
 msgstr "Correction effectuée."
 
-#: free/functions/common.php:1976 free/functions/modules.php:195
+#: free/functions/common.php:1977 free/functions/modules.php:195
 msgid "Banned IPs"
 msgstr "IPs bannies"
 
-#: free/functions/common.php:1980
+#: free/functions/common.php:1981
 msgid "Plugin Interactions"
 msgstr "Interactions des extensions"
 
-#: free/functions/common.php:1984
+#: free/functions/common.php:1985
 msgid "Theme Interactions"
 msgstr "Interactions des thèmes"
 
-#: free/functions/common.php:1988
+#: free/functions/common.php:1989
 msgid "ZIP Upload Attempts"
 msgstr "Tentatives de téléversement de ZIP"
 
-#: free/functions/common.php:1992
+#: free/functions/common.php:1993
 msgid "XMLRPC Intrusions"
 msgstr "Intrusions XML-RPC"
 
-#: free/functions/common.php:1996
+#: free/functions/common.php:1997
 msgid "Login Page"
 msgstr "Page de connexion"
 
-#: free/functions/common.php:2000
+#: free/functions/common.php:2001
 msgid "Login Attempts"
 msgstr "Tentatives de connexion"
 
-#: free/functions/common.php:2004
+#: free/functions/common.php:2005
 msgid "Password Spraying Attempts"
 msgstr "Tentatives de pulvérisation de mots de passe"
 
-#: free/functions/common.php:2008
+#: free/functions/common.php:2009
 msgid "User Actions"
 msgstr "Actions des comptes"
 
-#: free/functions/common.php:2012
+#: free/functions/common.php:2013
 msgid "Bad Robots"
 msgstr "Mauvais robots"
 
-#: free/functions/common.php:2016
+#: free/functions/common.php:2017
 msgid "Bad Request Content"
 msgstr "Mauvais contenu de requêtes"
 
-#: free/functions/common.php:2020
+#: free/functions/common.php:2021
 msgctxt "types of attacks"
 msgid "All"
 msgstr "Toutes"
 
-#: free/functions/common.php:2173
+#: free/functions/common.php:2174
 msgid "Plugin not found"
 msgstr "Extension non trouvée"
 
@@ -6053,7 +6059,7 @@ msgstr "1 par jour / 1 par 24 heures"
 msgid "0 Calls (blocked)"
 msgstr "0 appel (bloqué)"
 
-#: free/functions/ip.php:705
+#: free/functions/ip.php:742
 #, php-format
 msgid ""
 "Your IP address %1$s has been banned for %2$s minute, please do not retry "
@@ -6941,8 +6947,8 @@ msgid ""
 "Yes, comments <strong>are required</strong> on my website to combat comment "
 "spam"
 msgstr ""
-"Oui, j’ai les commentaires <strong>sont nécessaires</strong> sur mon site, "
-"lutter contre les spams de commentaires"
+"Oui, les commentaires <strong>sont nécessaires</strong> sur mon site, lutter "
+"contre les spams de commentaires"
 
 #: free/modules/antispam/settings/antispam.php:31
 msgid ""
@@ -7557,7 +7563,7 @@ msgid "Not installed yet"
 msgstr "Pas encore installé"
 
 #: free/modules/firewall/settings/geoip-system.php:78
-#: free/modules/plugins-themes/settings/plugins.php:127
+#: free/modules/plugins-themes/settings/plugins.php:128
 #: free/modules/plugins-themes/settings/themes.php:60
 msgid "Manual Update"
 msgstr "Mises à jour manuelles"
@@ -7567,7 +7573,7 @@ msgid "Update the GeoIP database now"
 msgstr "Mettre à jour la base GeoIP"
 
 #: free/modules/firewall/settings/geoip-system.php:82
-#: free/modules/plugins-themes/settings/plugins.php:131
+#: free/modules/plugins-themes/settings/plugins.php:132
 #: free/modules/plugins-themes/settings/themes.php:64
 msgid "Save changes first"
 msgstr "Enregistrez les modifications d’abord"
@@ -8443,13 +8449,13 @@ msgstr "Tentatives de suppression"
 msgid "You do not have sufficient permissions to install plugins on this site."
 msgstr "Vous n’avez pas la permission d’installer des extensions sur ce site."
 
-#: free/modules/plugins-themes/plugins/plugin-show-all.php:33
-#: free/modules/plugins-themes/plugins/plugin-show-all.php:96
+#: free/modules/plugins-themes/plugins/plugin-show-all.php:32
+#: free/modules/plugins-themes/plugins/plugin-show-all.php:95
 #, php-format
 msgid "The plugin %s has been hidden ! (using the WP Filter %s)"
 msgstr "L‘extension %s a été masquée ! (avec le filtre WP %s)"
 
-#: free/modules/plugins-themes/plugins/plugin-show-all.php:68
+#: free/modules/plugins-themes/plugins/plugin-show-all.php:67
 #, php-format
 msgid ""
 "The <strong>Must-Use</strong> tab has been hidden! (using the WP Filter %s)"
@@ -8457,7 +8463,7 @@ msgstr ""
 "L‘onglet des extensions <strong>Indispensables</strong> a été masquée ! "
 "(avec le Filtre WP %s)"
 
-#: free/modules/plugins-themes/plugins/plugin-show-all.php:82
+#: free/modules/plugins-themes/plugins/plugin-show-all.php:81
 #, php-format
 msgid ""
 "The <strong>Drop-in</strong> tab has been hidden! (using the WP Filter %s)"
@@ -8465,17 +8471,17 @@ msgstr ""
 "L‘onglet des extensions <strong>Avancées</strong> a été masquée ! (avec le "
 "Filtre WP %s)"
 
-#: free/modules/plugins-themes/plugins/plugin-show-all.php:114
+#: free/modules/plugins-themes/plugins/plugin-show-all.php:113
 #, php-format
 msgid "The must-use plugin %s has been hidden ! (using the WP Filter %s)"
 msgstr "L‘extension indispensable %s a été masquée ! (avec le filtre WP %s)"
 
-#: free/modules/plugins-themes/plugins/plugin-show-all.php:160
+#: free/modules/plugins-themes/plugins/plugin-show-all.php:158
 #, php-format
 msgid "The plugin %s has been hidden! (using CSS)"
 msgstr "L‘extension %s a été masquée ! (avec une CSS)"
 
-#: free/modules/plugins-themes/plugins/plugin-show-all.php:208
+#: free/modules/plugins-themes/plugins/plugin-show-all.php:216
 #, php-format
 msgid "The plugin %s has been hidden! (using JS)"
 msgstr "L‘extension %s a été masquée ! (avec du JS)"
@@ -8594,15 +8600,15 @@ msgstr "Confirmation"
 msgid "Visit %sthe plugins page%s to check this beforehand."
 msgstr "Visitez %sla page des extensions%s pour vérifier ça d‘abord."
 
-#: free/modules/plugins-themes/settings/plugins.php:67
+#: free/modules/plugins-themes/settings/plugins.php:68
 msgid "Display All"
 msgstr "Afficher tout"
 
-#: free/modules/plugins-themes/settings/plugins.php:68
+#: free/modules/plugins-themes/settings/plugins.php:69
 msgid "Yes, always display all on plugins page"
 msgstr "Oui, toujours afficher toutes les extensions sur la page"
 
-#: free/modules/plugins-themes/settings/plugins.php:76
+#: free/modules/plugins-themes/settings/plugins.php:77
 #, php-format
 msgid ""
 "The filters %1$s and %2$s will be emptied, CSS or JS tricks to hide them "
@@ -8611,15 +8617,15 @@ msgstr ""
 "Les filtres %1$s et %2$s seront vidés, les astuces CSS et JS pour les cacher "
 "seront inversées, la pagination de la page sera désactivée."
 
-#: free/modules/plugins-themes/settings/plugins.php:82
+#: free/modules/plugins-themes/settings/plugins.php:83
 msgid "Highlight Color"
 msgstr "Couleur de surbrillance"
 
-#: free/modules/plugins-themes/settings/plugins.php:92
+#: free/modules/plugins-themes/settings/plugins.php:93
 msgid "Monitor Vulnerable Plugins"
 msgstr "Vérification des extensions vulnérables"
 
-#: free/modules/plugins-themes/settings/plugins.php:93
+#: free/modules/plugins-themes/settings/plugins.php:94
 #, php-format
 msgid ""
 "Based on %s Daily Security Monitoring, notices will be displayed for newly "
@@ -8629,35 +8635,35 @@ msgstr ""
 "seront affichées pour les extensions nouvellement connues pour être "
 "vulnérables."
 
-#: free/modules/plugins-themes/settings/plugins.php:100
+#: free/modules/plugins-themes/settings/plugins.php:101
 msgid "Yes, enable detection of plugins with known vulnerabilities"
 msgstr "Oui, activer la détection des extensions connues pour être vulnérables"
 
-#: free/modules/plugins-themes/settings/plugins.php:104
+#: free/modules/plugins-themes/settings/plugins.php:105
 msgid "Compatible with any public plugin, whether premium or free."
 msgstr "Compatible avec toutes les extensions publiques, premium ou gratuites."
 
-#: free/modules/plugins-themes/settings/plugins.php:110
+#: free/modules/plugins-themes/settings/plugins.php:111
 #: free/modules/plugins-themes/settings/themes.php:43
 msgid "Not yet"
 msgstr "Pas encore"
 
-#: free/modules/plugins-themes/settings/plugins.php:113
+#: free/modules/plugins-themes/settings/plugins.php:114
 #: free/modules/plugins-themes/settings/themes.php:46
 msgid "Last Update"
 msgstr "Dernière mise à jour"
 
-#: free/modules/plugins-themes/settings/plugins.php:121
+#: free/modules/plugins-themes/settings/plugins.php:122
 #: free/modules/plugins-themes/settings/themes.php:54
 msgid "The Patchstack database updates automatically once a day"
 msgstr "La base de données Patchstack se met à jour quotidiennement"
 
-#: free/modules/plugins-themes/settings/plugins.php:131
+#: free/modules/plugins-themes/settings/plugins.php:132
 #: free/modules/plugins-themes/settings/themes.php:64
 msgid "Update the data"
 msgstr "Mettre à jour les données"
 
-#: free/modules/plugins-themes/settings/plugins.php:135
+#: free/modules/plugins-themes/settings/plugins.php:136
 #: free/modules/plugins-themes/settings/themes.php:68
 #, php-format
 msgid ""
@@ -8667,7 +8673,7 @@ msgstr ""
 "La base de données Patchstack se met à jour quotidiennement mais vous pouvez "
 "aussi le faire manuellement.<br>Dernière mise à jour : %s"
 
-#: free/modules/plugins-themes/settings/plugins.php:143
+#: free/modules/plugins-themes/settings/plugins.php:144
 msgid ""
 "Display a banner if a plugin has not been updated since 2 years, or has been "
 "closed from the official WordPress repository."
@@ -8675,11 +8681,11 @@ msgstr ""
 "Affiche une notification si une extension n'a pas été mise à jour depuis 2 "
 "ans, ou a été fermée sur le dépôt officiel de WordPress."
 
-#: free/modules/plugins-themes/settings/plugins.php:148
+#: free/modules/plugins-themes/settings/plugins.php:149
 msgid "Yes, check for not maintained and closed plugins too."
 msgstr "Oui, vérifier aussi les extensions non maintenues ou fermées."
 
-#: free/modules/plugins-themes/settings/plugins.php:152
+#: free/modules/plugins-themes/settings/plugins.php:153
 msgid ""
 "Only compatible with any public plugin from wp.org. Cannot be unchecked."
 msgstr ""
@@ -8954,11 +8960,12 @@ msgstr ""
 "<strong>Erreur</strong> : Cette base de page existe déjà pour %s. Merci d‘en "
 "choisir une autre."
 
-#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:7
+#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:14
+#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:18
 msgid "Warning - Deceptive content"
 msgstr "Attention - Contenu trompeur"
 
-#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:61
+#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:72
 #, php-format
 msgid ""
 "The purpose of this page is to detect robots that do not adhere to the rules "
@@ -8969,7 +8976,7 @@ msgstr ""
 "règles du fichier %1$s.<br><strong>%2$s ou vous aurez l‘interdiction de "
 "visiter ce site par bannissement.</strong>"
 
-#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:63
+#: free/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:74
 msgid "DO NOT CLICK THIS LINK"
 msgstr "NE CLIQUEZ PAS SUR CE LIEN"
 
@@ -9113,14 +9120,14 @@ msgstr "Merci d‘ajouter le code suivant dans votre fichier %s :"
 #: free/modules/sensitive-data/settings/content-protect.php:180
 msgid ""
 "PHP contains a flaw that discloses sensitive information about installed "
-"modules, this is also known as \"PHP Easter Egg\". This is highly insecure "
-"and most hosts disable it by default. If this is not the case you can "
-"disable it here."
+"modules, this is also known as «PHP Easter Egg». This is highly insecure and "
+"most hosts disable it by default. If this is not the case you can disable it "
+"here."
 msgstr ""
 "PHP contient une vulnérabilité qui divulgue des informations sensibles au "
-"sujet des modules installés, connue sous le nom de \"PHP Easter Egg\". Il "
-"est fortement recommandé de désactiver sa lecture, la plupart des hébergeurs "
-"le font par défaut. Si ce n’est pas le cas, vous pouvez le faire ici."
+"sujet des modules installés, connue sous le nom de «PHP Easter Egg». Il est "
+"fortement recommandé de désactiver sa lecture, la plupart des hébergeurs le "
+"font par défaut. Si ce n’est pas le cas, vous pouvez le faire ici."
 
 #: free/modules/sensitive-data/settings/content-protect.php:186
 msgid "Yes, forbid access to this PHP modules disclosure"
@@ -9142,7 +9149,7 @@ msgid ""
 "your site. It may be a useful information for attackers, and should be "
 "removed."
 msgstr ""
-"Certains serveurs envoient une entête appelée %s contenant la version de PHP "
+"Certains serveurs envoient un entête appelé %s contenant la version de PHP "
 "utilisée sur votre site. Cela peut être une information utile lors "
 "d’attaques et devrait être supprimée."
 
@@ -9249,7 +9256,7 @@ msgid ""
 "If you have a mobile application, or any service linked to your website, you "
 "should not disable all the features of XML-RPC."
 msgstr ""
-"Si vous avez une application mobile, ou tout service lié à votre site web, "
+"Si vous avez une application mobile, ou tout service lié à votre site Web, "
 "vous ne devriez pas désactiver entièrement l’API XML-RPC."
 
 #: free/modules/sensitive-data/settings/wp-endpoints.php:31
@@ -9788,7 +9795,7 @@ msgid ""
 msgstr ""
 "Les virus ont tendance à ajouter des utilisateurs directement dans la base "
 "de données en contournant la méthode WordPress. De plus, tout rôle "
-"« Administrateur » nouveau ou mis à niveau devra être validé par un autre "
+"«Administrateur» nouveau ou mis à niveau devra être validé par un autre "
 "administrateur."
 
 #: free/modules/users-login/settings/blacklist-logins.php:18
@@ -9848,23 +9855,22 @@ msgstr[1] ""
 #, php-format
 msgid ""
 "I confirm that this multisite has <strong>%d</strong> legitimate "
-"\"Administrator\" user"
+"«Administrator» user"
 msgid_plural ""
 "I confirm that this multisite has <strong>%d</strong> legitimate "
-"\"Administrator\" users"
+"«Administrator» users"
 msgstr[0] ""
-"Je confirme que ce multisite a <strong>%d</strong> \"Administrateur\" "
-"légitime"
+"Je confirme que ce multisite a <strong>%d</strong> «Administrateur» légitime"
 msgstr[1] ""
-"Je confirme que ce multisite a <strong>%d</strong> \"Administrateurs\" "
+"Je confirme que ce multisite a <strong>%d</strong> «Administrateurs» "
 "légitimes"
 
 #: free/modules/users-login/settings/blacklist-logins.php:61
 #, php-format
-msgid "and <strong>%d</strong> \"Super Admin\" user."
-msgid_plural "and <strong>%d</strong> \"Super Admin\" users."
-msgstr[0] "et <strong>%d</strong> compte \"Super Admin\"."
-msgstr[1] "et <strong>%d</strong> comptes \"Super Admin\"."
+msgid "and <strong>%d</strong> «Super Admin» user."
+msgid_plural "and <strong>%d</strong> «Super Admin» users."
+msgstr[0] "et <strong>%d</strong> compte «Super Admin»."
+msgstr[1] "et <strong>%d</strong> comptes «Super Admin»."
 
 #: free/modules/users-login/settings/blacklist-logins.php:72
 #, php-format
@@ -9918,19 +9924,19 @@ msgstr ""
 
 #: free/modules/users-login/settings/blacklist-logins.php:111
 #, php-format
-msgid "The existing account named \"%s\" is the only one allowed."
-msgstr "Le compte nommé \"%s\" existant sera le seul autorisé."
+msgid "The existing account named «%s» is the only one allowed."
+msgstr "Le compte nommé «%s» existant sera le seul autorisé."
 
 #: free/modules/users-login/settings/blacklist-logins.php:113
 #, php-format
-msgid "Forbid \"%s\" Usernames"
-msgstr "Interdire les identifiants \"%s\""
+msgid "Forbid «%s» Usernames"
+msgstr "Interdire les identifiants «%s»"
 
 #: free/modules/users-login/settings/blacklist-logins.php:118
 #, php-format
-msgid "Yes, also prevent the word \"%s\" from being used in any username"
+msgid "Yes, also prevent the word «%s» from being used in any username"
 msgstr ""
-"Oui, empêcher le mot \"%s\" d'être utilisé dans n‘importe quel nom de compte"
+"Oui, empêcher le mot «%s» d'être utilisé dans n‘importe quel nom de compte"
 
 #: free/modules/users-login/settings/blacklist-logins.php:126
 msgid "https://woocommerce.com/mobile/"
@@ -9945,7 +9951,7 @@ msgstr "Oui, interdire l’énumération des comptes"
 msgid ""
 "If you are using the %sWooCommerce Mobile App%s, do not activate this module."
 msgstr ""
-"Si vous utilisez %sl‘App Mobile WooComemrce%s, n‘activez pas le module."
+"Si vous utilisez %sl‘App Mobile WooCommerce%s, n‘activez pas le module."
 
 #: free/modules/users-login/settings/blacklist-logins.php:156
 msgid "Lock the Default Role"
@@ -9990,12 +9996,11 @@ msgstr "Verrouiller le réglage des inscriptions"
 
 #: free/modules/users-login/settings/blacklist-logins.php:199
 msgid ""
-"Some attacks attempt to set the membership status to \"Anyone can "
-"register\". Lock the membership setting to \"No\" to prevent any future "
-"modifications."
+"Some attacks attempt to set the membership status to «Anyone can register». "
+"Lock the membership setting to «No» to prevent any future modifications."
 msgstr ""
-"Des attaques peuvent tenter de mettre le statut des inscriptions sur \"Tout "
-"le monde peut s’inscrire\". Verrouillez ce réglage sur \"Non\" et interdire "
+"Des attaques peuvent tenter de mettre le statut des inscriptions sur «Tout "
+"le monde peut s’inscrire». Verrouillez ce réglage sur «Non» et interdire "
 "toute modification future."
 
 #: free/modules/users-login/settings/blacklist-logins.php:205
@@ -10825,10 +10830,10 @@ msgstr "Notre serveur a retourné une erreur : %s"
 #: free/modules/welcome/callbacks.php:548
 #, php-format
 msgid ""
-"Please deactivate this site from your %s (the \"Manage Sites\" link in your "
+"Please deactivate this site from your %s (the «Manage Sites» link in your "
 "license details)."
 msgstr ""
-"Merci de désactiver ce site de votre %s (le lien \"Gérer les sites\" dans le "
+"Merci de désactiver ce site de votre %s (le lien «Gérer les sites» dans le "
 "détail de vos licences)."
 
 #: free/modules/welcome/settings/advanced-settings.php:12

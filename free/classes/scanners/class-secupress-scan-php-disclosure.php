@@ -40,7 +40,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$this->title    = __( 'Check if your server lists the PHP modules <em>(known as "PHP Easter Egg")</em>.', 'secupress' );
+		$this->title    = __( 'Check if your server lists the PHP modules <em>(known as «PHP Easter Egg»)</em>.', 'secupress' );
 		$this->more     = __( 'PHP contains a flaw that discloses sensitive information about installed modules, resulting in a loss of confidentiality.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),

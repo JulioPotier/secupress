@@ -511,7 +511,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		// Ban form.
 		echo '<form id="form-ban-ip" class="hide-if-js" action="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip' . $referer_arg ), 'secupress-ban-ip' ) ) . '" method="post">';
 			echo '<label for="secupress-ban-ip" class="screen-reader-text">' . __( 'Specify an IP to ban.', 'secupress' ) . '</label><br/>';
-			echo '<p class="description">' . __( 'You can use <a href="https://docs.secupress.me/article/161-ip-range">IP ranges</a>.', 'secupress' ) . '</p>';
+			echo '<p class="description">' . sprintf( __( 'You can use %sIP ranges%s.', 'secupress' ), __( '<a href="https://docs.secupress.me/article/161-ip-range">', 'secupress' ), '</a>' ) . '</p>';
 			echo '<textarea cols="50" id="secupress-ban-ip" name="ip"></textarea> ';
 			echo '<button type="submit" class="secupress-button secupress-button-mini">' . _x( 'Ban IP', 'verb', 'secupress' ) . '</button>';
 		echo "</form>\n";

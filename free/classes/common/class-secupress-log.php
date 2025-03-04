@@ -250,7 +250,7 @@ class SecuPress_Log {
 
 		// Filter Logs by login.
 		if ( $user_login && ! empty( $filters['user_login'] ) ) {
-			$user_login = '<a title="' . esc_attr( sprintf( __( 'Filter logs with the user login "%s"', 'secupress' ), $user_login ) ) . '" href="' . esc_url( sprintf( $filters['user_login'], urlencode( $user_login ) ) ) . '" class="secupress-action-filter-login">' . $user_login . '</a>';
+			$user_login = '<a title="' . esc_attr( sprintf( __( 'Filter logs with the user login «%s»', 'secupress' ), $user_login ) ) . '" href="' . esc_url( sprintf( $filters['user_login'], urlencode( $user_login ) ) ) . '" class="secupress-action-filter-login">' . $user_login . '</a>';
 		}
 
 		// If the user exists and is not the current user.

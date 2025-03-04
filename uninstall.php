@@ -1,4 +1,10 @@
 <?php
+/**
+ * Uninstall Script
+ * // DO NOT USE ANY SP FUNCTIONS/CONSTANTS, WE MAY BE DEACTIVATED.
+ * @version 2.3.1
+*/
+
 defined( 'WP_UNINSTALL_PLUGIN' ) or die( 'Something went wrong.' );
 
 $settings = get_site_option( 'secupress_settings' );
@@ -27,7 +33,7 @@ if ( is_array( $settings ) && ! empty( $settings['consumer_email'] ) && ! empty(
 
 		/** This filter is documented in wp-includes/class-http.php. */
 		$user_agent      = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) );
-		$version         = '2.3';
+		$version         = '2.3.1';
 		$args['headers'] = array(
 			'X-Requested-With' => sprintf( '%s;SecuPress|%s|%s|;', $user_agent, $version, esc_url( home_url() ) ),
 			'Authorization' => 'Basic ' . base64_encode( $settings['consumer_email'] . ':' . $settings['consumer_key'] )

@@ -4,7 +4,9 @@
  *
  * @package WP-Background-Processing
  */
-
+if ( class_exists( 'WP_Async_Request' ) ) {
+	return;
+}
 /**
  * Abstract WP_Async_Request class.
  *

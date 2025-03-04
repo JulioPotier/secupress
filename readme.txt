@@ -4,7 +4,7 @@ Tags: wordpress security, malware, security plugin, security
 Requires at least: 4.9
 Tested up to: 6.7.2
 Requires PHP: 7.0
-Stable tag: 2.3
+Stable tag: 2.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -185,59 +185,14 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 2.3 =
-* 28 Fev 2025
-* Update: Many many strings have been revamp to be more clear. Also, belgian-french, canadian-french will load the french i18n ; every german i18n will load the german one.
-* Update: List of allowzed IPs from different services
-* Security Fix: Remove the 'action' param on 'secupress_check_ban_ips_form' shortcode to prevent XSS (useless param I admit)
-* Security Fix: Captcha let attackers to brute force the login page
-* Security Fix: Fix a CSRF in "ban-me-please" function from Blackhole feature where you could send a link to someone to be banned on this site
-* New: Block AI Bots feature
-* New: "SSL & HTTPS" Module page with 3 new features "Force HTTPS", "Redirect every HTTP request to SSL/HTTPS", "Fix Mixed Content Warning"
-* New: Bad Themes Scanner do the same as plugins
-* New: Reinstall all your plugins from a clean wp.org repo in 1 click
-* New: Force Reset Password for all your users in 1 click
-* New: Prevent Password Reset feature
-* New: Force Logout for all your users in 1 click
-* New: Forbid Same Email Domain
-* New: Forbid Bad Email MX Domain
-* New: Block PHP Function Names in HTTP Requests
-* New: Captcha is now at V2, this is a challenge, you can select 2 types of challenges.
-* New: Password Spraying Protection
-* New: Change the author base page (Thanks Greg!). Also force users to change their display names to now match their login (Thanks Daniel!).
-* New: Show All Plugins on the plugins page, to prevent hidden/false plugins
-* New: Plugins actions superseds all the plugins restrictions in place before, also, it can even now prevent the installation or activation directly from FTP or DB. Same for themes.
-* New: Anti-Phishing protection
-* New: Dashboard Widget that shows log attacks counter (finally)
-* New: Display the last login timestamp on users page
-* New: Displays an admin notice when your site was down due to a DB error
-* New: Do not display sensitive infos when your site is down due to DB error, instead, sends you an email (not each time, there is a time frame)
-* New: Add a malware detection column on each attempted install plugin on the plugins page. This is the same result as the Malware Files Scanner but in this context.
-* New: CONCATENATE_SCRIPTS has to be set on FALSE to prevent more easy DDoS on your site using the concatened scripts by WP
-* New: You can now check your licence status into the main settings page in your dashboard
-* New: CORE_UPGRADE_SKIP_NEW_BUNDLED can be set to FALSE to repevent the update of new twentythemes
-* New: SSO between your different sub-websites in a multisite env
-* New: Scan for Bad themes (same as bad plugins)
-* Improved: Bad Plugins Scanner now check in live which of your plugins are outdated even if no update is available, or have been closed on wp.org repository
-* Improved: The Malware Scanner will now also scan more items in the DB, and will check for Spam Content in your contents
-* Improved: Forbid Bad Usernames can now forbid ANY username containing the word "admin" in it. (you can filter that to allow yours)
-* Improved: Prevent User Creation has been improved and will now prevent users directly inserted in DB, or duplicating existing users, or not inserted using WP functions, also if a user should be granted as Admin, it has to be validated by another one.
-* Improved: Better detection of a hacked wp-config.php file
-* Improved: Bad URL Access, we reversed the way it worked, instead of disallowing, we nox only allow, be prepared.
-* Improved: The Moved Login page will now prevent cache from DB and Cache Object too
-* Improved: All our data will now be updated weekly
-* Improved: Force Strong Password will now require a strong password even for previous users, at login.
-* Improved: Your notices will only be displayed for particular capability, not only admins, if needed
-* Improved: If a robots.txt physical file exists, we will use it
-* Improved: Blacklist logins can now take joker chars
-* Improved: Better malware detection in wp-config.php
-* Fix: Missing notices from our cron tasks
-* Fix: Forbid User Enumeration still showing users on some sites
-* Removed: Bad Request Methods feature, not useful anymore
-* Delayed: Real 2FA OTP Auth, superseding PasswordLess (if you're using it, it won't be replaced, but is not available anymore for new sites)
+= 2.3.1 =
+* 04 March 2025
+* Fix: Add a forgotten class_exists() on WP_Async_Request updated class.
+* Fix: Deprecated on PHP8+ on filter_var()
+* Improvement: i18n
 
 == Upgrade Notice ==
-* SecuPress 2.3-beta now requires PHP 7.0 minimum.
+* SecuPress 2.3+ now requires PHP 7.0 minimum.
 
 == TODO ==
 Create a trust score for each non WP file and displays it

@@ -26,6 +26,7 @@ function secupress_get_ip() {
 /**
  * Tell if an IP address is valid.
  *
+ * @since 2.3.1 $flag back to default=0, else deprecated > PHP 8
  * @since 2.2.6 $flag - null by default
  * @since 1.0
  * @author Julio Potier
@@ -36,7 +37,7 @@ function secupress_get_ip() {
  *
  * @return (bool) True is valid IP
  */
-function secupress_ip_is_valid( $ip, $range_format = false , $flag = null ) {
+function secupress_ip_is_valid( $ip, $range_format = false , $flag = 0 ) {
 	if ( ! $ip || ! is_string( $ip ) ) {
 		return false;
 	}
@@ -59,7 +60,7 @@ function secupress_ip_is_valid( $ip, $range_format = false , $flag = null ) {
 			return (bool) filter_var( $ipv6, FILTER_VALIDATE_IP, $flag );
 		} elseif ( FILTER_FLAG_IPV4 === $flag ) {
 			return (bool) filter_var( $ipv4, FILTER_VALIDATE_IP, $flag );
-		} elseif ( is_null( $flag ) ) {
+		} elseif ( 0 === $flag ) {
 			return (bool) ( filter_var( $ipv4, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) || filter_var( $ipv6, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) );
 		}
 	}
