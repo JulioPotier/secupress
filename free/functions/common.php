@@ -1279,6 +1279,7 @@ function secupress_feature_is_pro( $feature ) {
 		'bbq-headers_bad-referer-list'              => 1,
 		'bbq-headers_block-ai'                      => 1,
 		'blacklist-logins_user-creation-protection' => 1,
+		'blacklist-logins_bad-email-domains'        => 1,
 		'bbq-url-content_block-functions'           => 1,
 	];
 

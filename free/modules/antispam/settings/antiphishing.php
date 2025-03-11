@@ -7,7 +7,7 @@ $this->add_section( __( 'Anti-Phishing', 'secupress' ) );
 
 $this->add_field( array(
 	'title'             => __( 'Anti-Phishing User Protection', 'secupress' ),
-	'description'       => __( 'Adds a unique digit code to the user‘s profile, which is included in every email from this website, ensuring authenticity and safeguarding against phishing.', 'secupress' ),
+	'description'       => __( 'Adds a digit code to the user‘s profile, which is included in every email from this website, ensuring authenticity and safeguarding against phishing.', 'secupress' ),
 	'label'             => __( 'Yes, users can set a anti-phishing code in their profile', 'secupress' ),
 	'name'              => $this->get_field_name( 'activated' ),
 	'type'              => 'checkbox',

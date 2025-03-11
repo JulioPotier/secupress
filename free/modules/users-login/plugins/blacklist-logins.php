@@ -524,13 +524,16 @@ function secupress_usernames_security_name_filter( $name ) {
 	global $secupress_new_login;
 	static $_name;
 
+	if ( ! secupress_get_module_option( 'blacklist-logins_lexicomatisation', 0, 'users-login' ) ) {
+		return $name;
+	}
 	$user_test = get_user_by( 'login', $name );
 	if ( $secupress_new_login || is_a( $user_test, 'WP_User' ) ) {
 		if ( ! $_name ) {
 			$_name = secupress_usernames_lexicomatisation();
 		}
 		$name = $_name;
-		if ( 'pre_user_nicename' == current_filter() && $secupress_new_login ) {
+		if ( 'pre_user_nicename' === current_filter() && $secupress_new_login ) {
 			$name = sanitize_key( $name );
 		}
 	}

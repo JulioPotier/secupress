@@ -175,6 +175,7 @@ function secupress_logins_blacklist_settings_callback( $modulenow, $settings, $a
 	// (De)Activation.
 	if ( false !== $activate ) {
 		$settings['blacklist-logins_admin']  = (int) ! empty( $settings['blacklist-logins_admin'] );
+		$settings['blacklist-logins_lexicomatisation']  = (int) ! empty( $settings['blacklist-logins_lexicomatisation'] );
 		secupress_manage_submodule( $modulenow, 'blacklist-logins', ! empty( $activate['blacklist-logins_activated'] ) );
 	}
 	return $settings;

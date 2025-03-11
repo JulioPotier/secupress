@@ -4,9 +4,8 @@
  *
  * @package WP-Background-Processing
  */
-if ( class_exists( 'WP_Background_Process' ) ) {
-	return;
-}
+if ( ! class_exists( 'WP_Background_Process' ) ) :
+
 /**
  * Abstract WP_Background_Process class.
  *
@@ -998,3 +997,5 @@ abstract class WP_Background_Process extends WP_Async_Request {
 		return $chain_id_arg_name;
 	}
 }
+
+endif;

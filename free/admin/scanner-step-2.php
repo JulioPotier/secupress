@@ -117,7 +117,26 @@ if ( ! $secupress_tests ) {
 </div>
 
 <div id="secupress-tests" class="secupress-tests">
+	<?php if ( secupress_is_pro() ) { ?>
+	<div class="secupress-scans-group secupress-group-all">
+		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
+
+			<div class="secupress-sgh-name">
+				<i class="secupress-icon-gear" aria-hidden="true"></i>
+				<p class="secupress-sgh-title">&nbsp;</p>
+			</div>
+
+			<div class="secupress-sgh-actions secupress-flex">
+				<label class="text hide-if-no-js" for="secupress-toggle-check-all">
+					<span class="label-before-text"><?php _e( 'Toggle check all', 'secupress' ); ?></span>
+					<input type="checkbox" id="secupress-toggle-check-all" class="secupress-checkbox secupress-toggle-check" checked="checked"/>
+					<span class="label-text"></span>
+				</label>
+			</div>
+		</div>
+	</div>
 	<?php
+	}
 	$modules = secupress_get_modules();
 
 	foreach ( $secupress_tests as $module_name => $class_name_parts ) {

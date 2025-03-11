@@ -80,6 +80,7 @@ $this->add_field( array(
 	'label_for'         => $this->get_field_name( 'bad-email-domains' ),
 	'description'       => __( 'Domain that does not exist, does not really send emails (MX Record), known to be a temporary/trash service or email addresses used by hackers will be blocked.', 'secupress' ),
 	'plugin_activation' => true,
+	'disabled'          => ! secupress_is_pro(),
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'bad-email-domains' ),
 	'label'             => __( 'Yes, prevent users to be created with a bad email domain', 'secupress' ),
@@ -120,6 +121,19 @@ $this->add_field( array(
 							[ 'type' => 'description',  'description' => $admin_exists, ],
 							[ 'type' => 'warning',      'description' => $warning, ],
 							[ 'type' => $e_helper_type, 'description' => $e_helper_desc, ],
+						]
+) );
+
+$this->add_field( array(
+	'title'             => sprintf( __( 'Rename the users nickname', 'secupress' ), 'admin' ),
+	'description'       => __( 'Any new user or updated user who has their nickname as the same as their login will be renamed', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'lexicomatisation' ),
+	'type'              => 'checkbox',
+	'depends'           => $this->get_field_name( 'activated' ),
+	'default'           => false,
+	'label'             => sprintf( __( 'Yes, prevent user‘s login to be the same as their display name', 'secupress' ), secupress_tag_me( 'admin', 'strong' ) ),
+	'helpers'           => [
+							[ 'type' => 'description',  'description' => sprintf( __( 'New nickname will look like this: "%s"', 'secupress' ), secupress_tag_me( secupress_usernames_lexicomatisation(), 'em' ) ), ],
 						]
 ) );
 

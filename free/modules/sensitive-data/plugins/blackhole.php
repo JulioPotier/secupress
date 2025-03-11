@@ -21,7 +21,7 @@ function secupress_blackhole_activate_write_robotstxt() {
 	$filesystem = secupress_get_filesystem();
 	$filename   = ABSPATH . 'robots.txt';
 
-	if ( ! file_exists( $filename ) ) { // We do not create it, the hook it enough
+	if ( ! file_exists( $filename ) ) { // We do not create it, the hook is enough
 		return;
 	}
 	$contents   = $filesystem->get_contents( $filename );
@@ -45,11 +45,10 @@ function secupress_blackhole_deactivate_write_robotstxt() {
 		return;
 	}
 	$contents   = $filesystem->get_contents( $filename );
-	$contents   = secupress_blackhole_robotstxt_content( $contents, true );
 	$dirname    = secupress_get_hashed_folder_name( basename( __FILE__, '.php' ) );
 
 	if ( false !== strpos( $contents, "User-agent: *\nDisallow: $dirname\n" ) ) {
-		$contents  = str_replace( "User-agent: *\nDisallow: $dirname\n", "User-agent: *\n", $output );
+		$contents  = str_replace( "User-agent: *\nDisallow: $dirname\n", "User-agent: *\n", $contents );
 		$filesystem->put_contents( $filename, $contents );
 	}
 }

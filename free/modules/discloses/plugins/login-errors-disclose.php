@@ -12,6 +12,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 add_filter( 'authenticate', 'secupress_replace_login_errors_disclose', 21 );
 add_filter( 'registration_errors', 'secupress_replace_login_errors_disclose', 1 );
 add_filter( 'user_profile_update_errors', 'secupress_replace_login_errors_disclose', 1 );
+add_filter( 'login_errors', 'secupress_replace_login_errors_disclose', 1 );
 /**
  * Replace all login errors with a more generic message.
  *

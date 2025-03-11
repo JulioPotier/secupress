@@ -175,12 +175,28 @@ jQuery( document ).ready( function( $ ) {
 		};
 
 		// Check all checkboxes.
+		$( '.secupress-sgh-actions .secupress-toggle-check' ).on( 'click', function( e ) {
+			var $group     = $( '#secupress-tests' ),
+				allChecked = 0 === $group.find( '.secupress-toggle-check' ).filter( ':visible:enabled' ).not( ':checked' ).not( '#secupress-toggle-check-all' ).length;
+			// Toggle global "check all" checkbox.
+			var el = $( '#secupress-toggle-check-all' );
+			if ( el.length )
+				$( '#secupress-toggle-check-all' ).prop( 'checked', allChecked );
+		} );
+
+
 		$( '.secupress-sg-content .secupress-row-check' ).on( 'click', function( e ) {
 			var $group     = $( this ).closest( '.secupress-scans-group' ),
 				allChecked = 0 === $group.find( '.secupress-row-check' ).filter( ':visible:enabled' ).not( ':checked' ).length;
 
 			// Toggle "check all" checkboxes.
 			$group.find( '.secupress-toggle-check' ).prop( 'checked', allChecked );
+			var $group2     = $( '#secupress-tests' ),
+				allChecked2 = 0 === $group2.find( '.secupress-toggle-check' ).filter( ':visible:enabled' ).not( ':checked' ).not( '#secupress-toggle-check-all' ).length;
+			// Toggle global "check all" checkbox.
+			var el = $( '#secupress-toggle-check-all' );
+			if ( el.length )
+				$( '#secupress-toggle-check-all' ).prop( 'checked', allChecked2 );
 		} )
 		// If nothing is checked, change the "Fix all checked issues" button into "Ignore this step".
 		.on( 'change.secupress', function( e ) {
@@ -210,6 +226,14 @@ jQuery( document ).ready( function( $ ) {
 				$buttons.addClass( 'hidden' );
 				$buttons.next().removeClass( 'hidden' );
 			}
+			var $group     = $( '#secupress-tests' ),
+				allChecked = 0 === $group.find( '.secupress-toggle-check' ).filter( ':visible:enabled' ).not( ':checked' ).not( '#secupress-toggle-check-all' ).length;
+			// Toggle global "check all" checkbox.
+			var el = $( '#secupress-toggle-check-all' );
+			if ( el.length )
+				$( '#secupress-toggle-check-all' ).prop( 'checked', allChecked );
+
+
 		} )
 		.first().trigger( 'change.secupress' );
 
@@ -218,30 +242,35 @@ jQuery( document ).ready( function( $ ) {
 				$wrap          = $this.closest( '.secupress-scans-group' ),
 				controlChecked = $this.prop( 'checked' ),
 				toggle         = e.shiftKey || $this.data( 'wp-toggle' );
+				
+			if ( 'secupress-toggle-check-all' === $this.attr('id') ) {
+				$('[id^="secupress-toggle-check-"]:not(#secupress-toggle-check-all)')
+				.trigger('click');
+			} else {
+				$wrap.children( '.secupress-sg-header' ).find( '.secupress-toggle-check' )
+					.prop( 'checked', function() {
+						var $this = $( this );
 
-			$wrap.children( '.secupress-sg-header' ).find( '.secupress-toggle-check' )
-				.prop( 'checked', function() {
-					var $this = $( this );
+						if ( $this.is( ':hidden,:disabled' ) ) {
+							return false;
+						}
 
-					if ( $this.is( ':hidden,:disabled' ) ) {
-						return false;
-					}
+						if ( toggle ) {
+							return ! $this.prop( 'checked' );
+						}
 
-					if ( toggle ) {
-						return ! $this.prop( 'checked' );
-					}
+						return controlChecked;
+					} );
 
-					return controlChecked;
-				} );
+				$wrap.children( '.secupress-sg-content' ).find( '.secupress-row-check' )
+					.prop( 'checked', function() {
+						if ( toggle ) {
+							return false;
+						}
 
-			$wrap.children( '.secupress-sg-content' ).find( '.secupress-row-check' )
-				.prop( 'checked', function() {
-					if ( toggle ) {
-						return false;
-					}
-
-					return controlChecked;
-				} );
+						return controlChecked;
+					} );
+			}
 		} );
 
 	} )(window, document, $);
