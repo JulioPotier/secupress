@@ -6,7 +6,7 @@
  * Description: More than a plugin, the guarantee of a protected website by experts.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 2.3.3
+ * Version: 2.3.4
  * Code Name: Starboost (Mark XXXIX)
  * Network: true
  * Contributors: SecuPress, juliobox, GregLone

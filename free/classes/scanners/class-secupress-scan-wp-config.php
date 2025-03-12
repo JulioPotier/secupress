@@ -181,7 +181,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		}
 
 		// Other constants.
-		$results = array();
+		$results = [];
 
 		foreach ( $this->constants as $constant => $compare ) {
 			$check = defined( $constant ) ? constant( $constant ) : null;
@@ -189,26 +189,26 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			switch ( $compare ) {
 				case 1:
 					if ( ! $check ) {
-						$results[209]           = isset( $results[209] )         ? $results[209]         : array();
-						$results[209]['true']   = isset( $results[209]['true'] ) ? $results[209]['true'] : array();
+						$results[209]           = isset( $results[209] )         ? $results[209]         : [];
+						$results[209]['true']   = isset( $results[209]['true'] ) ? $results[209]['true'] : [];
 						$results[209]['true'][] = '<code>' . $constant . '</code>';
 					}
 					break;
 				case false:
 					if ( $check ) {
-						$results[210]            = isset( $results[210] )          ? $results[210]          : array();
-						$results[210]['false']   = isset( $results[210]['false'] ) ? $results[210]['false'] : array();
+						$results[210]            = isset( $results[210] )          ? $results[210]          : [];
+						$results[210]['false']   = isset( $results[210]['false'] ) ? $results[210]['false'] : [];
 						$results[210]['false'][] = '<code>' . $constant . '</code>';
 					}
 					break;
 				default:
-					$check  = decoct( $check ) <= $compare;
-					$mes_id = 755 === $compare ? 211 : 212;
+					$check  = ! is_null( $check ) ? decoct( $check ) <= $compare : false;
+					$msg_id = 755 === $compare ? 211 : 212;
 
 					if ( ! $check ) {
-						$results[ $mes_id ]                     = isset( $results[ $mes_id ] )                   ? $results[ $mes_id ]                   : array();
-						$results[ $mes_id ][ '0' . $compare ]   = isset( $results[ $mes_id ][ '0' . $compare ] ) ? $results[ $mes_id ][ '0' . $compare ] : array();
-						$results[ $mes_id ][ '0' . $compare ][] = '<code>' . $constant . '</code>';
+						$results[ $msg_id ]                     = isset( $results[ $msg_id ] )                   ? $results[ $msg_id ]                   : [];
+						$results[ $msg_id ][ '0' . $compare ]   = isset( $results[ $msg_id ][ '0' . $compare ] ) ? $results[ $msg_id ][ '0' . $compare ] : [];
+						$results[ $msg_id ][ '0' . $compare ][] = '<code>' . $constant . '</code>';
 					}
 					break;
 			}

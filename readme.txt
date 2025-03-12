@@ -4,7 +4,7 @@ Tags: wordpress security, malware, security plugin, security
 Requires at least: 4.9
 Tested up to: 6.7.2
 Requires PHP: 7.0
-Stable tag: 2.3.3
+Stable tag: 2.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -185,13 +185,11 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 2.3.3 =
-* 11 March 2025
-* New: Checkbox to choose if you want to rename new or updated user if their login is the same as their display name
-* Fix: Scanner for Login Errors still in error even with the feature activated
-* Fix: Deactivating the Black Hole feature now correctly remove the rules in robots.txt
-* Fix: CSS stuff
-* Improvement: i18n
+= 2.3.4 =
+* 12 March 2025
+* Fix E_ERROR on rename login scanner
+* Fix Deprecated on PHP 8.1 when decoct passing null
+* Fix Array to String in wp_mail hook resulting in not sending the correct ajax answer for some plugin (the email still goes)
 
 == Upgrade Notice ==
 * SecuPress 2.3+ now requires PHP 7.0 minimum.

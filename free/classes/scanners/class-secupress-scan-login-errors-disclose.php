@@ -107,7 +107,7 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements Sec
 		$wp_error->add( 'invalid_username', $messages );
 		/** This filter is documented in wp-login.php */
 		$messages = reset( apply_filters( 'login_errors', $wp_error ) );
-		while ( ! is_string( $messages ) ) {
+		while ( is_array( $messages ) ) {
 			$messages = reset( $messages );
 		}
 

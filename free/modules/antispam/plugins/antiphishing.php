@@ -103,9 +103,10 @@ add_filter( 'wp_mail', 'secupress_antiphishingcode_mail' );
  * @return (array) $atts
  **/
 function secupress_antiphishingcode_mail( $atts ) {
-	$user        = secupress_get_user_by( $atts['to'] );
 	$admin_email = get_option( 'admin_email' );
-	if ( ! secupress_is_user( $user ) && $atts['to'] !== $admin_email ) {
+	$atts_to     = is_array( $atts['to'] ) ? reset( $atts['to'] ) : $atts['to'];
+	$user        = secupress_get_user_by( $atts_to );
+	if ( ! secupress_is_user( $user ) && $atts_to !== $admin_email ) {
 		return $atts;
 	}
 	if ( secupress_is_user( $user ) ) { // user
