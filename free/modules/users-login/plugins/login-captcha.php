@@ -22,7 +22,9 @@ if ( defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRESS_ALLOW_LOGIN_ACCESS )
  */
 function secupress_captcha_session() {
 	if ( session_status() === PHP_SESSION_NONE && ! headers_sent() ) {
-		session_start();
+		session_start( [
+			'read_and_close' => true,
+		] );
 		secupress_update_captcha_seed();
 	}
 }

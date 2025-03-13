@@ -6,6 +6,7 @@ $this->set_current_section( 'wp_config' );
 $this->add_section( __( 'WordPress configuration file', 'secupress' ) );
 
 $is_writable    = secupress_is_wpconfig_writable();
+$is_after_save  = remove_query_arg( 'settings-updated', secupress_get_current_url( 'raw' ) ) === wp_get_referer();
 $mu_is_writable = wp_is_writable( WPMU_PLUGIN_DIR );
 $mu_description = '';
 if ( ! $mu_is_writable ) {
@@ -19,7 +20,6 @@ if ( ! $is_writable ) {
 
 
 $active = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-script-concat' );
-$active = $active || ( defined( 'CONCATENATE_SCRIPTS' ) && ! CONCATENATE_SCRIPTS );
 $this->add_field( array(
 	'title'             => __( 'Scripts Concatenation', 'secupress' ),
 	'description'       => __( 'Prevent scripts and styles concatenation in admin area to prevent a Deny of Service (DoS)', 'secupress' ),
@@ -28,7 +28,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => __( 'Yes, disable concatenated scripts to prevent server overload', 'secupress' ),
-	'disabled'          => ! $is_writable,
+	'disabled'          => ! $is_writable || ( ! $active && defined( 'CONCATENATE_SCRIPTS' ) && ! CONCATENATE_SCRIPTS ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
@@ -42,7 +42,6 @@ $this->add_field( array(
 ) );
 
 $active = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-skip-bundle' );
-$active = $active || ( defined( 'CORE_UPGRADE_SKIP_NEW_BUNDLED' ) && CORE_UPGRADE_SKIP_NEW_BUNDLED );
 $this->add_field( array(
 	'title'             => __( 'Skip New Bundles', 'secupress' ),
 	'description'       => __( 'Every time WordPress upgrades itself, it downloads the new <em>twentytheme-à-la-mode</em>', 'secupress' ),
@@ -51,7 +50,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => __( 'Yes, prevent core upgrades from downloading unnecessary bundled items', 'secupress' ),
-	'disabled'          => ! $is_writable,
+	'disabled'          => ! $is_writable || ( ! $active && defined( 'CORE_UPGRADE_SKIP_NEW_BUNDLED' ) && CORE_UPGRADE_SKIP_NEW_BUNDLED ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
@@ -65,7 +64,6 @@ $this->add_field( array(
 ) );
 
 $active = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-debugging' );
-$active = $active || ( defined( 'WP_DEBUG' ) && ! WP_DEBUG && defined( 'WP_DEBUG_DISPLAY' ) && ! WP_DEBUG_DISPLAY );
 $this->add_field( array(
 	'title'             => __( 'Debugging', 'secupress' ),
 	'description'       => __( 'In a standard production environment you should prevent errors from being displayed.', 'secupress' ),
@@ -74,7 +72,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => __( 'Yes, prevent my site from displaying errors', 'secupress' ),
-	'disabled'          => ! $is_writable,
+	'disabled'          => ! $is_writable || ( ! $is_after_save && ! $active && defined( 'WP_DEBUG' ) && ! WP_DEBUG && defined( 'WP_DEBUG_DISPLAY' ) && ! WP_DEBUG_DISPLAY ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
@@ -89,7 +87,6 @@ $this->add_field( array(
 
 
 $active = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-locations' );
-$active = $active || ( defined( 'RELOCATE' ) && ! RELOCATE && defined( 'WP_SITEURL' ) && get_site_url() === WP_SITEURL && defined( 'WP_HOME' ) && get_home_url() === WP_HOME );
 $this->add_field( array(
 	'title'             => __( 'Locations', 'secupress' ),
 	'description'       => __( 'In a standard production environment there is no need to relocate your site and home URLs.', 'secupress' ),
@@ -98,7 +95,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => __( 'Yes, prevent my site and home URLs from being relocated', 'secupress' ),
-	'disabled'          => ! $is_writable,
+	'disabled'          => ! $is_writable || ( ! $is_after_save && ! $active && defined( 'RELOCATE' ) && ! RELOCATE && defined( 'WP_SITEURL' ) && get_site_url() === WP_SITEURL && defined( 'WP_HOME' ) && get_home_url() === WP_HOME ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
@@ -111,9 +108,7 @@ $this->add_field( array(
 	),
 ) );
 
-
 $active = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-file-edit' );
-$active = $active || ( defined( 'DISALLOW_FILE_EDIT' ) && DISALLOW_FILE_EDIT );
 $this->add_field( array(
 	'title'             => __( 'File editing', 'secupress' ),
 	'description'       => __( 'Nobody (not even administrators) should have the ability to edit plugin and theme files directly within the WordPress administration area.', 'secupress' ),
@@ -122,7 +117,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => __( 'Yes, disable the file editor', 'secupress' ),
-	'disabled'          => ! $is_writable,
+	'disabled'          => ! $is_writable || ( ! $is_after_save && ! $active && defined( 'DISALLOW_FILE_EDIT' ) && DISALLOW_FILE_EDIT ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
@@ -137,7 +132,6 @@ $this->add_field( array(
 
 
 $active = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-unfiltered-uploads' );
-$active = $active || ( defined( 'ALLOW_UNFILTERED_UPLOADS' ) && ! ALLOW_UNFILTERED_UPLOADS );
 $this->add_field( array(
 	'title'             => __( 'Unfiltered Uploads', 'secupress' ),
 	'description'       => __( 'Nobody (not even administrators) should be allowed to upload any type of file.', 'secupress' ),
@@ -146,7 +140,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => __( 'Yes, filter file uploads', 'secupress' ),
-	'disabled'          => ! $is_writable,
+	'disabled'          => ! $is_writable || ( ! $is_after_save && ! $active && defined( 'ALLOW_UNFILTERED_UPLOADS' ) && ! ALLOW_UNFILTERED_UPLOADS ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
@@ -161,7 +155,6 @@ $this->add_field( array(
 
 
 $active = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-dieondberror' );
-$active = $active || ( defined( 'DIEONDBERROR' ) && ! DIEONDBERROR );
 $this->add_field( array(
 	'title'             => __( 'Database Errors', 'secupress' ),
 	'description'       => __( 'Database errors shouldn’t be displayed on front-office to prevent attackers from accessing your database hostname, prefix, or table names.', 'secupress' ),
@@ -170,7 +163,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => __( 'Yes, hide any database details on front-office', 'secupress' ),
-	'disabled'          => ! $is_writable,
+	'disabled'          => ! $is_writable || ( ! $is_after_save && ! $active && defined( 'DIEONDBERROR' ) && ! DIEONDBERROR ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
@@ -185,7 +178,6 @@ $this->add_field( array(
 
 
 $active = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-repair' );
-$active = $active || ( defined( 'WP_ALLOW_REPAIR' ) && ! WP_ALLOW_REPAIR );
 $this->add_field( array(
 	'title'             => __( 'Repairing Database', 'secupress' ),
 	'description'       => __( 'In a standard production environment, your repair page should not be accessible.', 'secupress' ),
@@ -194,7 +186,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => sprintf( __( 'Yes, make the <a href="%s" target="_blank">Database Repair Page</a> inaccessible', 'secupress' ), admin_url( 'maint/repair.php' ) ),
-	'disabled'          => ! $is_writable,
+	'disabled'          => ! $is_writable || ( ! $is_after_save && ! $active && defined( 'WP_ALLOW_REPAIR' ) && ! WP_ALLOW_REPAIR ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
@@ -208,7 +200,6 @@ $this->add_field( array(
 ) );
 
 $active = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-cookiehash' );
-$active = $active || ( defined( 'COOKIEHASH' ) && md5( get_site_option( 'siteurl' ) ) !== COOKIEHASH );
 $this->add_field( array(
 	'title'             => __( 'WordPress Cookie Default Name', 'secupress' ),
 	'description'       => __( 'Every WordPress cookie contains a unique string, which can be guessed for any site. It‘s important not to reveal yours, as this makes it harder for potential attackers to target your site.', 'secupress' ),
@@ -217,7 +208,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => __( 'Yes, change the default value of the cookie to something random', 'secupress' ),
-	'disabled'          => ! $mu_is_writable,
+	'disabled'          => ! $mu_is_writable || ( ! $is_after_save && ! $active && defined( 'COOKIEHASH' ) && md5( get_site_option( 'siteurl' ) ) !== COOKIEHASH ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
@@ -236,8 +227,6 @@ $this->add_field( array(
 
 
 $active = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-saltkeys' );
-					// retrocompat < SP 2.0
-$active   = $active || ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) && SECUPRESS_SALT_KEYS_ACTIVE ) || ( defined( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE' ) && SECUPRESS_SALT_KEYS_MODULE_ACTIVE );
 $this->add_field( array(
 	'title'             => __( 'WordPress Security Keys', 'secupress' ),
 	'description'       => __( 'Create tamper-proof security keys for your installation.', 'secupress' ),
@@ -246,7 +235,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => __( 'Yes, create secure keys for my installation', 'secupress' ),
-	'disabled'          => ! $is_writable,
+	'disabled'          => ! $is_writable || ( ! $is_after_save && ! $active && ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) && SECUPRESS_SALT_KEYS_ACTIVE ) || ( defined( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE' ) && SECUPRESS_SALT_KEYS_MODULE_ACTIVE ) ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',

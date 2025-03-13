@@ -853,3 +853,14 @@ function secupress_shuffle_assoc( $array ) {
 
 	return $new;
 }
+
+add_action( 'requests-curl.before_request', 'secupress_curl_before_request', SECUPRESS_INT_MAX );
+/**
+ * Close any session before API REST request (not only for us, this should be in WP Core)
+ *
+ * @author Julio Potier
+ * @since 2.3.5
+ **/
+function secupress_curl_before_request( $curlhandle ) {
+	session_write_close();
+}
