@@ -31,9 +31,10 @@ function secupress_add_notice( $message, $error_code = 'updated', $notice_id = '
  *                                  false: the notice is not dismissible.
  *                                  string: the notice is dismissible and send an ajax call to store the "dismissed" state into a user meta to prevent it to popup again.
  *                                  empty string: meant for a one-shot use. The notice is dismissible but the "dismissed" state is not stored, it will popup again. This is the exact same behavior than the WordPress dismissible notices.
+ * @param (null|string) $capa       A WordPress capability or role. "null" = secupress_get_capability()
  */
-function secupress_add_transient_notice( $message, $error_code = 'updated', $notice_id = '' ) {
-	SecuPress_Admin_Notices::get_instance()->add_temporary( $message, $error_code, $notice_id );
+function secupress_add_transient_notice( $message, $error_code = 'updated', $notice_id = '', $capa = null ) {
+	SecuPress_Admin_Notices::get_instance()->add_temporary( $message, $error_code, $notice_id, $capa );
 }
 
 

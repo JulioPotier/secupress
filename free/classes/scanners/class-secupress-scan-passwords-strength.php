@@ -192,7 +192,10 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 	 *
 	 * @return (bool)
 	 */
-	public static function dictionary_attack( $password ) {
+	public static function dictionary_attack( 
+		#[\SensitiveParameter]
+		$password
+	) {
 		$dictionary = file( SECUPRESS_INC_PATH . 'data/10kmostcommon.data', FILE_IGNORE_NEW_LINES );
 		return $dictionary ? in_array( $password, $dictionary, true ) : null;
 	}

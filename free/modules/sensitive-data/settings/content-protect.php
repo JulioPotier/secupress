@@ -437,21 +437,32 @@ if ( $choices ) {
 
 
 $main_field_name  = $this->get_field_name( 'bad-url-access' );
-$is_plugin_active = (int) secupress_is_submodule_active( 'sensitive-data', 'bad-url-access' );
-
+$value            = (int) secupress_is_submodule_active( 'sensitive-data', 'bad-url-access' )     ? 'disallowed' : '';
+$value            = (int) secupress_is_submodule_active( 'sensitive-data', 'bad-url-access-pro' ) ? 'allowed'    : $value;
+$options          = [ 'disallowed' => __( 'Yes, block a list of <strong>disallowed</strong> URLs from WP core', 'secupress' ) ];
+if ( secupress_is_expert_mode() ) {
+	$options['allowed']     = __( 'Yes, only <strong>allow</strong> a list of URLs from WP core <em>(new)</em>', 'secupress' );
+	$options['disallowed'] .= ' <em>(' . __( 'legacy', 'secupress' ) . ')</em>';
+}
 $this->add_field( array(
 	'title'             => __( 'Bad URL Access and File Extensions', 'secupress' ),
-	'description'       => __( 'Directly accessing certain URLs or files on your site could expose sensitive information that might help an attacker.', 'secupress' ),
+	'description'       => __( 'Directly accessing certain URLs and files on your site could expose sensitive information helping attackers.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
-	'type'              => 'checkbox',
-	'value'             => $is_plugin_active,
-	'label'             => __( 'Yes, restrict access to these URLs and files', 'secupress' ),
+	'type'              => 'radioboxes',
+	'value'             => $value,
+	'options'           => $options,
+	'helpers'           => array(
+		array(
+			'type'        => 'force',
+			'description' => secupress_is_expert_mode() ? __( '• <strong>Disallowing</strong> does not require any configuration, but is less effective.<br>• <strong>Allowing</strong> may require a special configuration but is way more effective.<br>If you encounter any issue that you cannot resolve with the <strong>Custom allowed URLs</strong> field below, rollback to <strong>Disallowed</strong>.', 'secupress' ) : '',
+		),
+	),
 ) );
 
 $this->add_field( array(
-	'title'             => __( 'Allowed URLs', 'secupress' ),
-	'depends'           => $main_field_name,
+	'title'             => __( 'Custom allowed URLs and Folders', 'secupress' ),
+	'depends'           => $main_field_name . '_allowed',
 	'name'              => $main_field_name . '_allowed-urls',
 	'type'              => 'textarea',
 	'helpers'           => array(

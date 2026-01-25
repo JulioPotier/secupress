@@ -18,13 +18,13 @@ $override_plugins = apply_filters( 'secupress.move-login.override-plugins', [ 'w
 foreach ( $override_plugins as $plugin_path => $plugin_page) {
 	if ( secupress_is_plugin_active( $plugin_path ) ) {
 		$this->add_field( array(
-			'title'             => __( 'Move the login and admin pages', 'secupress' ),
+			'title'             => __( 'Move the login and other actions on login page', 'secupress' ),
 			'label_for'         => $main_field_name,
 			'plugin_activation' => true,
 			'type'              => 'checkbox',
 			'value'             => false,
 			'disabled'          => true,
-			'label'             => __( 'Yes, move the login and admin pages', 'secupress' ),
+			'label'             => __( 'Yes, Move the login and other actions on login page', 'secupress' ),
 			'helpers'           => array(
 				array(
 					'type'        => 'warning',
@@ -43,13 +43,13 @@ foreach ( $override_plugins as $plugin_path => $plugin_page) {
 $wp_rewrite = new WP_Rewrite();
 if ( ! $wp_rewrite->using_permalinks() ) {
 	$this->add_field( array(
-		'title'             => __( 'Move the login and admin pages', 'secupress' ),
+		'title'             => __( 'Move the login and other actions on login page', 'secupress' ),
 		'label_for'         => $main_field_name,
 		'plugin_activation' => true,
 		'type'              => 'checkbox',
 		'value'             => false,
 		'disabled'          => true,
-		'label'             => __( 'Yes, move the login and admin pages', 'secupress' ),
+		'label'             => __( 'Yes, Move the login and other actions on login page', 'secupress' ),
 		'helpers'           => array(
 			array(
 				'type'        => 'warning',
@@ -62,17 +62,17 @@ if ( ! $wp_rewrite->using_permalinks() ) {
 }
 
 $this->add_field( array(
-	'title'             => __( 'Move the login and admin pages', 'secupress' ),
+	'title'             => __( 'Move the login and other actions on login page', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) $is_plugin_active,
-	'label'             => __( 'Yes, move the login and admin pages', 'secupress' ),
+	'label'             => __( 'Yes, Move the login and other actions on login page', 'secupress' ),
 ) );
 
 if ( defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRESS_ALLOW_LOGIN_ACCESS ) {
 	$this->add_field( array(
-		'title'             => __( 'Move the login and admin pages', 'secupress' ),
+		'title'             => __( 'Move the login and other actions on login page', 'secupress' ),
 		'label_for'         => $main_field_name,
 		'type'              => 'html',
 		'value'             => '',
@@ -88,11 +88,11 @@ if ( defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRESS_ALLOW_LOGIN_ACCESS )
 
 $labels    = secupress_move_login_slug_labels();
 $login_url = site_url( '%%slug%%', 'login' );
-
+$login_slug = secupress_get_module_option( 'move-login_slug-login', 'login', 'users-login' );
 foreach ( $labels as $slug => $label ) {
 	$name    = $this->get_field_name( 'slug-' . $slug );
 	$default = 'login' === $slug ? '' : $slug;
-	$value   = secupress_get_module_option( $name, $slug, 'users-login' );
+	$value   = isset( $value ) ? $value : secupress_get_module_option( $name, $slug, 'users-login' );
 	$value   = sanitize_title( $value, $default, 'display' );
 
 	if ( ! $value ) {
@@ -104,28 +104,64 @@ foreach ( $labels as $slug => $label ) {
 		}
 	}
 
+	$disabled = 'login' !== $slug;
+	$value    = $disabled ? $login_slug . '-' . $slug : $value;
 	$this->add_field( array(
 		'title'        => esc_html( $label ),
 		'depends'      => $main_field_name,
 		'label_for'    => $this->get_field_name( 'slug-' . $slug ),
 		'type'         => 'text',
 		'default'      => $default,
+		'disabled'     => $disabled,
+		'value'        => $value,
+
 		'label_before' => '<span class="screen-reader-text">' . __( 'URL' ) . '</span>',
 		'label_after'  => '<em class="hide-if-no-js">' . str_replace( '%%slug%%', '<strong class="dynamic-login-url-slug">' . $value . '</strong>', $login_url ) . '</em>',
+		'helpers'      => array(
+			array(
+				'type'        => 'login' === $slug ? 'description' : '',
+				'description' => __( 'The following slugs are related to the login page, so they cannot be changed.', 'secupress' ),
+			),
+		),
 	) );
 }
 
+$options = [
+	'sperror'      => __( 'Standard Error Message', 'secupress' ),
+	'custom_error' => __( 'Custom Error Message', 'secupress' ),
+	'custom_page'  => __( 'Custom Page', 'secupress' ),
+];
+$not     = [];
+if ( secupress_is_expert_mode() ) {
+	$options['honeypot'] = __( 'Honeypot', 'secupress' );
+}
+if ( ! secupress_is_honeypotable() ) {
+	$not['honeypot'] = true;
+}
+$whattodo_value = secupress_get_module_option( 'move-login_whattodo', 'sperror', 'users-login' );
+if ( 'honeypot' === $whattodo_value && ! secupress_is_honeypotable() ) {
+	$whattodo_value = 'sperror';
+}
 $this->add_field( [
 	'title'        => __( 'What to do when the old page is triggered?', 'secupress' ),
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'whattodo' ),
 	'type'         => 'radio',
 	// 'default'      => 'sperror', //
-	'options'      => [
-		'sperror'      => __( 'Standard Error Message', 'secupress' ),
-		'custom_error' => __( 'Custom Error Message', 'secupress' ),
-		'custom_page'  => __( 'Custom Page', 'secupress' )
-	],
+	'value'        => $whattodo_value,
+	'options'      => $options,
+	'not'          => $not,
+	'helpers'      => array(
+		array(
+			'type'        => 'description',
+			'depends'     => $this->get_field_name( 'whattodo' ) . '_honeypot',
+			'description' => __( 'Honeypot displays a fake login page acting like a trap to attackers.', 'secupress' ),
+		),
+		array(
+			'type'        => secupress_is_expert_mode() && ! secupress_is_honeypotable() ? 'help' : '',
+			'description' => __( 'Honeypot is available when you have only Administrators on your site.', 'secupress' ),
+		),
+	),
 ] );
 
 add_action( 'admin_footer', 'add_thickbox' );

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: {{PLUGIN_NAME}} No Plugin Installations
  * Description: Filters the active plugin option to prevent loading other ones.
- * Version: 2.2.6
+ * Version: 2.3.17
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
@@ -11,41 +11,61 @@
 
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
+if ( defined( 'SECUPRESS_NO_PLUGIN_ACTION_RUNNING' ) ) {
+	@unlink( __FILE__ ); // We are in a duplicated file, should not happen, delete us!
+	return;
+}
+
 define( 'SECUPRESS_INSTALLED_PLUGINS'       , '_secupress_installed_plugins' );
 define( 'SECUPRESS_INSTALLED_MUPLUGINS'     , '_secupress_installed_muplugins' );
 define( 'SECUPRESS_ACTIVE_PLUGINS'          , '_secupress_active_plugins' );
+
+define( 'SECUPRESS_NO_PLUGIN_ACTION_RUNNING', true );
+$GLOBALS['SECUPRESS_EXPERT_MODULES_ON']['plugin_actions'] = true;
+
 if ( is_multisite() ) {
-	define( 'SECUPRESS_ACTIVE_PLUGINS_NETWORK'  , '_secupress_active_plugins_network' );
+	define( 'SECUPRESS_ACTIVE_PLUGINS_NETWORK'  , '_secupress_active_sitewide_plugins' );
 	add_filter( 'pre_site_option_active_sitewide_plugins', 'secupress_no_action_filter_active_plugins_network' );
 	/**
 	 * Return our active plugins list
 	 *
+	 * @since 2.2.6
 	 * @author Julio Potier
 	 * @return (array) $active_plugins
 	 **/
-	function secupress_no_action_filter_active_plugins_network() {
-		return get_site_option( SECUPRESS_ACTIVE_PLUGINS_NETWORK, [] );
+	function secupress_no_action_filter_active_plugins_network( $pre ) {
+		$plugins = get_site_option( SECUPRESS_ACTIVE_PLUGINS_NETWORK, null );
+		if ( is_null( $plugins ) ) {
+			defined( 'SECUPRESS_ACTIVE_PLUGINS_NETWORK_ERROR' ) || define( 'SECUPRESS_ACTIVE_PLUGINS_NETWORK_ERROR', true );
+			return $pre;
+		}
+		return $plugins;
 	}
 }
-define( 'SECUPRESS_NO_PLUGIN_ACTION_RUNNING', true );
-
 
 add_filter( 'pre_option_active_plugins', 'secupress_no_action_filter_active_plugins' );
 /**
  * Return our active plugins list
  *
+ * @since 2.2.6
  * @author Julio Potier
  * @return (array) $active_plugins
  **/
-function secupress_no_action_filter_active_plugins() {
-	return get_option( SECUPRESS_ACTIVE_PLUGINS, [] );
+function secupress_no_action_filter_active_plugins( $pre ) {
+	$plugins = get_option( SECUPRESS_ACTIVE_PLUGINS, null );
+	if ( is_null( $plugins ) ) {
+		defined( 'SECUPRESS_ACTIVE_PLUGINS_ERROR' ) || define( 'SECUPRESS_ACTIVE_PLUGINS_ERROR', true );
+		return $pre;
+	}
+	return $plugins;
 }
 
 /**
  * @see secupress_get_not_installed_plugins_list()
  *
- * @author Julio Potier
  * @since 2.2.6
+ * @author Julio Potier
+ * @return (array) $plugins
  **/
 function _secupress_get_not_installed_plugins_list_all() {
 	$ins_plugins = get_site_option( SECUPRESS_INSTALLED_PLUGINS );

@@ -271,7 +271,7 @@ class SecuPress_HTTP_Log extends SecuPress_Log {
 			$current_offset = get_option( 'gmt_offset' );
 			foreach ( $history as $time => $arr ) {
 				$id_hash = md5( $time );
-				printf( '<li><strong>%s</strong>%s<br><code>%s</code></li>', sprintf( __( '%s ago', 'secupress' ), secupress_readable_duration( time() - $time ) ), ' <a name="' . __( 'HTTP Response Details', 'secupress' ) . '" class="hide-if-no-js thickbox" href="#TB_inline?height=400&width=600&inlineId=' . $id_hash . '">' . __( 'Open Details', 'secupress' ) . '</a>', esc_html( $arr['url'] ) );
+				printf( '<li><strong>%s</strong>%s<br><code>%s</code></li>', sprintf( _x( '%s ago', 'date', 'secupress' ), secupress_readable_duration( time() - $time ) ), ' <a name="' . __( 'HTTP Response Details', 'secupress' ) . '" class="hide-if-no-js thickbox" href="#TB_inline?height=400&width=600&inlineId=' . $id_hash . '">' . __( 'Open Details', 'secupress' ) . '</a>', esc_html( $arr['url'] ) );
 				echo '<div id="' . $id_hash . '" class="hide-if-js">';
 				echo '<h4>$args</h4>';
 				var_dump( $arr['parsed_args'] );

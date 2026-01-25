@@ -1,7 +1,7 @@
 <?php
 /**
  * {{PLUGIN_NAME}} DB Error Bail Message
- * @since 2.2.6
+ * @since 2.3.13
  * @author Julio Potier
  * @license GPLv2
  * @see $wpdb->db_connect()
@@ -30,14 +30,11 @@ $message .= '<p>' . sprintf(
 
 if ( defined( 'SECUPRESS_LOCKED_ADMIN_EMAIL' ) ) {
 	$fname   = ABSPATH . '/.secupress_db_down_flag';
-	$content = '';
-	if ( @file_exists( $fname ) ) {
-		$content = @file_get_contents( $fname, false, null, 0, 10 );
+	$host    = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : false;
+	if ( ! $host ) {
+		return; // Impossible to continue here...
 	}
-	if ( (int) $content < ( time() - ( 60*60*24 ) ) ) {
-		$headers = 'From: no-reply@' . $_SERVER['HTTP_HOST'];
-		$sent    = @mail( SECUPRESS_LOCKED_ADMIN_EMAIL, sprintf( 'Website %s down!', $_SERVER['HTTP_HOST'] ), sprintf( 'Website %s is down due to a database error. Please check the server and contact the host.', $_SERVER['HTTP_HOST'] ), $headers );
-		@unlink( $fname );
+	if ( ! @file_exists( $fname ) ) {
 		@file_put_contents( $fname, time() );
 	}
 }

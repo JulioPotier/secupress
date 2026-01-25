@@ -136,7 +136,7 @@ function secupress_render_plugin_card( $plugin ) {
 				<span class="num-ratings" aria-hidden="true">(<?php echo number_format_i18n( $plugin->num_ratings ); ?>)</span>
 			</div>
 			<div class="column-updated">
-				<strong><?php _e( 'Last Updated:', 'secupress' ); ?></strong> <?php printf( __( '%s ago', 'secupress' ), human_time_diff( $last_updated_timestamp ) ); ?>
+				<strong><?php sprintf( __( 'Last update: %s', 'secupress' ), sprintf( _x( '%s ago', 'date', 'secupress' ), human_time_diff( $last_updated_timestamp ) ) ); ?></strong>
 			</div>
 			<div class="column-downloaded">
 				<?php

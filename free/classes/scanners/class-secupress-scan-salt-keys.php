@@ -39,7 +39,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	protected function init() {
 		$this->title    = __( 'Check if the security keys are correctly set.', 'secupress' );
-		$this->more     = __( 'WordPress provides 8 security keys, each key has its own purpose. These keys must be set with long random strings: don’t keep the default value, don’t store them in the database, don’t hardcode them.', 'secupress' );
+		$this->more     = sprintf( __( 'WordPress provides %d security keys, each key has its own purpose. These keys must be set with long random strings: don’t keep the default value, don’t store them in the database, don’t hardcode them.', 'secupress' ), 10 );
 		$this->more_fix = sprintf( __( 'Create a <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> to replace your actual keys stored in <code>%s</code> or in your database to keep them safer.', 'secupress' ), secupress_get_wpconfig_filename() );
 	}
 
@@ -70,6 +70,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			// "cantfix"
 			300 => sprintf( __( 'The %s file is not writable, security keys could not be changed.', 'secupress' ), secupress_code_me( secupress_get_wpconfig_filename() ) ),
 			301 => __( 'The security keys fix has been applied but there is still keys that could not be modified so far.', 'secupress' ),
+			302 => __( 'Some keys have been deleted from database, but some could not. Please do it manually, refer to the documentation if needed.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -158,8 +159,9 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			}
 
 			// Check DB.
+			require_once( ABSPATH . '/wp-admin/includes/upgrade.php' );
 			$key = strtolower( $key );
-			$db  = get_site_option( $key, null );
+			$db  = __get_option( $key, null );
 
 			if ( ! is_null( $db ) ) {
 				// From DB.
@@ -235,16 +237,12 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	public function fix() {
 		global $current_user;
 
-		secupress_delete_db_salt_keys();
-
-		if ( $present > 0 ) {
+		if ( 0 === secupress_delete_db_salt_keys() ) { // 0 = Eveything has been deleted OR nothing needed.
 			// good
-			if ( $deleted === $present ) {
-				$this->add_fix_message( 1 );
-			} else {
+			$this->add_fix_message( 0 );
+		} else {
 			// cantfix
-				$this->add_fix_message( 302 );
-			}
+			$this->add_fix_message( 302 );
 		}
 
 		if ( defined( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE' ) ) {

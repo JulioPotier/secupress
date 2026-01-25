@@ -216,6 +216,16 @@ if ( ! $secupress_tests ) {
 									</span>
 									<?php
 								} else {
+									?>
+									<a class="secupress-button-primary secupress-button-mini hide-if-js secupress-fixit<?php echo $current_test->is_delayed_fix() ? ' delayed-fix delayed-fix-' . $current_test->get_delayed_fix_value() : ''; ?>" href="<?php echo esc_url( $fix_nonce_url ); ?>">
+										<span class="icon" aria-hidden="true">
+											<i class="secupress-icon-shield"></i>
+										</span>
+										<span class="text">
+											<?php _e( 'Fix it', 'secupress' ); ?>
+										</span>
+									</a>
+									<?php
 									// It can be fixed.
 									if ( $secupress_is_pro ) {
 									?>
@@ -224,14 +234,6 @@ if ( ! $secupress_tests ) {
 									<label for="secupress-item-<?php echo $class_name_part; ?>" class="label-text hide-if-no-js">
 										<span class="screen-reader-text"><?php _e( 'Auto-fix this item', 'secupress' ); ?></span>
 									</label>
-									<a class="secupress-button-primary secupress-button-mini hide-if-js secupress-fixit<?php echo $current_test->is_delayed_fix() ? ' delayed-fix' : ''; ?>" href="<?php echo esc_url( $fix_nonce_url ); ?>">
-										<span class="icon" aria-hidden="true">
-											<i class="secupress-icon-shield"></i>
-										</span>
-										<span class="text">
-											<?php _e( 'Fix it', 'secupress' ); ?>
-										</span>
-									</a>
 									<?php
 								}
 								?>

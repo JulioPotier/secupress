@@ -51,6 +51,7 @@ if ( secupress_is_pro() && defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRES
 		}
 	}
 	// Let the possibility to continue using PasswordLess until your switch for OTP ;)
+/* //// redo
 	if ( array_search( 'passwordless', $is_plugin_active ) !== false ) {
 		$type   = 'radioboxes';
 		$values['otp-auth'] .= ' ' . _x( '(recommended)', 'method', 'secupress' );
@@ -58,6 +59,7 @@ if ( secupress_is_pro() && defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRES
 		$type   = 'checkboxes';
 		unset( $values['passwordless'] );
 	}
+
 	$this->add_field( array(
 		'title'             => __( 'Use a Two-Factor Authentication', 'secupress' ),
 		'label_for'         => $field_name,
@@ -103,8 +105,32 @@ if ( secupress_is_pro() && defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRES
 			),
 		),
 	) );
+*/
 
-	if ( secupress_is_submodule_active( 'users-login', 'passwordless' ) && ! secupress_get_option( 'secupress_passwordless_activation_validation' ) ) {
+	$message = '';
+	if ( secupress_is_pro() ) {
+		$message = ( is_int( secupress_passwordless_is_activated() ) && secupress_passwordless_is_activated() === get_current_user_id() ) ? __( 'This module will not work until validated by a link sent to your email address when you activated it.', 'secupress' ) : __( 'This module will not work until the person who activated it has validated it by clicking a link sent to their email address.', 'secupress' );
+	}
+	$this->add_field( array(
+		'title'             => __( 'Use a Two-Factor Authentication', 'secupress' ),
+		'name'              => $field_name,
+		'plugin_activation' => true,
+		'type'              => 'checkbox',
+		'label'             => __( 'Yes, use the <strong>PasswordLess</strong> method', 'secupress' ),
+		'value'             => (int) secupress_is_submodule_active( 'users-login', 'passwordless' ),
+		'helpers'           => array(
+			array(
+				'type'        => 'description',
+				'description' => __( 'Users will just have to enter their email address when log in, then click on a link in the email they receive.', 'secupress' ),
+			),
+			array(
+				'type'        => 'warning',
+				'description' => $message,
+			),
+		),
+	) );
+/*
+	if ( secupress_is_submodule_active( 'users-login', 'passwordless' ) && ! secupress_passwordless_is_activated() ) {
 		$resend_link_url = wp_nonce_url( admin_url( 'admin-post.php?action=send_passwordless_validation_link' ), 'send_passwordless_validation_link' );
 		$this->add_field( array(
 			'name'         => 'passwordless_warning',
@@ -114,16 +140,19 @@ if ( secupress_is_pro() && defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRES
 			'move_item'    => '.secupress-field-double-auth_type_passwordless',
 		) );
 	}
+*/
+/*
 	// Use this filters like the next blocks are helpers
-	if ( apply_filters( 'secupress.settings.help', 'passwordless_info', $field_name . '_passwordless', 'description' ) ) {
-		$this->add_field( array(
-			'name'         => 'passwordless_info',
-			'depends'      => $field_name . '_passwordless',
-			'type'         => 'html',
-			'value'        => '<span class="dashicons dashicons-editor-help"></span>' . __( 'Affected users will have to provide their email address, then click on a link in their mailbox to log in.', 'secupress' ) . '<hr>',
-			'move_item'    => '.secupress-field-double-auth_type_passwordless',
-		) );
-	}
+	// if ( apply_filters( 'secupress.settings.help', 'passwordless_info', $field_name . '_passwordless', 'description' ) ) {
+	// 	$this->add_field( array(
+	// 		'name'         => 'passwordless_info',
+	// 		'depends'      => $field_name . '_passwordless',
+	// 		'type'         => 'html',
+	// 		'value'        => '<span class="dashicons dashicons-editor-help"></span>' . __( 'Affected users will have to provide their email address, then click on a link in their mailbox to log in.', 'secupress' ) . '<hr>',
+	// 		'move_item'    => '.secupress-field-double-auth_type_passwordless',
+	// 	) );
+	// }
+*/
 	if ( apply_filters( 'secupress.settings.help', 'otp-auth_info', $field_name . '_otp-auth', 'description' ) ) {
 		$this->add_field( array(
 			'name'         => 'otp-auth_info',
@@ -145,7 +174,8 @@ if ( secupress_is_pro() && defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRES
 	$this->add_field( array(
 		'title'        => '<span class="dashicons dashicons-groups"></span> ' . __( 'Affected Roles', 'secupress' ),
 		'description'  => __( 'Which roles does this module affect?', 'secupress' ),
-		'depends'      => $field_name . '_passwordless ' . $field_name . '_otp-auth',
+		'depends'      => $field_name,
+		// 'depends'      => $field_name . '_passwordless ' . $field_name . '_otp-auth',
 		'row_class'    => 'affected-role-row',
 		'name'         => $this->get_field_name( 'affected_role' ),
 		'type'         => 'roles',
@@ -166,6 +196,118 @@ if ( secupress_is_pro() && defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRES
 
 }
 
+$req_wp_ver = '6.8'; // Minimum WP version required
+$is_wp_ok   = secupress_wp_version_is( $req_wp_ver );
+
+$helper_type = $is_wp_ok ? '' : 'warning';
+$helper_desc = $is_wp_ok ? '' : sprintf(
+	__( 'WordPress <b>v%1$s</b> is required to use the module <em>%2$s</em>.', 'secupress' ),
+	$req_wp_ver,
+	__( 'Force the Best Password Encryption Method', 'secupress' )
+);
+
+$active    = secupress_is_submodule_active( 'users-login', 'force-strong-encryption' );
+$sp_algo   = secupress_get_option( 'strong_encryption_system' );
+$wp_algo   = apply_filters( 'wp_hash_password_algorithm', PASSWORD_BCRYPT );
+$best_algo = secupress_get_best_encryption_system();
+
+$cur_algo = $active && !empty( $sp_algo['algo'] ) ? $sp_algo['algo'] : ( $best_algo ?: $wp_algo );
+$cur_algo_name = secupress_get_encryption_name( $cur_algo );
+
+$opts = apply_filters( 'wp_hash_password_options', [], $cur_algo_name );
+$cost = $opts['cost'] ?? ( $opts['time_cost'] ?? false );
+
+$best_stat = secupress_get_best_cost_by_algo( $best_algo );
+$best_cost = $best_stat['cost'] ?? false;
+
+if ( ! $cost ) {
+	$hash = password_hash( 'a', $best_algo );
+	$info = password_get_info( $hash );
+	$cost = $info['options']['cost'] ?? ( $info['options']['time_cost'] ?? _x( 'Unknown', 'Unknown cost', 'secupress' ) );
+}
+
+if ( $active && isset( $sp_algo['cost'] ) ) {
+	$cost = $sp_algo['cost'];
+}
+
+$is_argon = strpos( $best_algo, 'argon' ) !== false;
+$desc = ! secupress_is_expert_mode() || ! $is_argon
+	? sprintf(
+		__( 'We recommend using %s with %s iterations.', 'secupress' ),
+		secupress_tag_me( secupress_get_encryption_name( $best_algo ), 'strong' ),
+		secupress_code_me( $best_cost )
+	)
+	: sprintf(
+		__( 'We recommend using %s with %s iterations and a memory usage of %s.', 'secupress' ),
+		secupress_tag_me( secupress_get_encryption_name( $best_algo ), 'strong' ),
+		secupress_code_me( $best_cost ),
+		secupress_code_me( size_format( $best_stat['memory_cost'] ?? 0 ) )
+	);
+
+if ( ! $active ) {
+	$desc .= '<br>' . __( 'No accounts on this site will experience login issues once this module is activated.', 'secupress' );
+}
+
+$this->add_field( array(
+	'title'             => __( 'Force the Best Password Encryption Method Available', 'secupress' ) . ' — BETA',
+	'description'       => $desc,
+	'label_for'         => $this->get_field_name( 'force-strong-encryption' ),
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'disabled'          => ! $is_wp_ok,
+	'value'             => (int) secupress_is_submodule_active( 'users-login', 'force-strong-encryption' ),
+	'label'             => sprintf( __( 'Yes, force %s as password encryption method with a cost of %s', 'secupress' ), secupress_tag_me( $cur_algo, 'strong' ), secupress_code_me( $best_cost ) ),
+	'helpers'           => array(
+		array(
+			'type'        => 'description',
+			'description' => ! $active ? sprintf( __( 'Current Password Encryption Method: %s with cost %s', 'secupress' ), secupress_tag_me( secupress_get_encryption_name( $wp_algo ), 'strong' ), secupress_code_me( $cost ) ) : '',
+		),
+		array(
+			'type'        => $helper_type,
+			'description' => $helper_desc
+		),
+	),
+) );
+
+$this->add_field( array(
+	'title'             => __( 'Prevent Other Encryption Method to Log In', 'secupress' ),
+	'description'       => __( 'Prevent fake accounts not using the recommended method to log in here.', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'prevent-low-encryption' ),
+	'type'              => 'checkbox',
+	'depends'           => $this->get_field_name( 'force-strong-encryption' ),
+	'disabled'          => ! $is_wp_ok,
+	'label'             => __( 'Yes, prevent log in without a strong encrypted system', 'secupress' ),
+	'helpers'           => array(
+		array(
+			'type'        => $helper_type,
+			'description' => $helper_desc
+		),
+	),
+) );
+
+$same_hashes = secupress_users_contains_duplicated_hashes();
+$is_disabled = $same_hashes;
+$helper_warn = $same_hashes ? sprintf( __( 'Your database table %s contains duplicated password hashes, <strong>which is highly suspicious</strong>. This feature adds a unique INDEX to this table, and will not function properly. Please, address this issue as soon as possible.', 'secupress' ), secupress_code_me( 'users' ) ) : '';
+$this->add_field( array(
+	'title'             => __( 'Prevent Password Hashes to be Reused for Other Users', 'secupress' ),
+	'description'       => __( 'Prevent attackers from injecting duplicate password hashes into your database to log in easily.', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'prevent-hash-reuse' ),
+	'type'              => 'checkbox',
+	'depends'           => $this->get_field_name( 'force-strong-encryption' ),
+	'disabled'          => ! $is_wp_ok || $is_disabled,
+	'label'             => __( 'Yes, prevent the reuse of password hashes', 'secupress' ),
+	'helpers'           => array(
+		array(
+			'type'        => 'warning',
+			'description' => $helper_warn
+		),
+		array(
+			'type'        => $helper_type,
+			'description' => $helper_desc
+		),
+	),
+) );
+
 $this->set_current_plugin( 'captcha' );
 
 $this->add_field( array(
@@ -180,7 +322,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'warning',
-			'description' => defined( 'SECUPRESS_CAPTCHA_NO_SESSION' ) || ( (int) secupress_is_submodule_active( 'users-login', 'login-captcha' ) && ! session_id() ) ? __( 'It seems you have a PHP session issue, this module will not work correctly. There is nothing we can do here.', 'secupress' ) : '',
+			// 'description' => defined( 'SECUPRESS_CAPTCHA_NO_SESSION' ) || ( (int) secupress_is_submodule_active( 'users-login', 'login-captcha' ) && ! session_id() ) ? __( 'It seems you have a PHP session issue, this module will not work correctly. There is nothing we can do here.', 'secupress' ) : '',
 		),
 	),
 ) );

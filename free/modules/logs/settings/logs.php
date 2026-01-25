@@ -3,8 +3,12 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 global $wpdb;
 
+// Add the form manually.
+add_action( 'secupress.settings.before_section_logs', array( $this, 'print_open_form_tag' ) );
+add_action( 'secupress.settings.after_section_logs', array( $this, 'print_close_form_tag' ) );
+
 $this->set_current_section( 'logs' );
-$this->add_section( _x( 'Logs', 'post type general name', 'secupress' ), array( 'with_save_button' => false ) );
+$this->add_section( _x( 'Logs', 'post type general name', 'secupress' ) );
 
 
 /**
@@ -13,10 +17,12 @@ $this->add_section( _x( 'Logs', 'post type general name', 'secupress' ), array( 
 $main_field_name = $this->get_field_name( 'action-logs-activated' );
 
 $this->add_field( array(
-	'title'             => __( 'WordPress action logs', 'secupress' ),
-	'description'       => __( 'What occurred on your WordPress website? Activating this module will log most sensitive actions.', 'secupress' ),
+	'title'             => __( 'WordPress Action logs', 'secupress' ),
+	'description'       => __( 'What occurred on your WordPress website? This module will log most sensitive actions like password and profile update, email changes, new administrator user, important role has logged in&hellip;', 'secupress' ),
 	'label_for'         => $main_field_name,
-	'type'              => 'activate_action_logs',
+	'plugin_activation' => true,
+	'value'             => (int) secupress_is_submodule_active( 'logs', 'action-logs' ),
+	'type'              => 'checkbox',
 	'label'             => __( 'Yes, log WordPress actions', 'secupress' ),
 ) );
 
@@ -72,10 +78,12 @@ endif;
 $main_field_name = $this->get_field_name( '404-logs-activated' );
 
 $this->add_field( array(
-	'title'             => __( '404 Error Pages Log', 'secupress' ),
-	'description'       => __( '404 error pages are common but may also indicate bots searching for insecure content on your website.', 'secupress' ),
+	'title'             => __( '404 Error Page Logs', 'secupress' ),
+	'description'       => __( '404 error page are common but may also indicate bots searching for insecure content on your website.', 'secupress' ),
 	'label_for'         => $main_field_name,
-	'type'              => 'activate_404_logs',
+	'plugin_activation' => true,
+	'value'             => (int) secupress_is_submodule_active( 'logs', '404-logs' ),
+	'type'              => 'checkbox',
 	'label'             => __( 'Yes, log WordPress 404s', 'secupress' ),
 ) );
 

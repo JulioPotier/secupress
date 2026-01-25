@@ -1,20 +1,19 @@
 <?php
 /**
  * Plugin Name: SecuPress Free with Simple SSL – Simple and Performant Security
- * 
  * Plugin URI: https://secupress.me
  * Description: More than a plugin, the guarantee of a protected website by experts.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 2.3.5
- * Code Name: Starboost (Mark XXXIX)
+ * Version: 2.6
+ * Code Name: Makeshift
  * Network: true
  * Contributors: SecuPress, juliobox, GregLone
  * License: GPLv2
  * Domain Path: /languages/
- * Requires at least: 4.9
+ * Requires at least: 5.4
  * Requires PHP: 7.0
- * Copyright 2012-2025 SecuPress
+ * Copyright 2012-2026 SecuPress
  * 
  *  ██████╗███████╗ █████╗██╗   ██╗██████╗ ██████╗ ███████╗ ██████╗ ██████╗   ███╗   ███╗███████╗
  * ██╔════╝██╔════╝██╔═══╝██║   ██║██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝   ████╗ ████║██╔════╝
@@ -137,19 +136,18 @@ function secupress_init() {
 	// Functions.
 	secupress_load_functions();
 
-	// Hooks.
-	require_once( SECUPRESS_INC_PATH . 'network-options-autoload.php' );
-	require_once( SECUPRESS_INC_PATH . 'common.php' );
-	require_once( SECUPRESS_INC_PATH . 'admin-bar.php' );
-
 	// Last constants.
 	if ( secupress_is_pro() ) {
 		define( 'SECUPRESS_PLUGIN_NAME', esc_html( secupress_get_option( 'wl_plugin_name', 'SecuPress' ) ) );
 	} else {
 		define( 'SECUPRESS_PLUGIN_NAME', 'SecuPress' );
 	}
-
 	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_title( SECUPRESS_PLUGIN_NAME ) );
+
+	// Hooks.
+	require_once( SECUPRESS_INC_PATH . 'network-options-autoload.php' );
+	require_once( SECUPRESS_INC_PATH . 'common.php' );
+	require_once( SECUPRESS_INC_PATH . 'admin-bar.php' );
 
 	// Cleanup leftovers periodically.
 	SecuPress_Cleanup_Leftovers::get_instance();
@@ -173,8 +171,9 @@ function secupress_init() {
 		require_once( SECUPRESS_ADMIN_PATH . 'settings.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'admin.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'ajax-post-callbacks.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'notices.php' );
 	}
+	require_once( SECUPRESS_ADMIN_PATH . 'notices.php' );
+	require_once( SECUPRESS_INC_PATH . 'migrations.php' );
 
 	/**
 	 * Fires when SecuPress is correctly loaded.
@@ -285,7 +284,7 @@ function secupress_load_plugins() {
 		secupress_delete_site_transient( 'secupress_pro_activation' );
 
 		/**
-		 * Fires once SecuPress Pro is activated, after the SecuPress's plugins are loaded.
+		 * Fires once SecuPress is activated, after the SecuPress's plugins are loaded.
 		 *
 		 * @since 1.1.4
 		 * @see `secupress_pro_activation()`
@@ -295,7 +294,7 @@ function secupress_load_plugins() {
 
 	if ( $has_activation ) {
 		/**
-		 * Fires once SecuPress or SecuPress Pro is activated, after the SecuPress's plugins are loaded.
+		 * Fires once SecuPress or SecuPress is activated, after the SecuPress's plugins are loaded.
 		 *
 		 * @since 1.1.4
 		 */
@@ -476,7 +475,7 @@ function secupress_load_functions() {
 /** I18N ======================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-add_filter( 'load_textdomain_mofile', 'secupress_load_own_i18n', 10, 2 );
+add_filter( 'load_textdomain_mofile', 'secupress_load_own_i18n', 11, 2 );
 /**
  * Load our own i18n to prevent too long strings or spelling errors from voluteers at translate.wp.org, sorry guys.
  *

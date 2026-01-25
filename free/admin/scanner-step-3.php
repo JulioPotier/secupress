@@ -6,11 +6,13 @@ $bad_scan_results = array_merge( $bad_scans, $warning_scans );	// `array( $class
 $fix_actions      = array();									// `array( $class_name_part_lower => array( $fix_action, $fix_action ) )`.
 
 // We'll order the tests depending if they're fixable in Pro, manually, etc.
-$tests_1 = array(); // 1: fix action.
-$tests_2 = array(); // 2: manual.
-$tests_3 = array(); // 3: fallback.
-$tests_4 = array(); // 4: fix auto failed or can't proceed further.
-$tests_5 = array(); // 5: pro.
+$tests_1 = []; // 1: fix action.
+$tests_2 = []; // 2: manual.
+$tests_3 = []; // 3: fallback.
+$tests_4 = []; // 4: fix auto failed or can't proceed further.
+$tests_5 = []; // 5: pro.
+$tests_6 = []; // 6: a list to be moved in last position when fixing things, order is imporant.
+$lasts   = [ 'WP_Config' => true, 'Salt_Keys' => true ];
 
 /**
  * Keep only scanners where:
@@ -32,8 +34,6 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		continue;
 	}
 
-	$secupress_tests[ $module_name ] = $class_name_parts;
-
 	foreach ( $class_name_parts as $class_name_part_lower => $class_name_part ) {
 		if ( ! file_exists( secupress_class_path( 'scan', $class_name_part ) ) ) {
 			// Excluded.
@@ -49,11 +49,15 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$this_fix_actions = $current_test->need_manual_fix();
 
 		// Those that need a manual fix.
-		if ( is_array( $this_fix_actions ) ) {
+		if ( is_array( $this_fix_actions ) && ( ( secupress_is_pro() && 'pro' !== $is_fixable ) || 'pro' !== $is_fixable ) ) {
 			// Store the "fix actions".
 			if ( $this_fix_actions ) {
 				$fix_actions[ $class_name_part_lower ] = $this_fix_actions;
-				$tests_1[ $class_name_part ]           = $module_name;								// 1: fix action.
+				if ( isset( $lasts[ $class_name_part ] ) ) {
+					$tests_6[ $class_name_part ] = $module_name; // last
+				} else {
+					$tests_1[ $class_name_part ]           = $module_name; // 1: fix action.
+				}
 			} else {
 				// Doesn't need to be fixed, the scan is simply not up to date. Excluded.
 				unset( $bad_scan_results[ $class_name_part_lower ] );
@@ -62,20 +66,29 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		}
 		// Pro.
 		if ( 'pro' === $is_fixable && ! secupress_is_pro() ) {
-			// OK.
-			$tests_5[ $class_name_part ] = $module_name;											// 5: pro.
+			if ( isset( $lasts[ $class_name_part ] ) ) {
+				$tests_6[ $class_name_part ] = $module_name; // last
+			} else {
+				$tests_5[ $class_name_part ] = $module_name; // 5: pro.
+			}
 			continue;
 		}
 		// Only fixable manually.
 		if ( false === $is_fixable ) {
-			// OK.
-			$tests_2[ $class_name_part ] = $module_name;											// 2: manual.
+			if ( isset( $lasts[ $class_name_part ] ) ) {
+				$tests_6[ $class_name_part ] = $module_name; // last
+			} else {
+				$tests_2[ $class_name_part ] = $module_name; // 2: manual.
+			}
 			continue;
 		}
 		// An automatic fix has been attempted (and failed or can't do more).
 		if ( ! empty( $fixes[ $class_name_part_lower ] ) ) {
-			// OK.
-			$tests_4[ $class_name_part ] = $module_name;											// 4: fix auto failed or can't proceed further.
+			if ( isset( $lasts[ $class_name_part ] ) ) {
+				$tests_6[ $class_name_part ] = $module_name; // last
+			} else {
+				$tests_4[ $class_name_part ] = $module_name; // 4: fix auto failed or can't proceed further.
+			}
 			continue;
 		}
 		// A "bad" scan status means the user didn't try to fix it.
@@ -85,14 +98,16 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			continue;
 		}
 		// Should not happen.
-		$tests_3[ $class_name_part ] = $module_name;												// 3: fallback.
+		if ( isset( $lasts[ $class_name_part ] ) ) {
+			$tests_6[ $class_name_part ] = $module_name; // last
+		} else {
+			$tests_3[ $class_name_part ] = $module_name; // 3: fallback.
+		}
 	}
 }
 
-$secupress_tests = array_merge( $tests_1, $tests_2, $tests_3, $tests_4, $tests_5 );
-unset( $tests_1, $tests_2, $tests_3, $tests_4, $tests_5 );
-
-// Move along, move along...
+$secupress_tests = array_merge( $tests_5, $tests_1, $tests_2, $tests_3, $tests_4, $tests_6 );
+unset( $tests_1, $tests_2, $tests_3, $tests_4, $tests_5, $tests_6, $lasts );
 if ( ! $secupress_tests ) {
 	?>
 	<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
@@ -262,11 +277,11 @@ if ( ! $secupress_tests ) {
 					<div class="secupress-row-actions secupress-flex secupress-flex-spaced secupress-mt2">
 						<?php if ( ! secupress_is_white_label() ) { ?>
 							<p class="secupress-action-doc">
-								<a href="<?php echo esc_url( $current_test::get_docs_url() ); ?>" class="secupress-button secupress-button-mini shadow" target="_blank" title="<?php esc_attr_e( 'Open in a new window.', 'secupress' ); ?>">
+								<a href="<?php echo esc_url( $current_test::get_docs_url() ); ?>" class="secupress-button secupress-button-doc shadow" target="_blank" title="<?php esc_attr_e( 'Open in a new window.', 'secupress' ); ?>">
 									<span class="icon">
 										<i class="secupress-icon-file-text" aria-hidden="true"></i>
 									</span>
-									<span class="text"><?php _e( 'Read the documentation', 'secupress' ); ?></span>
+									<span class="text"><?php _e( 'Documentation', 'secupress' ); ?></span>
 								</a>
 							</p>
 						<?php } ?>

@@ -29,7 +29,7 @@ $this->add_field( array(
 $ver    = substr( $GLOBALS['wp_version'], 0, 3 );
 $this->add_field( array(
 	'title'             => __( 'Major Updates', 'secupress' ),
-	'description'       => sprintf( __( 'Allow WordPress to update automatically when a major version is available. <em>Example: <strong>%s</strong> is a major version</em>.', 'secupress' ), $ver ),
+	'description'       => sprintf( __( 'Allow WordPress to update automatically when a major version is available. <em>Example: %s is a major version</em>.', 'secupress' ), secupress_tag_me( esc_html( $ver ), 'strong' ) ),
 	'label_for'         => $this->get_field_name( 'major' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',

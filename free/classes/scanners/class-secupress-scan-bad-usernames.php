@@ -27,7 +27,6 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 	 *
 	 * @var (object)
 	 */
-	protected static $_instance;
 
 
 	/** Init and messages. ====================================================================== */
@@ -38,11 +37,13 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 	 * @since 1.0
 	 */
 	protected function init() {
+		$activated      = secupress_is_submodule_active( 'users-login', 'blacklist-logins' );
+		$this->fixable  = ! $activated;
 		$this->title    = __( 'Check if your usernames are correctly set.', 'secupress' );
 		$this->more     = __( 'Some usernames are known to be used for malicious usage, or created by bots, or the same as the nickname.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
-			'<em>' . __( 'Forbid Usernames', 'secupress' ) . '</em>',
+			'<em>' . __( 'Forbid Bad Usernames', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-blacklist-logins_activated">' . __( 'Users & Login', 'secupress' ) . '</a>'
 		);
 	}
@@ -65,7 +66,8 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 			2   => __( 'Users updated: The users with a login same as their nickname or display_name have been renamed, their login is still the same.', 'secupress' ),
 			// "bad"
 			200 => _n_noop( '<strong>%1$s user</strong> has a disallowed username: %2$s', '<strong>%1$s users</strong> have a disallowed username: %2$s', 'secupress' ),
-			201 => _n_noop( '<strong>%1$s user</strong> has the same nickname as login: %2$s', '<strong>%1$s users</strong> have the same nickname as login: %2$s', 'secupress' ),
+			201 => _n_noop( '<strong>%1$s user</strong> has the same display name as login: %2$s', '<strong>%1$s users</strong> have the same display name as login: %2$s', 'secupress' ),
+			202 => _n_noop( '<strong>%1$s user</strong> has the same nickname as login: %2$s', '<strong>%1$s users</strong> have the same nickname as login: %2$s', 'secupress' ),
 			// "cantfix"
 			300 => __( 'The module is already activated. Let’s give your users some time to change their username.', 'secupress' ),
 		);
@@ -126,16 +128,9 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 			$this->slice_and_dice( $logins, 10 );
 			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
 			$this->add_message( 200, array( $ids, $ids, static::wrap_in_tag( $logins, 'strong' ) ) );
-		}
-
-		$logins = $wpdb->get_col( "SELECT u.user_login FROM $wpdb->users u, $wpdb->usermeta um WHERE u.user_login=u.display_name OR (um.user_id=u.ID AND um.meta_key='nickname' AND um.meta_value=u.user_login ) GROUP BY ID" ); // WPCS: unprepared SQL ok.
-		$ids    = count( $logins );
-
-		// "bad"
-		if ( $ids ) {
-			$this->slice_and_dice( $logins, 10 );
-			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
-			$this->add_message( 201, array( $ids, $ids, static::wrap_in_tag( $logins, 'strong' ) ) );
+			if ( secupress_is_submodule_active( 'users-login', 'blacklist-logins' ) ) {
+				$this->add_message( 300 );
+			}
 		}
 
 		// "good"
@@ -197,7 +192,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 
 		// Blacklisted names.
 		$names = static::get_blacklisted_usernames();
-		$ids   = $wpdb->get_col( "SELECT ID from $wpdb->users WHERE user_login IN ( '$names' )" ); // WPCS: unprepared SQL ok.
+		$ids   = $wpdb->get_col( "SELECT ID from $wpdb->users WHERE user_login REGEXP '^($names)$'" ); // WPCS: unprepared SQL ok.
 
 		if ( $ids ) {
 			$activated = secupress_is_submodule_active( 'users-login', 'blacklist-logins' );
@@ -211,29 +206,6 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 				secupress_activate_submodule( 'users-login', 'blacklist-logins' );
 				// "good"
 				$this->add_fix_message( 1 );
-			}
-		}
-
-		// Same nickname or display_name
-		$ids = $wpdb->get_col( "SELECT ID FROM $wpdb->users u, $wpdb->usermeta um WHERE u.user_login=u.display_name OR (um.user_id=u.ID AND um.meta_key='nickname' AND um.meta_value=u.user_login ) GROUP BY ID" ); // WPCS: unprepared SQL ok.
-		if ( $ids ) {
-			foreach( $ids as $id ) {
-				$user         = get_user_by( 'ID', $id );
-				$userID       = $user->ID;
-				$displayname  = $user->display_name;
-				$userlogin    = $user->user_login;
-				$usernickname = $user->nickname;
-				$newname      = secupress_usernames_lexicomatisation();
-
-				if ( $displayname === $userlogin && $usernickname === $userlogin ) {
-					update_user_meta( $userID, 'nickname', $newname );
-					wp_update_user( array( 'ID' => $userID, 'display_name' => $newname ) );
-				} elseif ( $displayname === $userlogin) {
-					wp_update_user( array ('ID' => $userID, 'display_name' => $usernickname ) );
-				} elseif ( $usernickname === $userlogin ) {
-					update_user_meta( $userID, 'nickname', $displayname );
-				}
-				$this->add_fix_message( 2 );
 			}
 		}
 

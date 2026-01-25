@@ -214,7 +214,18 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 * @return (bool)
 	 */
 	public function is_delayed_fix() {
-		return $this->delayed_fix;
+		return (bool) $this->delayed_fix;
+	}
+
+	/**
+	 * The fix order value, 1 first, then 2...
+	 *
+	 * @since 2.3.18.1
+	 *
+	 * @return (bool)
+	 */
+	public function get_delayed_fix_value() {
+		return (int) $this->delayed_fix;
 	}
 
 

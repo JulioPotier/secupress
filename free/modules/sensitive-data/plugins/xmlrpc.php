@@ -114,7 +114,12 @@ function secupress_xmlrpc_remove_multicall_methods( $methods ) {
  *
  * @return (null|object)
  */
-function secupress_xmlrpc_block_multiauth_attempts( $user, $username, $password ) {
+function secupress_xmlrpc_block_multiauth_attempts( 
+	$user, 
+	$username, 
+	#[\SensitiveParameter] 
+	$password
+) {
 	static $credentials;
 
 	if ( empty( $credentials ) ) {
@@ -122,7 +127,7 @@ function secupress_xmlrpc_block_multiauth_attempts( $user, $username, $password 
 		return $user;
 	}
 
-	if ( $username === $credentials['username'] && $password === $credentials['password'] ) {
+	if ( 0 === strcmp( $username, $credentials['username'] ) && 0 === strcmp( $password, $credentials['password'] ) ) {
 		return $user;
 	}
 

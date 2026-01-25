@@ -302,9 +302,6 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 		// Check if it worked.
 		clearstatcache();
 
-		// Activate.
-		secupress_activate_submodule( 'wordpress-core', 'wp-config-constant-fs-chmod' );
-
 		if ( ! $files ) {
 			// "good" (there was nothing to fix).
 			$this->add_fix_message( 0 );

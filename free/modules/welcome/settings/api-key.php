@@ -164,7 +164,7 @@ ob_start();
 		case 'active':
 		case 'inactive':
 		?>
-			<a class="button button-small button-primary"
+			<a class="button button-small button-primary secupress-button secupress-button-tertiary light"
 			href="<?php echo trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . _x( 'account', 'link to website (Only FR or EN!)', 'secupress' ); ?>"
 			target="_blank"
 			title="<?php _e( 'on secupress.me', 'secupress' ); ?>">
@@ -175,7 +175,7 @@ ob_start();
 		break;
 		case 'expired':
 		?>
-			<a class="button button-small button-primary"
+			<a class="button button-small button-primary secupress-button secupress-button-tertiary light"
 			href="<?php echo trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . _x( 'checkout', 'link to website (Only FR or EN!)', 'secupress' ) . '/?edd_license_key=' . secupress_get_option( 'consumer_key' ) . '&download_id=14'; ?>"
 			target="_blank"
 			title="<?php _e( 'on secupress.me', 'secupress' ); ?>">
@@ -186,7 +186,7 @@ ob_start();
 		break;
 		default:
 		?>
-			<a class="button button-small button-primary"
+			<a class="button button-small button-primary secupress-button secupress-button-tertiary light"
 			href="<?php echo trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . _x( 'pricing', 'link to website (Only FR or EN!)', 'secupress' ); ?>"
 			target="_blank"
 			title="<?php _e( 'on secupress.me', 'secupress' ); ?>">

@@ -33,7 +33,7 @@ if ( is_array( $settings ) && ! empty( $settings['consumer_email'] ) && ! empty(
 
 		/** This filter is documented in wp-includes/class-http.php. */
 		$user_agent      = apply_filters( 'http_headers_useragent', 'WordPress/' . get_bloginfo( 'version' ) . '; ' . get_bloginfo( 'url' ) );
-		$version         = '2.3.5';
+		$version         = '2.6';
 		$args['headers'] = array(
 			'X-Requested-With' => sprintf( '%s;SecuPress|%s|%s|;', $user_agent, $version, esc_url( home_url() ) ),
 			'Authorization' => 'Basic ' . base64_encode( $settings['consumer_email'] . ':' . $settings['consumer_key'] )
@@ -70,7 +70,7 @@ if ( is_multisite() ) {
 }
 
 // User metas.
-$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'secupress_%' OR meta_key LIKE '%_secupress_%'" );
+$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '%secupress%'" );
 
 // Delete muplugins
 $mu_plugins_dir = WPMU_PLUGIN_DIR;
@@ -82,6 +82,22 @@ foreach ( $files as $file_path ) {
 	}
 }
 
+// Delete secupress-data directory
+$uploads = wp_upload_dir( null, false );
+if ( ! empty( $uploads['basedir'] ) ) {
+	$data_dir = wp_normalize_path( $uploads['basedir'] ) . '/secupress-data/';
+	if ( is_dir( $data_dir ) ) {
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+		$filesystem = new WP_Filesystem_Direct( new StdClass() );
+		$filesystem->delete( $data_dir, true );
+	}
+}
+
 // CRONS
 wp_clear_scheduled_hook( 'secupress_cleanup_leftovers' );
 wp_clear_scheduled_hook( 'secupress_malware_files' );
+wp_clear_scheduled_hook( 'secupress_bad_themes' );
+wp_clear_scheduled_hook( 'secupress_bad_themes_maybe_do_checks' );
+wp_clear_scheduled_hook( 'secupress_bad_plugins' );
+wp_clear_scheduled_hook( 'secupress_bad_plugins_maybe_do_checks' );

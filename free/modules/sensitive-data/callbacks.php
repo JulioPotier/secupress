@@ -70,14 +70,17 @@ function secupress_content_protection_settings_callback( $modulenow, &$settings,
 	secupress_manage_submodule( 'discloses', 'no-x-powered-by', ! empty( $activate['content-protect_php-version'] ) );
 	secupress_manage_submodule( 'discloses', 'wp-version', ! empty( $activate['content-protect_wp-version'] ) );
 	secupress_manage_submodule( 'discloses', 'readmes', ! empty( $activate['content-protect_readmes'] ) );
-	if ( secupress_is_pro() ) {
-		if ( ! empty( $settings['content-protect_bad-url-access_allowed-urls'] ) ) {
-			$settings['content-protect_bad-url-access_allowed-urls'] = implode( "\n", array_filter( explode( "\n", $settings['content-protect_bad-url-access_allowed-urls'] ), '_secupress_bad_url_access_allowed_url_filter' ) );
-			$settings['content-protect_bad-url-access_allowed-urls'] = _secupress_bad_url_access_allowed_urls_sanitize( $settings['content-protect_bad-url-access_allowed-urls'] );
-		}
+	$settings['content-protect_bad-url-access'] = isset( $activate['content-protect_bad-url-access'][0] ) ? $activate['content-protect_bad-url-access'][0] : '';
+	$settings['content-protect_bad-url-access'] = 'allowed' === $settings['content-protect_bad-url-access'] || 'disallowed' === $settings['content-protect_bad-url-access'] ? $settings['content-protect_bad-url-access'] : '';
+	if ( ! empty( $settings['content-protect_bad-url-access_allowed-urls'] ) ) {
 		$GLOBALS['contentprotectbadurlaccessallowedurls'] = isset( $settings['content-protect_bad-url-access_allowed-urls'] ) ? $settings['content-protect_bad-url-access_allowed-urls'] : false;
-		secupress_manage_submodule( $modulenow,  'bad-url-access', ! empty( $activate['content-protect_bad-url-access'] ) );
+		$GLOBALS['contentprotectbadurlaccess']            = $settings['content-protect_bad-url-access'];
+		$settings['content-protect_bad-url-access_allowed-urls'] = implode( "\n", array_filter( explode( "\n", $settings['content-protect_bad-url-access_allowed-urls'] ), '_secupress_bad_url_access_allowed_url_filter' ) );
+		$settings['content-protect_bad-url-access_allowed-urls'] = _secupress_bad_url_access_allowed_urls_sanitize( $settings['content-protect_bad-url-access_allowed-urls'] );
 	}
+	secupress_manage_submodule( $modulenow, 'bad-url-access-pro',  'allowed'    === $settings['content-protect_bad-url-access'] );
+	secupress_manage_submodule( $modulenow, 'bad-file-extensions', 'disallowed' === $settings['content-protect_bad-url-access'] );
+	secupress_manage_submodule( $modulenow, 'bad-url-access',      'disallowed' === $settings['content-protect_bad-url-access'] );
 
 	$plugin_disclose = ! empty( $activate['content-protect_plugin-version-discloses'] ) && is_array( $activate['content-protect_plugin-version-discloses'] ) ? array_flip( $activate['content-protect_plugin-version-discloses'] ) : array();
 	$wp_plugins      = array( 'woocommerce', 'wpml' );
@@ -114,7 +117,7 @@ function secupress_wp_endpoints_settings_callback( $modulenow, &$settings, $acti
 	// (De)Activation.
 	secupress_manage_submodule( $modulenow, 'xmlrpc', ! empty( $settings['wp-endpoints_xmlrpc'] ) ); // `$settings`, not `$activate`.
 
-	if ( ! empty( $settings['wp-endpoints_author_base'] ) ){
+	if ( ! empty( $settings['wp-endpoints_author_base'] ) ) {
 		$old_author_base = trim( secupress_get_module_option( 'wp-endpoints_author_base', 'author', 'sensitive-data' ), '/' );
 		$new_author_base = sanitize_title( $settings['wp-endpoints_author_base'] );
 		$message         = '';
@@ -124,6 +127,7 @@ function secupress_wp_endpoints_settings_callback( $modulenow, &$settings, $acti
 			if ( 'author' === $new_author_base || ! $new_author_base ) { // back to WP default, no need to check
 				$settings['wp-endpoints_author_base'] = 'author';
 				secupress_set_author_base( 'author' );
+				secupress_add_module_notice( '', __( 'Author Page Base', 'secupress' ), 'deactivation' );
 				return $settings;
 			}
 
@@ -168,29 +172,32 @@ function secupress_wp_endpoints_settings_callback( $modulenow, &$settings, $acti
 			}
 
 			if ( ! empty( $bases[ $new_author_base ] ) ) {
-				$message = '';
+				$error = '';
 				if ( taxonomy_exists( $bases[ $new_author_base ] ) ) {
-					$message = __( 'a taxonomy', 'secupress' );
+					$error = __( 'a taxonomy', 'secupress' );
 				} elseif ( post_type_exists( $bases[ $new_author_base ] ) ) {
-					$message = __( 'a custom post type', 'secupress' );
+					$error = __( 'a custom post type', 'secupress' );
 				}
 			} elseif ( get_page_by_path( $new_author_base ) ) {
-				$message = __( 'a page', 'secupress' );
+				$error = __( 'a page', 'secupress' );
 
 			} elseif ( trim( get_option( 'permalink_structure' ), '/' ) === trim( $wp_rewrite->front . '%postname%', '/' ) && get_page_by_path( $new_author_base, 'OBJECT', 'post' ) ) {
-				$message = __( 'a post', 'secupress' );
+				$error = __( 'a post', 'secupress' );
 			}
 
-			if ( $message ) {
+			if ( $error ) {
 				$settings['wp-endpoints_author_base'] = $old_author_base;
-				$message = sprintf( __( '<strong>Error</strong>: This author page base is already used for %s. Please choose another one.', 'secupress' ), $message );
-				secupress_add_transient_notice( $message, 'error', '' );
+				$error = sprintf( __( 'This author page base is already used for %s. Please choose another one.', 'secupress' ), $message );
+				secupress_add_transient_notice( $error, 'error', '', 'exist' );
 				return $settings;
 			}
 
 			$settings['wp-endpoints_author_base'] = $new_author_base;
 			secupress_set_author_base( $new_author_base );
+			secupress_add_module_notice( '', __( 'Author Page Base', 'secupress' ), 'activation' );
 		}
+	} else {
+		secupress_add_module_notice( '', __( 'Author Page Base', 'secupress' ), 'deactivation' );
 	}
 
 }

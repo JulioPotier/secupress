@@ -334,10 +334,17 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	protected function print_current_module() {
 		?>
-		<div class="secupress-tab-content-header">
+		<div class="secupress-tab-content-header secupress-flex secupress-flex-spaced secupress-vcenter">
 			<?php
 			$this->print_module_title();
 			?>
+			<div class="secupress-module-search-wrapper hide-if-no-js">
+				<label for="secupress-module-search" class="screen-reader-text"><?php _e( 'Search', 'secupress' ); ?></label>
+				<span class="dashicons dashicons-search secupress-search-icon" aria-hidden="true"></span>
+				<input type="search" id="secupress-module-search" name="secupress-module-search" class="secupress-module-search" placeholder="<?php esc_attr_e( 'Search...', 'secupress' ); ?>" />
+				<span class="spinner secupress-inline-spinner" style="float: none; margin: 0;"></span>
+				<ul id="secupress-module-search-results" class="secupress-module-search-results" style="display: none;"></ul>
+			</div>
 		</div>
 
 		<?php
@@ -591,6 +598,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * Displays the textarea that lists the IP addresses not to ban.
 	 *
 	 * @since 1.0
+	 * @author Grégory Viguier
 	 *
 	 * @param (array) $args An array of parameters. See `::field()`.
 	 */
@@ -672,125 +680,12 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		echo '<p id="secupress-whitelist-ips-actions">';
 			// Display a button to unban all IPs.
 			$clear_href = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-clear-whitelist-ips' . $referer_arg ), 'secupress-clear-whitelist-ips' );
-			echo '<a class="secupress-button secupress-button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-whitelist-ips-button" href="' . esc_url( $clear_href ) . '" data-loading-i18n="' . esc_attr__( 'Clearing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
+			echo '<a class="secupress-button secupress-button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-whitelist-ips-button" href="' . esc_url( $clear_href ) . '" data-loading-i18n="' . esc_attr__( 'Clearing&hellip;', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
 			echo '<span class="spinner secupress-inline-spinner' . ( $ban_ips || $is_search ? ' hide-if-no-js' : ' hidden' ) . '"></span>';
 			// For JS: ban a IP.
 			echo '<button type="button" class="secupress-button secupress-button-primary hide-if-no-js" id="secupress-whitelist-ip-button" data-loading-i18n="' . esc_attr__( 'Adding to allowed list&hellip;', 'secupress' ) . '" data-original-i18n="' . esc_attr_x( 'Allow', 'verb', 'secupress' ) . '">' . _x( 'Allow', 'verb', 'secupress' ) . "</button>\n";
 			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
 		echo "</p>\n";
-	}
-
-
-	/**
-	 * Displays the checkbox to activate the "action" Logs.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (array) $args An array of parameters. See `::field()`.
-	 */
-	protected function activate_action_logs( $args ) {
-		$name_attribute = 'secupress-plugin-activation[' . $args['name'] . ']';
-		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
-		$disabled       = $disabled ? ' disabled="disabled"' : '';
-		$value          = (int) secupress_is_submodule_active( 'logs', 'action-logs' );
-
-		// Labels.
-		$label_open  = '';
-		$label_close = '';
-		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
-			$label_open  = '<label' . ( $disabled ? ' class="disabled"' : '' ) . '>';
-			$label_close = '</label>';
-		}
-		?>
-		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_action_logs' ), 'secupress_activate_action_logs' ) ); ?>" id="form-activate-action-logs" method="post">
-			<p>
-				<?php
-				echo $label_open;
-				echo $args['label_before'];
-				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) . $disabled . ' class="secupress-checkbox" /> ';
-				echo '<span class="label-text">' . $args['label'] . '</span>';
-				echo $label_close;
-				?>
-			</p>
-			<p class="description desc">
-				<?php _e( 'Post creation or update will not be logged, but rather password and profile update, email changes, new administrator user, important role has logged in...', 'secupress' ); ?>
-			</p>
-			<p class="submit"><button type="submit" class="secupress-button secupress-button-primary"><?php _ex( 'Submit', 'verb', 'secupress' ); ?></button></p>
-		</form>
-		<?php
-	}
-
-
-	/**
-	 * Displays the checkbox to activate the "404" Logs.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (array) $args An array of parameters. See `::field()`.
-	 */
-	protected function activate_404_logs( $args ) {
-		$name_attribute = 'secupress-plugin-activation[' . $args['name'] . ']';
-		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
-		$disabled       = $disabled ? ' disabled="disabled"' : '';
-		$value          = (int) secupress_is_submodule_active( 'logs', '404-logs' );
-
-		// Labels.
-		$label_open  = '';
-		$label_close = '';
-		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
-			$label_open  = '<label' . ( $disabled ? ' class="disabled"' : '' ) . '>';
-			$label_close = '</label>';
-		}
-		?>
-		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_404_logs' ), 'secupress_activate_404_logs' ) ); ?>" id="form-activate-404-logs" method="post">
-			<p><?php echo $label_open; ?>
-				<?php
-				echo $args['label_before'];
-				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) . $disabled . 'class="secupress-checkbox" /> ';
-				echo '<span class="label-text">' . $args['label'] . '</span>';
-				?>
-			<?php echo $label_close; ?>
-			</p>
-			<?php echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary">' . __( 'Submit' ) . '</button></p>'; ?>
-		</form>
-		<?php
-	}
-
-
-	/**
-	 * Displays the checkbox to activate the "HTTP" Logs.
-	 *
-	 * @since 2.1
-	 *
-	 * @param (array) $args An array of parameters. See `::field()`.
-	 */
-	protected function activate_http_logs( $args ) {
-		return; ////
-		$name_attribute = 'secupress-plugin-activation[' . $args['name'] . ']';
-		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
-		$disabled       = $disabled ? ' disabled="disabled"' : '';
-		$value          = (int) secupress_is_submodule_active( 'logs', 'http-logs' );
-
-		// Labels.
-		$label_open  = '';
-		$label_close = '';
-		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
-			$label_open  = '<label' . ( $disabled ? ' class="disabled"' : '' ) . '>';
-			$label_close = '</label>';
-		}
-		?>
-		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_http_logs' ), 'secupress_activate_http_logs' ) ); ?>" id="form-activate-http-logs" method="post">
-			<p><?php echo $label_open; ?>
-				<?php
-				echo $args['label_before'];
-				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) . $disabled . 'class="secupress-checkbox" /> ';
-				echo '<span class="label-text">' . $args['label'] . '</span>';
-				?>
-			<?php echo $label_close; ?>
-			</p>
-			<?php echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary">' . __( 'Submit' ) . '</button></p>'; ?>
-		</form>
-		<?php
 	}
 
 
@@ -1018,13 +913,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function file_scanner() {
-		?>
-		<p class="submit">
-			<button type="button" disabled="disabled" class="secupress-button">
-				<?php _e( 'Search for malwares', 'secupress' ); ?>
-			</button>
-		</p>
-		<?php
+		secupress_print_scanner_ui();
 	}
 
 

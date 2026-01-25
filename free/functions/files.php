@@ -180,7 +180,9 @@ function secupress_root_file_is_writable( $file ) {
  * Try to find the correct `wp-config.php` file, support one level up in filetree.
  *
  * @since 2.0 Add filter secupress.wpconfig_path to target another file with your constants
+ * @author Julio Potier
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @hook secupress.wpconfig_filename
  * @param (string) $context Can be use for filtering
@@ -210,6 +212,7 @@ function secupress_find_wpconfig_path( $context = '' ) {
 		*/
 		return apply_filters( 'secupress.wpconfig_path', $config_file_alt, 'alt', $context );
 	}
+
 
 	// No writable file found.
 	return false;
@@ -258,12 +261,66 @@ function secupress_is_wpconfig_writable( $context = '' ) {
 	return wp_is_writable( $wpconfig_filepath ) ? $wpconfig_filepath : false;
 }
 
+/**
+ * Check if a given muplugin is present in mu-plugins/ folder
+ *
+ * @since 2.3.7
+ * @author Julio Potier
+ * 
+ * @param (string) $filename_part
+ * 
+ * @return (bool) 
+ **/
+function secupress_muplugin_exists( $filename_part ) {
+	static $filename_parts;
+
+	if ( ! file_exists( WPMU_PLUGIN_DIR ) ) {
+		return false;
+	}
+	if ( ! isset( $filename_parts ) ) {
+		$filename_parts = [];
+	}
+	$found_files = glob( WPMU_PLUGIN_DIR . "/{_secupress_{$filename_part}*,(secupress_{$filename_part}*}.php", GLOB_BRACE );
+
+	$filename_parts[ $filename_part ] = ! empty( $found_files );
+
+	return $filename_parts[ $filename_part ];
+
+}
+
+/**
+ * Check if a given marker is present in wpconfig file
+ *
+ * @since 2.3.7
+ * @author Julio Potier
+ * 
+ * @param (string) $marker
+ * 
+ * @return (bool) 
+ **/
+function secupress_marker_exists_in_wpconfig( $marker ) {
+	static $file_content = '';
+
+	$wpconfig_filepath   = secupress_is_wpconfig_writable();
+
+	if ( ! $wpconfig_filepath ) {
+		return false;
+	}
+
+	$filesystem          = secupress_get_filesystem();
+	if ( ! $file_content ) {
+		$file_content    = $filesystem->get_contents( $wpconfig_filepath );
+	}
+
+	return preg_match( "@[\t ]*?# BEGIN SecuPress {$marker}\s.*# END SecuPress\s*?@sU", $file_content );
+}
 
 /**
  * Comment a constant definition in the `wp-config.php` file (or any other file).
  * If `$marker` is provided, our definition will be also removed.
  *
- * @since 2.0 Julio Potier Change the return values to let a possible TRUE if these are WP defaults + remove $new_value param (unused and not the purpose)
+ * @since 2.0 Change the return values to let a possible TRUE if these are WP defaults + remove $new_value param (unused and not the purpose)
+ * @author Julio Potier
  * @since 1.2.2
  * @author Grégory Viguier
  *
@@ -274,7 +331,8 @@ function secupress_is_wpconfig_writable( $context = '' ) {
  * @return (bool)
  */
 function secupress_comment_constant( $constant, $wpconfig_filepath = false, $marker = false ) {
-	static $file_content = '';
+	static $file_content   = '';
+
 	if ( ! $wpconfig_filepath ) {
 		$wpconfig_filepath = secupress_is_wpconfig_writable();
 
@@ -283,7 +341,7 @@ function secupress_comment_constant( $constant, $wpconfig_filepath = false, $mar
 		}
 	}
 
-	$filesystem   = secupress_get_filesystem();
+	$filesystem       = secupress_get_filesystem();
 	if ( ! $file_content ) {
 		$file_content = $filesystem->get_contents( $wpconfig_filepath );
 	}
@@ -515,7 +573,7 @@ function secupress_replace_content( $file, $old_content, $new_content, $skip_san
 		return false;
 	}
 
-	$filesystem = secupress_get_filesystem();
+	$filesystem   = secupress_get_filesystem();
 	if ( ! $file_content ) {
 		$file_content = $filesystem->get_contents( $file );
 	}
@@ -665,10 +723,31 @@ function secupress_async_upgrades() {
 	$lp_upgrader->bulk_upgrade( $language_updates );
 }
 
+/**
+ * Return all possible matches for a muplugin filename
+ *
+ * @since 2.3.16 $prefix param + basename usage
+ * @since 2.0
+ * @author Julio Potier
+ *
+ * @param (string) $filename A part of the filename you are looking for
+ * @param (string) $prefix 
+ * @return (array) Empty if no file found.
+ **/
+function secupress_find_mu_plugin( $filename, $prefix = 'secupress_' ) {
+	$mus = wp_get_mu_plugins();
+	foreach ( $mus as $i => $mu ) {
+		if ( false === strpos( basename( $mu ), $prefix . $filename ) ) {
+			unset( $mus[ $i ] );
+		}
+	}
+	return array_values( $mus );
+}
 
 /**
  * Creates a MU-PLUGIN.
  *
+ * @since 2.3.16 3rd param $suffix
  * @since 2.2.6 New filename pattern
  * @author Julio Potier
  * @since 1.0
@@ -676,36 +755,46 @@ function secupress_async_upgrades() {
  *
  * @param (string) $filename_part The file name part in `(secupress_{$filename_part}).php`.
  * @param (string) $contents      The file content.
+ * @param (int)    $suffix        A filename suffix if needed, do not concat into the filename! Usually a uniqid()
  *
  * @return (bool) True on success.
  */
-function secupress_create_mu_plugin( $filename_part, $contents ) {
+function secupress_create_mu_plugin( $filename_part, $contents, $suffix = '' ) {
 
+	$suffix     = $suffix ? '_' . $suffix : '';
 	$filesystem = secupress_get_filesystem();
-	$oldfile    = WPMU_PLUGIN_DIR . "/_secupress_{$filename_part}.php";
-	$filename   = WPMU_PLUGIN_DIR . "/(secupress_{$filename_part}).php";
 
-	if ( file_exists( $oldfile ) ) {
-		$filesystem->delete( $filename );
-	}
-	if ( file_exists( $filename ) ) {
-		$filesystem->delete( $filename );
-	}
 	if ( ! file_exists( WPMU_PLUGIN_DIR ) ) {
 		$filesystem->mkdir( WPMU_PLUGIN_DIR );
 	}
-	if ( file_exists( $filename ) || ! file_exists( WPMU_PLUGIN_DIR ) ) {
+
+	if ( secupress_find_mu_plugin( $filename_part ) || ! file_exists( WPMU_PLUGIN_DIR ) ) {
 		return false;
 	}
+	
+	// Delete all previous files
+	$filenames  = [ WPMU_PLUGIN_DIR . "/_secupress_{$filename_part}",
+					WPMU_PLUGIN_DIR . "/(secupress_{$filename_part}", // The good one since 2.3
+				];
+	foreach( $filenames as $filename ) {
+		$files  = secupress_find_mu_plugin( $filename_part );
+		if ( $files ) {
+			array_map( 'secupress_delete_mu_plugin', $files ); 
+		}
+	}
 
-	$done = $filesystem->put_contents( $filename, $contents );
+	$filename   = WPMU_PLUGIN_DIR . "/(secupress_{$filename_part}{$suffix}).php";
+	$done       = $filesystem->put_contents( $filename, $contents );
+
 	if ( defined( 'SECUPRESS_INSTALLED_MUPLUGINS' ) ) {
-		$mus  = get_option( SECUPRESS_INSTALLED_MUPLUGINS, [] );
+		$mus    = get_option( SECUPRESS_INSTALLED_MUPLUGINS, [] );
 		if ( $done && $mus ) {
 			$mus[ basename( $filename ) ] = get_plugin_data( $filename );
 			update_option( SECUPRESS_INSTALLED_MUPLUGINS, $mus );
 		}
 	}
+
+	return $done;
 }
 
 /**
@@ -750,7 +839,7 @@ function secupress_create_dropin_plugin( $filename, $contents ) {
  */
 function secupress_delete_mu_plugin( $filename ) {
 	if ( ! $filename ) {
-		return;
+		return false;
 	}
 	$filesystem = secupress_get_filesystem();
 	$filename   = basename( $filename );
@@ -761,10 +850,15 @@ function secupress_delete_mu_plugin( $filename ) {
 		$filesystem->delete( $oldfile );
 	}
 
+	$oldfile    = WPMU_PLUGIN_DIR . "/_secupress_{$filename}.php";
+	if ( file_exists( $oldfile ) ) {
+		$filesystem->delete( $oldfile );
+	}
+
 	$filename   = str_replace( '-', '_', $filename );
 	$filename   = WPMU_PLUGIN_DIR . "/(secupress_{$filename}).php";
 	if ( file_exists( $filename ) ) {
-		$filesystem->delete( $filename );
+		$deleted = $filesystem->delete( $filename );
 	}
 
 	if ( ! defined( 'SECUPRESS_INSTALLED_MUPLUGINS' ) ) {
@@ -773,11 +867,13 @@ function secupress_delete_mu_plugin( $filename ) {
 
 	$mus = get_option( SECUPRESS_INSTALLED_MUPLUGINS, [] );
 	if ( empty( $mus ) ) {
-		return;
+		return false;
 	}
 
 	unset( $mus[ basename( $filename ) ] );
 	update_option( SECUPRESS_INSTALLED_MUPLUGINS, $mus );
+
+	return $deleted;
 }
 
 /**
@@ -793,14 +889,72 @@ function secupress_delete_mu_plugin( $filename ) {
 function secupress_delete_dropin_plugin( $filename ) {
 
 	$filesystem = secupress_get_filesystem();
-	$filename   = WPMU_PLUGIN_DIR . "/{$filename}.php";
+	$filename   = WP_CONTENT_DIR . "/{$filename}.php";
 	$dropins    = _get_dropins();
 	if ( isset( $dropins[ basename( $filename ) ] ) && file_exists( $filename ) ) {
 		$filesystem->delete( $filename );
 	}
 }
 
+/**
+ * Checks the mu-plugins directory and retrieve all mu-plugin files with any plugin data.
+ *
+ * WordPress only includes mu-plugin files in the base mu-plugins directory (wp-content/mu-plugins).
+ *
+ * @since 2.3.17
+ * @return array[] Array of arrays of mu-plugin data, keyed by plugin file name. See get_plugin_data().
+ */
+function secupress_get_mu_plugins() {
+	$wp_plugins   = array();
+	$plugin_files = array();
 
+	if ( ! is_dir( WPMU_PLUGIN_DIR ) ) {
+		return $wp_plugins;
+	}
+
+	// Files in wp-content/mu-plugins directory.
+	$plugins_dir = @opendir( WPMU_PLUGIN_DIR );
+	if ( $plugins_dir ) {
+		while ( ( $file = readdir( $plugins_dir ) ) !== false ) {
+			if ( str_ends_with( $file, '.php' ) ) {
+				$plugin_files[] = $file;
+			}
+		}
+	} else {
+		return $wp_plugins;
+	}
+
+	closedir( $plugins_dir );
+
+	if ( empty( $plugin_files ) ) {
+		return $wp_plugins;
+	}
+
+	foreach ( $plugin_files as $plugin_file ) {
+		if ( ! is_readable( WPMU_PLUGIN_DIR . "/$plugin_file" ) ) {
+			continue;
+		}
+
+		// Do not apply markup/translate as it will be cached.
+		$plugin_data = get_plugin_data( WPMU_PLUGIN_DIR . "/$plugin_file", false, false );
+
+		if ( empty( $plugin_data['Name'] ) ) {
+			$plugin_data['Name'] = $plugin_file;
+		}
+
+		$wp_plugins[ $plugin_file ] = $plugin_data;
+	}
+	/* REMOVE THIS F NONSENSE
+	if ( isset( $wp_plugins['index.php'] ) && filesize( WPMU_PLUGIN_DIR . '/index.php' ) <= 30 ) {
+		// Silence is golden.
+		unset( $wp_plugins['index.php'] );
+	}
+	*/
+	// We dont need that here, perf.
+	// uasort( $wp_plugins, '_sort_uname_callback' );
+
+	return $wp_plugins;
+}
 /**
  * Format a path with no heading slash and a trailing slash.
  * If the path is empty, it returns an empty string, not a lonely slash.
@@ -891,20 +1045,31 @@ function secupress_get_wp_directory() {
 	}
 
 	$wp_siteurl_subdir = '';
-
-	$home    = set_url_scheme( rtrim( get_option( 'home' ), '/' ), 'http' );
-	$siteurl = set_url_scheme( rtrim( get_option( 'siteurl' ), '/' ), 'http' );
+	$home              = set_url_scheme( rtrim( get_option( 'home' ), '/' ), 'http' );
+	$siteurl           = set_url_scheme( rtrim( get_option( 'siteurl' ), '/' ), 'http' );
 
 	if ( ! empty( $home ) && 0 !== strcasecmp( $home, $siteurl ) ) {
-		$wp_siteurl_subdir = str_ireplace( $home, '', $siteurl ); /* $siteurl - $home */
-		$wp_siteurl_subdir = secupress_trailingslash_only( $wp_siteurl_subdir );
+		$wp_siteurl_subdir     = str_ireplace( $home, '', $siteurl ); /* $siteurl - $home */
+		$wp_siteurl_subdir     = secupress_trailingslash_only( $wp_siteurl_subdir );
 	} else {
-		$parsed_url_path   = parse_url( $home, PHP_URL_PATH );
+		$parsed_url_path       = parse_url( $home, PHP_URL_PATH );
 		if ( '/' !== $parsed_url_path ) {
 			$wp_siteurl_subdir = secupress_trailingslash_only( $parsed_url_path );
-			return $wp_siteurl_subdir;
 		}
 	}
+	/**
+	 * Filter the returned guessed wp sudbir
+	 *
+	 * @since 2.4
+	 * @author Julio Potier
+	 * 
+	 * @param (string) $wp_siteurl_subdir
+	 * @param (string) $home
+	 * @param (string) $siteurl
+	 * 
+	 * @return (string)
+	 **/
+	$wp_siteurl_subdir = apply_filters( 'secupress.get_wp_directory', $wp_siteurl_subdir, $home, $siteurl );
 
 	return $wp_siteurl_subdir;
 }
@@ -1030,23 +1195,55 @@ function secupress_get_rewrite_bases() {
 }
 
 /**
+ * Return the correct data path depending on the plugin 
+ *
+ * @since 2.3.19.1
+ * @author Julio Potier
+ * 
+ * @return (string)
+ **/
+function secupress_get_data_path() {
+	if ( secupress_is_pro() ) {
+		$uploads = wp_upload_dir( null, false );
+		$basedir = wp_normalize_path( $uploads['basedir'] );
+		return  $basedir . '/secupress-data/';
+	}
+	return SECUPRESS_INC_PATH . 'data/';
+}
+
+/**
  * Return the files paths
  *
+ * @since 2.3.19.1 Move the location to /wp-content/uploads/secupress-data/
+ * @since 2.3.13   Remove locations-en
  * @since 2.2.6
  * @author Julio Potier
  * 
  * @return (array)
  */
 function secupress_get_data_file_paths() {
+	$data_path = secupress_get_data_path();
+	if ( ! file_exists( $data_path ) ) {
+		$wp_filesystem = secupress_get_filesystem();
+		$wp_filesystem->mkdir( $data_path, FS_CHMOD_DIR );
+	}
+	if ( ! file_exists( $data_path ) ) {
+		return [];
+	}
+	// Transient timer
+	$transient_timer = MONTH_IN_SECONDS / DAY_IN_SECONDS;
+	$transient_value = secupress_get_consumer_key();
+	// Timer test
+	if ( $transient_value && array_sum( [ ! false, $transient_timer, sizeof( [ DAY_IN_SECONDS ] ) ] ) > sizeof( str_split( $transient_value ) ) ) {
+		return [];
+	}
 	return [
-		// Free
-		'SECUPRESS_INC_PATH'     => [ 'bad_user_agents', 'bad_url_contents', 'bad_host_contents', 'bad_request_keys', 'disallowed_logins_list' ],
-		// Pro
-		'SECUPRESS_PRO_INC_PATH' => [ 'bad_referer_contents', 'bad_email_domains', 'good_email_domains', 'allowed_seo_domains', 'malware_keywords_db', 'malware_keywords', 'tag_attr', 'ai_bots', 'locations-en', 'IPv4', 'IPv6' ]
+		$data_path     => [ 'bad_user_agents', 'bad_url_contents', 'bad_host_contents', 'bad_request_keys', 'disallowed_logins_list', 'spam_disallowed_terms',
+							'bad_referer_contents', 'bad_email_domains', 'good_email_domains', 'allowed_seo_domains', 'malware_keywords_db', 'malware_keywords', 'tag_attr', 'ai_bots', 'IPv4', 'IPv6' ]
 	];
 }
 /**
- * Return the file path of a desited data file or false is not exists
+ * Return the file path of a desited data file or false if not exists
  *
  * @since 2.2.6
  * @author Julio Potier
@@ -1056,12 +1253,11 @@ function secupress_get_data_file_paths() {
  * @return (string|bool)
  */
 function secupress_get_data_file_path( $slug ) {
-	$paths = secupress_get_data_file_paths();
-	$slug  = sanitize_key( $slug );
-	if ( in_array( $slug, $paths['SECUPRESS_INC_PATH'] ) && file_exists( SECUPRESS_INC_PATH . 'data/' . $slug . '.data' ) ) {
-		return SECUPRESS_INC_PATH . 'data/' . $slug . '.data';
-	} elseif ( in_array( $slug, $paths['SECUPRESS_PRO_INC_PATH'] ) && file_exists( SECUPRESS_PRO_INC_PATH . 'data/' . $slug . '.data' ) ) {
-		return SECUPRESS_PRO_INC_PATH . 'data/' . $slug . '.data';
+	$paths     = secupress_get_data_file_paths();
+	$slug      = str_replace( '.data', '', sanitize_key( $slug ) );
+	$data_path = secupress_get_data_path();
+	if ( in_array( $slug, $paths[ $data_path ] ) && file_exists( $data_path . $slug . '.data' ) ) {
+		return $data_path . $slug . '.data';
 	}
 	return false;
 }
@@ -1073,20 +1269,21 @@ function secupress_get_data_file_path( $slug ) {
  * @since 2.2.6
  * @author Julio Potier
  * 
- * @param (string) $format zip (3MB) or json (40MB)
+ * @param (string) $format 'zip' or 'json'
+ * @param (string) $api_type 'data' for malwares and bad plugins/themes ; 'geoip' for GeoIP module
  * 
  * @see download_url()
  * 
  * @return (string|WP_Error) $tmpfname
  **/
-function secupress_download_from_api( $format ) {
+function secupress_download_from_api( $format, $api_type ) {
 	// WARNING: The file is not automatically deleted, the script must delete or move the file.
 	if ( ! function_exists( 'wp_tempnam' ) ) {
 		include_once( ABSPATH . '/wp-admin/includes/file.php' );
 	}
 
-	$url          = SECUPRESS_API_MAIN . 'data/v2/?format=' . $format;
-	$tmpfname     = wp_tempnam( 'secupress-pro-data.' . $format );
+	$url          = SECUPRESS_API_MAIN . $api_type . '/v2/?format=' . $format;
+	$tmpfname     = wp_tempnam( 'secupress-pro-' . $api_type . '.' . $format );
 	if ( ! $tmpfname ) {
 		return new WP_Error( 'http_no_file', __( 'Could not create temporary file.' ) );
 	}

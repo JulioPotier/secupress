@@ -26,7 +26,7 @@ function secupress_get_modules() {
 			'with_reset_box' => false,
 			'submodules'     => [
 							'module-secupress_display_apikey_options' => ! defined( 'SECUPRESS_HIDE_API_KEY' ) || SECUPRESS_HIDE_API_KEY ? __( 'License Information', 'secupress' ) : '',
-							'module-secupress_display_white_label'    => secupress_is_pro() && defined( 'WP_SWL' ) && WP_SWL ? __( 'White Label', 'secupress' ) : '',
+							'module-secupress_display_white_label'    => secupress_is_pro() && ( defined( 'WP_SWL' ) && constant( 'WP_SWL' ) ) ? __( 'White Label', 'secupress' ) : '',
 							'module-secupress_advanced_settings'      => __( 'Advanced Settings', 'secupress' ),
 							'module-import_export'                    => '*' . __( 'Settings, Import & Export', 'secupress' ),
 						]
@@ -46,17 +46,23 @@ function secupress_get_modules() {
 							'login-protection_type_passwordspraying'          => '*' . __( 'Bad Password Attempts', 'secupress' ),
 							'row-login-protection_sessions_control'           => '*' . __( 'Session Control', 'secupress' ),
 							'row-login-protection_login_errors'               => __( 'Login Errors', 'secupress' ),
+							'row-login-protection_geoip_login'                => '*' . __( 'GeoIP Login', 'secupress' ),
 							'row-double-auth_type'                            => '*' . __( '2 Factors Authentication', 'secupress' ),
+							'row-double-auth_force-strong-encryption'         => __( 'Force Strong Pass Encryption', 'secupress' ),
+							'row-double-auth_prevent-low-encryption'          => secupress_is_submodule_active( 'users-login', 'force-strong-encryption' ) ? '*' . __( 'Prevent Other Encryption System', 'secupress' ) : '',
+							'row-double-auth_prevent-hash-reuse'              => secupress_is_submodule_active( 'users-login', 'force-strong-encryption' ) ? '*' . __( 'Prevent Reuse of Password Hashes', 'secupress' ) : '',
 							'row-captcha_activate'                            => __( 'Captcha', 'secupress' ),
+							'row-password-policy_strong_passwords'            => '*' . __( 'Strong Password', 'secupress' ),
+							'row-password-policy_password_expiration'         => secupress_is_submodule_active( 'users-login', 'strong-passwords' ) ? '*' . __( 'Password Lifespan', 'secupress' ) : '',
 							'row-password-policy_send-emails'                 => '*' . __( 'Force Reset Passwords', 'secupress' ),
 							'row-password-policy_force-logout'                => '*' . __( 'Force Logout Everyone', 'secupress' ),
-							'row-password-policy_password_expiration'         => '*' . __( 'Password Lifespan', 'secupress' ),
-							'row-password-policy_strong_passwords'            => '*' . __( 'Strong Password', 'secupress' ),
 							'row-blacklist-logins_user-creation-protection'   => '*' . __( 'Protect User Creation', 'secupress' ),
 							'row-blacklist-logins_prevent-user-creation'      => secupress_is_submodule_active( 'users-login', 'user-creation-protection' ) ? '>*' . __( 'Forbid User Creation', 'secupress' ) : '',
 							'row-blacklist-logins_bad-email-domains'          => '*' . __( 'Forbid Bad Email Domains', 'secupress' ),
 							'row-blacklist-logins_same-email-domain'          => __( 'Forbid Same Email Domain', 'secupress' ),
-							'row-blacklist-logins_activated'                  => __( 'Forbid Usernames', 'secupress' ),
+							'row-blacklist-logins_activated'                  => __( 'Forbid Bad Usernames', 'secupress' ),
+							'row-blacklist-logins_admin'                      => secupress_is_submodule_active( 'users-login', 'blacklist-logins' ) ? '>' . sprintf( __( 'Forbid «%s» Usernames', 'secupress' ), 'admin' ) : '',
+							'row-blacklist-logins_lexicomatisation'           => secupress_is_submodule_active( 'users-login', 'blacklist-logins' ) && secupress_is_expert_mode() ? '>*' . __( 'Rename public user names', 'secupress' ) : '',
 							'row-blacklist-logins_stop-user-enumeration'      => __( 'Forbid User Enumeration', 'secupress' ),
 							'row-blacklist-logins_prevent-reset-password'     => __( 'Prevent Password Reset', 'secupress' ),
 							'row-blacklist-logins_default-role-activated'     => __( 'Lock Default Role', 'secupress' ),
@@ -73,7 +79,8 @@ function secupress_get_modules() {
 			],
 			'submodules'  => [
 							'row-uploads_activate'           => sprintf( __( 'Disallow %s uploads', 'secupress' ), 'zip' ),
-							'row-plugins_actions'            => __( 'Plugin Actions', 'secupress' ),
+							'row-plugins_actions'            => __( 'Plugin Actions Back-end', 'secupress' ),
+							'row-plugins_installation-pro'   => secupress_is_submodule_active( 'plugins-themes', 'plugin-installation' ) ? '>*' . __( 'Plugin Actions FTP', 'secupress' ) : '',
 							'row-plugins_show-all'           => __( 'Show All Plugins', 'secupress' ),
 							'row-plugins_detect_bad_plugins' => '*' . __( 'Detect Bad Plugins', 'secupress' ),
 							'row-themes_actions'             => __( 'Theme Actions', 'secupress' ),
@@ -144,8 +151,20 @@ function secupress_get_modules() {
 							'module-geoip-system'                    => '*' . __( 'GeoIP Management', 'secupress' ),
 						]
 		],
+		'file-system'     => [
+			'title'       => __( 'Malware Scanners', 'secupress' ),
+			'icon'        => 'radar',
+			'dashicon'    => 'search',
+			'summaries'   => [
+				'small'   => __( 'Check your files &amp; DB', 'secupress' ),
+				'normal'  => __( 'Check file permissions, run monitoring and antivirus on your installation to verify file integrity.', 'secupress' ),
+			],
+			'with_form'      => false,
+			'with_reset_box' => false,
+			// 'mark_as_pro'    => $should_be_pro,
+		],
 		'ssl'             => [
-			'new'         => true, //// remove this in 2.4
+			// 'new'         => true,
 			'title'       => __( 'SSL & HTTPS', 'secupress' ),
 			'icon'        => 'sensitive-data',
 			'dashicon'    => 'privacy',
@@ -169,18 +188,6 @@ function secupress_get_modules() {
 							'row-antispam_antispam'                  => __( 'Anti-Spam', 'secupress' ),
 							'row-antiphishing_activated'             => __( 'Anti-Phishing', 'secupress' ),
 						]
-		],
-		'file-system'     => [
-			'title'       => __( 'Malware Scanners', 'secupress' ),
-			'icon'        => 'radar',
-			'dashicon'    => 'search',
-			'summaries'   => [
-				'small'   => __( 'Check your files &amp; DB', 'secupress' ),
-				'normal'  => __( 'Check file permissions, run monitoring and antivirus on your installation to verify file integrity.', 'secupress' ),
-			],
-			'with_form'      => false,
-			'with_reset_box' => false,
-			// 'mark_as_pro'    => $should_be_pro,
 		],
 		'logs'            => [
 			'title'       => _x( 'Logs and IPs', 'post type general name', 'secupress' ),
@@ -279,6 +286,22 @@ function secupress_get_modules() {
 	return $modules;
 }
 
+/**
+ * Depending on the value of `$activate`, will activate or deactivate a sub-module.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module    The module.
+ * @param (string) $submodule The sub-module.
+ * @param (bool)   $activate  True to activate, false to deactivate.
+ */
+function secupress_manage_submodule( $module, $submodule, $activate ) {
+	if ( $activate ) {
+		secupress_activate_submodule( $module, $submodule );
+	} else {
+		secupress_deactivate_submodule( $module, $submodule );
+	}
+}
 
 /**
  * Activate a sub-module.
@@ -350,7 +373,6 @@ function secupress_activate_submodule( $module, $submodule, $incompatible_submod
 	return ! $is_active;
 }
 
-
 /**
  * Deactivate a sub-module.
  *
@@ -360,9 +382,8 @@ function secupress_activate_submodule( $module, $submodule, $incompatible_submod
  *
  * @param (string)       $module     The module.
  * @param (string|array) $submodules The sub-module. Can be an array, deactivate multiple sub-modules.
- * @param (array)        $args       An array of arguments to pass to the hooks.
  */
-function secupress_deactivate_submodule( $module, $submodules, $args = array() ) {
+function secupress_deactivate_submodule( $module, $submodules ) {
 	$submodules = (array) $submodules;
 
 	if ( ! $submodules ) {
@@ -388,10 +409,10 @@ function secupress_deactivate_submodule( $module, $submodules, $args = array() )
 		 *
 		 * @since 1.0
 		 *
-		 * @param (array) $args        Some arguments.
+		 * @param (array) $args        deprecated.
 		 * @param (bool)  $is_active   False if the sub-module was already inactive.
 		 */
-		do_action( 'secupress.modules.deactivate_submodule_' . $submodule, $args, ! $is_active );
+		do_action( 'secupress.modules.deactivate_submodule_' . $submodule, [], ! $is_active );
 
 		/**
 		 * Fires once any sub-module is deactivated.
@@ -402,7 +423,7 @@ function secupress_deactivate_submodule( $module, $submodules, $args = array() )
 		 * @param (array)  $args        Some arguments.
 		 * @param (bool)   $is_active   False if the sub-module was already inactive.
 		 */
-		do_action( 'secupress.modules.deactivate_submodule', $submodule, $args, ! $is_active );
+		do_action( 'secupress.modules.deactivate_submodule', $submodule, [], ! $is_active );
 	}
 
 	if ( $delete_cache ) {
@@ -504,17 +525,32 @@ function secupress_deactivate_submodule_silently( $module, $submodules ) {
  * @param (string) $action    "activation" or "deactivation".
  */
 function secupress_add_module_notice( $module, $submodule, $action ) {
-	$submodule_name = secupress_get_module_data( $module, $submodule );
-
-	if ( empty( $submodule_name['Name'] ) ) {
-		return;
+	$is_for_user_only    = false !== strpos( $module, '###USER###' );
+	if ( $is_for_user_only ) {
+		$module = '';
 	}
+	$submodule_name      = secupress_get_module_data( $module, $submodule )['Name'];
+	$is_silent           = false !== strpos( $action, 'silent-' );
+	$action              = str_replace( 'silent-', '', $action );
+	secupress_remove_module_notice( $module, $submodule, 'activation' === $action ? 'deactivation' : 'activation' );
+	$transient_name      = 'secupress_module_' . $action . '_' . get_current_user_id();
+	$transient_value     = secupress_get_site_transient( $transient_name );
+	$transient_value     = is_array( $transient_value ) ? $transient_value : array();
+	if ( $is_for_user_only ) {
+		$submodule_name .= ' ' . secupress_tag_me( __( '(just for you)', 'secupress' ), 'em' );
+	}
+	$transient_value[]   = $submodule_name;
+	if ( secupress_is_pro() && ! $is_silent ) {
+		switch( $action ) {
+			case 'activation' :
+				secupress_remove_submodule_alert( $module, $submodule );
+			break;
 
-	$submodule_name    = $submodule_name['Name'];
-	$transient_name    = 'secupress_module_' . $action . '_' . get_current_user_id();
-	$transient_value   = secupress_get_site_transient( $transient_name );
-	$transient_value   = is_array( $transient_value ) ? $transient_value : array();
-	$transient_value[] = $submodule_name;
+			case 'deactivation' :
+				secupress_set_submodule_alert( $module, $submodule );
+			break;
+		}
+	}		
 
 	secupress_set_site_transient( $transient_name, $transient_value );
 
@@ -550,14 +586,8 @@ function secupress_remove_module_notice( $module, $submodule, $action ) {
 		return;
 	}
 
-	$submodule_name = secupress_get_module_data( $module, $submodule );
-
-	if ( empty( $submodule_name['Name'] ) ) {
-		return;
-	}
-
+	$submodule_name  = secupress_get_module_data( $module, $submodule )['Name'];
 	$transient_value = array_flip( $transient_value );
-	$submodule_name  = $submodule_name['Name'];
 
 	if ( ! isset( $transient_value[ $submodule_name ] ) ) {
 		return;
@@ -596,12 +626,16 @@ function secupress_get_module_data( $module, $submodule ) {
 	);
 
 	$file_path = secupress_get_submodule_file_path( $module, $submodule );
-
-	if ( ! is_array( $file_path ) ) {
-		return get_file_data( $file_path, $default_headers, 'module' );
+	$data      = [];
+	if ( $file_path && ! is_array( $file_path ) ) {
+		$data  = get_file_data( $file_path, $default_headers, 'module' );
 	}
 
-	return array();
+	if ( empty( $data['Name'] ) ) {
+		$data['Name'] = $submodule;
+	}
+
+	return $data;
 }
 
 
@@ -674,10 +708,12 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
  * An error notice is displayed on nginx or not supported systems, or if the file is not writable.
  * This is usually used on the module activation.
  *
+ * @since 2.3.13 Add filters for $message
+ * @author Julio Potier
  * @since 1.0
  * @since 1.3 Moved to global scope.
  * @author Grégory Viguier
- *
+ * 
  * @param (array) $args An array of arguments.
  *
  * @return (bool) True if the file has been edited.
@@ -685,17 +721,17 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 function secupress_add_module_rules_or_notice( $args ) {
 	global $is_apache, $is_nginx, $is_iis7;
 
-	$args = array_merge( array(
-		'rules'    => '',
-		'marker'   => '',
-		'iis_args' => array(),
-		'title'    => '', // Submodule name.
-	), $args );
+	$args = array_merge( [
+		'rules'      => '',
+		'marker'     => '',
+		'iis_args'   => [],
+		'title'      => '', // Submodule name.
+	], $args );
 
-	$rules    = $args['rules'];
-	$marker   = $args['marker'];
-	$iis_args = $args['iis_args'];
-	$title    = $args['title'];
+	$rules      = $args['rules'];
+	$marker     = $args['marker'];
+	$iis_args   = $args['iis_args'];
+	$title      = $args['title'];
 
 	// Apache.
 	if ( $is_apache ) {
@@ -710,6 +746,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 				'<code>.htaccess</code>',
 				"<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>"
 			);
+			$message = apply_filters( 'secupress.apache.notice.message', $message, $args );
 			secupress_add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
 			return false;
 		}
@@ -751,6 +788,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 					"<pre>{$spaces}{$rules}</pre>"
 				);
 			}
+			$message = apply_filters( 'secupress.iis7.notice.message', $message, $args );
 			secupress_add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
 			return false;
 		}
@@ -769,6 +807,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 			"<pre>$rules</pre>"
 		);
 		if ( apply_filters( 'secupress.nginx.notice', true ) ) {
+			$message = apply_filters( 'secupress.nginx.notice.message', $message, $args );
 			secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
 		}
 		return false;
@@ -777,7 +816,9 @@ function secupress_add_module_rules_or_notice( $args ) {
 	// Server not supported.
 	$message  = sprintf( __( '%s:', 'secupress' ), $title ) . ' ';
 	$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Nginx</strong>, nor <strong>IIS7</strong>. This module won’t work.', 'secupress' );
+	$message = apply_filters( 'secupress.unknown_os.notice.message', $message, $args );
 	secupress_add_settings_error( 'general', 'unknown_os', $message, 'error' );
+
 	return false;
 }
 
@@ -853,6 +894,7 @@ function secupress_get_active_submodules() {
 /**
  * Check whether a sub-module is active.
  *
+ * @since 2.4.1 Add filters for $shortcut and $after_filter
  * @since 1.0
  *
  * @param (string) $module    A module.
@@ -864,6 +906,10 @@ function secupress_get_active_submodules() {
 function secupress_is_submodule_active( $module, $submodule ) {
 	$submodule = sanitize_key( $submodule );
 
+	$shortcut = apply_filters( 'secupress.is_submodule_active.shortcut', null, $module, $submodule );
+	if ( $shortcut !== null ) {
+		return $shortcut;
+	}
 	if ( wp_doing_ajax() ) {
 		$is_active = get_site_option( 'secupress_active_submodule_' . $submodule );
 		$is_active = $is_active && $module === $is_active;
@@ -887,6 +933,11 @@ function secupress_is_submodule_active( $module, $submodule ) {
 
 	if ( $is_active && ! secupress_is_pro() && secupress_submodule_is_pro( $module, $submodule ) ) {
 		return false;
+	}
+	
+	$after_filter = apply_filters( 'secupress.is_submodule_active.after', null, $module, $submodule );
+	if ( $after_filter !== null ) {
+		return $after_filter;
 	}
 
 	return $is_active;

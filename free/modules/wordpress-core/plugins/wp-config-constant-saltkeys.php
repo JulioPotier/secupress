@@ -1,10 +1,10 @@
 <?php
 /**
  * Module Name: Correct Security Keys
- * Description: Creates a mu-plugin with 8 constants.
+ * Description: Creates a mu-plugin with 10 constants.
  * Main Module: wordpress_core
  * Author: SecuPress
- * Version: 2.0
+ * Version: 2.3.18
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
@@ -22,13 +22,9 @@ add_action( 'secupress.plugins.activation', 'secupress_wpconfig_saltkeys_activat
  * @author Julio Potier
  */
 function secupress_wpconfig_saltkeys_activation() {
-	// Don't do it in the submodule file to prevent 8 db delete query at each load for nothing mainly.
+	// Don't do it in the submodule file to prevent 10 db delete query at each load for nothing mainly.
 	// So we just do it on activation, mu file present or not.
 	secupress_delete_db_salt_keys();
-
-	if ( defined( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE' ) ) {
-		return;
-	}
 
 	$current_user = wp_get_current_user();
 	secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID ) );
@@ -44,8 +40,6 @@ add_action( 'secupress.plugins.deactivation', 'secupress_wpconfig_saltkeys_deact
  * @author Julio Potier
  */
 function secupress_wpconfig_saltkeys_deactivation() {
-    $current_user = wp_get_current_user();
-    secupress_set_site_transient( 'secupress-auto-login', array( 'ID' => $current_user->ID ) );
-	// $mu = reset( secupress_find_muplugin( '_secupress_salt_keys_' ) );
-	// secupress_remove_old_plugin_file( $mu );
+    // $current_user = wp_get_current_user();
+    // secupress_set_site_transient( 'secupress-auto-login', array( 'ID' => $current_user->ID ) );
 }

@@ -77,7 +77,7 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 		<p><?php _e( 'SecuPress makes your site more secure. The A grade is not necessary to get a secure website. It’s like having 10 locks on a door but only lock 9 of them, is your house stil safe? Yes.', 'secupress' ); ?></p>
 		<p><?php _e( 'Did you know that we can propose you a Pro Configuration Service?', 'secupress' ); ?></p>
 		<div class="text-center">
-			<a href="<?php echo trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . __( 'pricing', 'link to website (Only FR or EN!)', 'secupress' ); ?>" class="secupress-button secupress-button-tertiary shadow"><?php _e( 'Visit Pricing Now', 'secupress' ); ?></a>
+			<a href="<?php echo trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . _x( 'pricing', 'link to website (Only FR or EN!)', 'secupress' ); ?>" class="secupress-button secupress-button-tertiary shadow"><?php _e( 'Visit Pricing Now', 'secupress' ); ?></a>
 		</div>
 		<p>
 		</p>
@@ -86,7 +86,7 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 		<p><?php _e( 'We’re sorry to hear that because our goal is to prevent this. Still, SecuPress was protecting you, without it, maybe your website would have been hacked earlier! Also sometimes a flaw is exploited in a clean way so no script nor plugin could detect that and block it.', 'secupress' ); ?>
 		<p><?php _e( 'Did you know that we can propose you a Post Hack Service?', 'secupress' ); ?></p>
 		<div class="text-center">
-			<a href="<?php echo trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . __( 'pricing', 'link to website (Only FR or EN!)', 'secupress' ); ?>" class="secupress-button secupress-button-tertiary shadow"><?php _e( 'Visit Pricing Now', 'secupress' ); ?></a>
+			<a href="<?php echo trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . _x( 'pricing', 'link to website (Only FR or EN!)', 'secupress' ); ?>" class="secupress-button secupress-button-tertiary shadow"><?php _e( 'Visit Pricing Now', 'secupress' ); ?></a>
 		</div>
 		<p>
 		</p>
@@ -96,7 +96,7 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 		<p><?php _e( 'We tried to be the less speak-tech as possible but sometimes we have to. If you are talking about the email alerts or security logs, we understand that it could be unsettling at first.', 'secupress' ); ?></p>
 		<p><?php _e( 'Did you know that we can propose you a Security Maintenance? So we are the one in charge of that for you, all year long.', 'secupress' ); ?></p>
 		<div class="text-center">
-			<a href="<?php echo trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . __( 'pricing', 'link to website (Only FR or EN!)', 'secupress' ); ?>" class="secupress-button secupress-button-tertiary shadow"><?php _e( 'Visit Pricing Now', 'secupress' ); ?></a>
+			<a href="<?php echo trailingslashit( set_url_scheme( SECUPRESS_WEB_MAIN, 'https' ) ) . _x( 'pricing', 'link to website (Only FR or EN!)', 'secupress' ); ?>" class="secupress-button secupress-button-tertiary shadow"><?php _e( 'Visit Pricing Now', 'secupress' ); ?></a>
 		</div>
 		<p>
 		</p>

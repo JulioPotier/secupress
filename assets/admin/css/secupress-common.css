@@ -540,6 +540,10 @@ input:hover + .secupress_disabled{
 	top: 0;
 }
 
+.secupress-setting-row_file-scanner_file-scanner p.description.help{
+	display: block;
+}
+
 /* Indeterminate styles */
 .secupress-checkbox.secupress-checkbox:indeterminate + label:after,
 .secupress-checkbox.secupress-checkbox:indeterminate + .label-text:after {
@@ -1160,11 +1164,16 @@ label.secupress-setting-row-title {
 .secupress-pro-ad .secupress-text-medium {
 	margin-bottom: 0;
 }
+.secupress-pro-ad .secupress-text-medium code {
+    background: #F19B12;
+    color: black;
+    font-size: large;
+}
 .secupress-pro-ad .secupress-text-medium + p {
 	margin-top: 0;
 }
 .secupress-pro-ad .secupress-button-getpro {
-	margin-top: 2em;
+	margin-top: 1em;
 	margin-bottom: 1em;
 }
 
@@ -1332,6 +1341,9 @@ pre code, pre samp, pre kbd {
 	vertical-align: top;
 	visibility: hidden;
 	float: none;
+}
+.secupress-inline-spinner-active {
+	visibility: visible;
 }
 .secupress-inline-spinner.hidden {
 	display: none;

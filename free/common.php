@@ -173,7 +173,7 @@ All at ###SITENAME###
 		__( 'unlock yourself', 'secupress' ) . ' ( ' . $url . ' )'
 	);
 
-	$subject = sprintf( __( 'Unban yourself from %s', 'secupress' ), home_url() );
+	$subject = sprintf( __( '[%s] Unban yourself from %s', 'secupress' ), '###SITENAME###', home_url() );
 	/**
 	 * Filter the mail subject for blocklist_logins
 	 * @param (string) $subject
@@ -338,7 +338,7 @@ function secupress_add_own_ua( $r, $url ) {
 	return $r;
 }
 
-add_filter( 'pre_http_request', 'secupress_request_me', 10, 3 );
+add_filter( 'pre_http_request', 'secupress_request_me', 11, 3 );
 /**
  * Force our site to be requested.
  *
@@ -438,7 +438,7 @@ add_action( 'plugins_loaded', 'secupress_rename_admin_username_logout', 50 );
 function secupress_rename_admin_username_logout() {
 	global $current_user, $wpdb;
 
-	if ( ! secupress_can_perform_extra_fix_action() ) {
+	if ( ! secupress_can_perform_extra_fix_action() || ! secupress_is_soft_request() ) {
 		return;
 	}
 
@@ -498,9 +498,7 @@ add_action( 'plugins_loaded', 'secupress_add_cookiehash_muplugin', 50 );
  * @author Julio Potier
  */
 function secupress_add_cookiehash_muplugin() {
-	global $current_user, $wpdb;
-
-	if ( ! secupress_can_perform_extra_fix_action() ) {
+	if ( ! secupress_can_perform_extra_fix_action() || ! secupress_is_soft_request() ) {
 		return;
 	}
 
@@ -528,20 +526,8 @@ function secupress_add_cookiehash_muplugin() {
 		'{{HASH}}'        => wp_generate_password( 64 ),
 	);
 	$cookiehash = str_replace( array_keys( $args ), $args, $cookiehash );
-	$uniqid     = uniqid();
 
-	// retro compat (<2.2.6)
-	$files = secupress_find_muplugin( '_secupress-cookiehash-' );
-	if ( ! empty( $files ) ) {
-		array_map( 'secupress_delete_mu_plugin', $files );
-	}
-
-	// 2.2.6+
-	if ( ! empty( $files ) ) {
-		array_map( 'secupress_delete_mu_plugin', $files );
-	}
-
-	if ( ! $cookiehash || ! secupress_create_mu_plugin( 'cookiehash_' . $uniqid, $cookiehash ) ) {
+	if ( ! $cookiehash || ! secupress_create_mu_plugin( 'cookiehash', $cookiehash, uniqid() ) ) {
 		// MU Plugin creation failed.
 		secupress_set_site_transient( 'secupress-cookiehash-muplugin-failed', 1 );
 		secupress_fixit( 'WP_Config' );
@@ -566,92 +552,40 @@ add_action( 'plugins_loaded', 'secupress_add_salt_muplugin', 50 );
  * @author Julio Potier
  */
 function secupress_add_salt_muplugin() {
-	global $current_user, $wpdb;
-
-	if ( defined( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE' ) ) {
-		return;
-	}
-
-	if ( ! secupress_can_perform_extra_fix_action() ) {
+	if ( ! secupress_can_perform_extra_fix_action() || ! secupress_is_soft_request() ) {
 		return;
 	}
 
 	$data = secupress_get_site_transient( 'secupress-add-salt-muplugin' );
-
-	if ( ! $data ) {
-		return;
-	}
-
-	if ( ! is_array( $data ) || ! isset( $data['ID'] ) ) {
-		secupress_delete_site_transient( 'secupress-add-salt-muplugin' );
-		return;
-	}
-
-	if ( get_current_user_id() !== (int) $data['ID'] ) {
-		return;
-	}
-
 	secupress_delete_site_transient( 'secupress-add-salt-muplugin' );
+
+	if ( ! $data || ! is_array( $data ) || ! isset( $data['ID'] ) || get_current_user_id() !== (int) $data['ID'] ) {
+		return;
+	}
+
+	// Remove old secret keys from the database.
+	secupress_delete_db_salt_keys();
+
+	// Remove old secret keys from /wp-config.php.
+	secupress_delete_wpconfig_salt_keys();
 
 	// Create the MU plugin.
 	if ( ! defined( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE' ) ) {
 		$filesystem  = secupress_get_filesystem();
 		$alicia_keys = $filesystem->get_contents( SECUPRESS_INC_PATH . 'data/salt-keys.phps' );
 		$args        = array(
-			'{{PLUGIN_NAME}}' => SECUPRESS_PLUGIN_NAME,
+			'{{PLUGIN_NAME}}'  => SECUPRESS_PLUGIN_NAME,
 			'{{HASH1}}'        => wp_generate_password( 64, true, true ),
 			'{{HASH2}}'        => wp_generate_password( 64, true, true ),
 		);
 		$alicia_keys = str_replace( array_keys( $args ), $args, $alicia_keys );
-		$uniqid      = uniqid();
-		$file        = secupress_find_muplugin( '_secupress_salt_keys_' );
-		$file        = reset( $file );
-		secupress_delete_mu_plugin( $file );
-		if ( ! $alicia_keys || ! secupress_create_mu_plugin( 'salt_keys_' . $uniqid, $alicia_keys ) ) {
+		$created     = secupress_create_mu_plugin( 'salt_keys', $alicia_keys, uniqid() );
+		if ( ! $alicia_keys || ! $created ) {
 			return;
 		}
 	}
 
-	$keys = array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
-	// Remove old secret keys from the database.
-	foreach ( $keys as $constant ) {
-		delete_site_option( $constant );
-	}
-
-	// Make sure we find the `wp-config.php` file.
-	$wpconfig_filepath = secupress_is_wpconfig_writable();
-
-
-	if ( $wpconfig_filepath ) {
-		/**
-		 * Remove old secret keys from the `wp-config.php` file and add a comment.
-		 * We have to make sure the comment is added, only once, only if one or more keys are found, even if some secret keys are missing, and do not create useless empty lines.
-		 */
-		$wp_filesystem    = secupress_get_filesystem();
-		$wpconfig_content = $wp_filesystem->get_contents( $wpconfig_filepath );
-		$comment_added    = false;
-		$comment          = '/** If you want to add secret keys back in wp-config.php, get new ones at https://api.wordpress.org/secret-key/1.1/salt, then delete this file. */';
-		$placeholder      = '/** SecuPress salt placeholder. */';
-
-		foreach ( $keys as $i => $constant ) {
-			$pattern = '@define\s*\(\s*([\'"])' . $constant . '\1.*@';
-
-			if ( preg_match( $pattern, $wpconfig_content, $matches ) ) {
-				$replace          = $comment_added ? $placeholder : $comment;
-				$wpconfig_content = str_replace( $matches[0], $replace, $wpconfig_content );
-				$comment_added    = true;
-			}
-		}
-
-		if ( $comment_added ) {
-			$wpconfig_content = str_replace( $placeholder . "\n", '', $wpconfig_content );
-
-			$wp_filesystem->put_contents( $wpconfig_filepath, $wpconfig_content, FS_CHMOD_FILE );
-		}
-	}
-
 	secupress_auto_login( 'Salt_Keys' );
-	die();
 }
 
 
@@ -666,7 +600,7 @@ function secupress_auto_username_login() {
 		return;
 	}
 
-	list( $username, $action ) = secupress_get_site_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
+	list( $username, $action, $message_str ) = secupress_get_site_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
 
 	secupress_delete_site_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
 	if ( ! $username ) {
@@ -685,8 +619,14 @@ function secupress_auto_username_login() {
 	if ( $action ) {
 		secupress_scanit( $action );
 	}
-
-	wp_safe_redirect( esc_url_raw( wp_get_referer() ) );
+	$redirect = esc_url_raw( wp_get_referer() );
+	if ( strpos( $redirect, wp_login_url() ) !== false ) {
+		$redirect = esc_url( secupress_admin_url( 'modules' ) );
+	}
+	if ( $message_str ) {
+		secupress_add_transient_notice( $message_str, 'updated', '', 'exist' );
+	}
+	wp_safe_redirect( $redirect );
 	die();
 }
 
@@ -706,24 +646,6 @@ function secupress_give_him_a_user( $user, $username ) {
 	return get_user_by( 'login', $username );
 }
 
-/**
- * Return all possible matches for a muplugin filename
- *
- * @since 2.0
- * @author Julio Potier
- *
- * @param (string) $filename A part of the filename you are looking for
- * @return (array) Empty if no file found.
- **/
-function secupress_find_muplugin( $filename ) {
-	$mus = wp_get_mu_plugins();
-	foreach ( $mus as $i => $mu ) {
-		if ( false === strpos( $mu, $filename ) ) {
-			unset( $mus[ $i ] );
-		}
-	}
-	return $mus;
-}
 
 /**
  * Add HTML header
@@ -756,11 +678,57 @@ function secupress_get_php_versions() {
 	$ver = array_slice( $ver, 0, 2 );
 	$ver = implode( '.', $ver );
 
+	$year  = (int) date( 'Y' );
+	$month = (int) date( 'n' );
+	$day   = (int) date( 'j' );
+
+	/**
+	 * PHP releases a new version around November 20th each year.
+	 * - Security Support: 4 years (ends December 31st)
+	 * - Active Support: 2 years (ends December 31st)
+	 * Base: PHP 8.0 released in 2020, one version per year.
+	 * Pattern: 8.0 (2020), 8.1 (2021), ..., 8.9/9.0 (2029/2030), 9.1 (2031), etc.
+	 */
+	$after_nov_release = ( $month > 11 ) || ( 11 === $month && $day >= 20 );
+
+	/**
+	 * Helper function to calculate PHP version from year offset.
+	 *
+	 * @param int $years_since_2020 Number of years since 2020.
+	 * @return string PHP version (e.g., "8.5", "9.0", "10.3").
+	 */
+	$get_version = function( $years_since_2020 ) {
+		$major = 8 + floor( $years_since_2020 / 10 );
+		$minor = $years_since_2020 % 10;
+		return $major . '.' . $minor;
+	};
+
+	// Calculate years since PHP 8.0 (released in 2020).
+	$years_offset = $year - 2020;
+
+	// mini: Oldest version with Security Support (expires end of current year).
+	// Security Support = 4 years, so mini expires this year.
+	// Example: In 2025, PHP 8.1 (2021) expires, so mini = 8.1.
+	$mini = $get_version( $years_offset - 4 );
+
+	// last: Oldest version with Active Support (expires Dec 31 of release_year + 2).
+	// Active Support = 2 years. Changes on January 1st.
+	// Example: In 2025, PHP 8.3 (2023) is the oldest with Active Support.
+	$last = $get_version( $years_offset - 2 );
+
+	// best: Latest stable version available.
+	// Changes on ~Nov 20th when new version is released.
+	if ( $after_nov_release ) {
+		$best = $get_version( $years_offset );
+	} else {
+		$best = $get_version( $years_offset - 1 );
+	}
+
 	$versions = array(
 		'current' => $ver,
-		'mini'    => '8.1',
-		'last'    => '8.2',
-		'best'    => '8.3',
+		'mini'    => $mini,
+		'last'    => $last,
+		'best'    => $best,
 	);
 
 	return $versions;
@@ -787,7 +755,7 @@ if ( is_admin() ) {
  * @param (string)      $module The SecuPress module to be redirected
  * @param (WP_User|int) $user The user to be logged in
  **/
-function secupress_auto_login( $module, $user = null ) {
+function secupress_auto_login( $module, $user = null, $message_str = '' ) {
 	if( is_int( $user ) ) {
 		$user = new WP_User( $user );
 	}
@@ -800,38 +768,12 @@ function secupress_auto_login( $module, $user = null ) {
 		return;
 	}
 	$token = md5( time() . $module );
-	secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $current_user->user_login, $module ), MINUTE_IN_SECONDS );
+	secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $current_user->user_login, $module, $message_str ), MINUTE_IN_SECONDS );
 
 	wp_safe_redirect( esc_url_raw( add_query_arg( 'secupress_auto_login_token', $token ) ) );
 	die();
 }
 
-add_filter( 'authenticate', 'secupress_authenticate_cookie', 0 );
-/**
- * Auto login the user
- *
- * @since 2.0
- * @author Julio Potier
- * 
- * @param  (WP_User) $user
- * 
- * @return (WP_User) $user
- */
-function secupress_authenticate_cookie( $user ) {
-	$data = secupress_get_site_transient( 'secupress-auto-login' );
-
-	if ( ! $data ) {
-		return $user;
-	}
-
-	secupress_delete_site_transient( 'secupress-auto-login' );
-
-	if ( ! is_array( $data ) || ! isset( $data['ID'] ) ) {
-		return $user;
-	}
-	
-	secupress_auto_login( 'Salt_Keys', $user );
-}
 
 /**
  * Shuffle an associative array
@@ -863,4 +805,36 @@ add_action( 'requests-curl.before_request', 'secupress_curl_before_request', SEC
  **/
 function secupress_curl_before_request( $curlhandle ) {
 	session_write_close();
+}
+
+add_filter( 'password_needs_rehash', 'secupress_prevent_hash_reuse_password_needs_rehash', 10, 3 );
+/**
+ * If the module "Prevent other encryption system to log in" is activated, only let the current users with this meta to rehash their password
+ *
+ * @since 2.3.21
+ * @author Julio Potier
+ * 
+ * @param (bool) $needs_rehash
+ * @param (string) $hash
+ * @param (int) $user_id
+ * 
+ * @return (bool) $needs_rehash
+ **/
+function secupress_prevent_hash_reuse_password_needs_rehash( $needs_rehash, $hash, $user_id ) {
+	$active = (bool) secupress_is_submodule_active( 'users-login', 'force-strong-encryption' ) && secupress_get_module_option( 'double-auth_prevent-low-encryption', 0, 'users-login' );
+	$meta   = (bool) get_user_meta( $user_id, 'secupress-password-needs-rehash', true );
+	if ( $active ) {
+		if ( $meta ) {
+			delete_user_meta( $user_id, 'secupress-password-needs-rehash' );
+			return true;
+		}
+		$user = secupress_get_user_by( $user_id );
+		if ( ! secupress_is_user( $user ) ) {
+			return false;
+		}
+		$prefix = secupress_get_encryption_prefix( secupress_get_best_encryption_system() );
+		return strpos( $user->user_pass, $prefix ) === false;
+	}
+
+	return $needs_rehash;
 }

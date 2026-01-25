@@ -883,9 +883,13 @@ jQuery( document ).ready( function( $ ) {
 				return $buttons;
 			}
 			// Some fixes may need to be queued and delayed.
-			$buttons.filter( '.delayed-fix' ).each( function() {
+			$buttons.filter( '.delayed-fix-1' ).each( function() {
 				secupressScans.delayedFixes.push( this );
 			} );
+			$buttons.filter( '.delayed-fix-2' ).each( function() {
+				secupressScans.delayedFixes.push( this );
+			} );
+			// need 3 ? set it.
 			return $buttons.not( '.delayed-fix' );
 		}
 

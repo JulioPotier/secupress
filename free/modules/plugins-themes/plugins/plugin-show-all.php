@@ -4,22 +4,51 @@
  * Description: Display all plugins that have been hidden and highlight them inthe plugins list
  * Main Module: plugins_themes
  * Author: SecuPress
- * Version: 2.2.6
+ * Version: 2.3.12
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 add_action( 'admin_head-plugins.php', 'secupress_plugin_show_all_force_all_plugins_view_pre_current_active_plugins' );
 add_filter( 'views_plugins', 'secupress_plugin_show_all_force_all_plugins_view_pre_current_active_plugins' );
+/**
+ * Force the plugins page to show all plugins
+ *
+ * @since 2.3.12 Add "pre_current_active_plugins" filter
+ * @since 2.2.6
+ * @author Julio Potier
+ * 
+ * @return (int|null) $value
+ **/
 function secupress_plugin_show_all_force_all_plugins_view_pre_current_active_plugins( $dummy ) {
 	global $wp_list_table;
+	$backgroundColor          = secupress_get_module_option( 'plugins_show-all-color', '#FAC898', 'plugins-themes' );
+	$legend                   =  ' <span style="font-size:large;color:' . esc_attr( $backgroundColor ) .'">&#x25A0;</span>';
+
+	if ( is_array( $wp_list_table->items ) ) {
+		// Handle the "pre_current_active_plugins" filter
+		$wp_list_table_backup     = $wp_list_table->items;
+		$all_plugins_non_filtered = array_keys( $wp_list_table->items );
+		do_action( 'pre_current_active_plugins', $wp_list_table->items );
+		$all_plugins_filtered     = array_keys( $wp_list_table->items );
+		remove_all_actions( 'pre_current_active_plugins' );
+		$wp_list_table->items     = $wp_list_table_backup;
+		$removed_plugins          = array_diff( $all_plugins_non_filtered, $all_plugins_filtered );
+		foreach( $removed_plugins as $slug ) {
+			$css = "<style type='text/css'>
+				[data-plugin='$slug'] * {
+				background-color: $backgroundColor !important;
+			}</style>";
+			secupress_cache_data( 'plugins_show-all-notice', 'pre_current_active_plugins' );
+			secupress_add_notice( sprintf( __( 'The plugin %s has been hidden ! (using the WP Filter %s)', 'secupress' ), secupress_code_me( $slug ), secupress_code_me( 'pre_current_active_plugins' ) ) . $legend . $css, 'error', 'pre_current_active_plugins-tab-' . md5( $css ) );
+		}
+	}
 
 	$pre_current_active_plugins[] = $wp_list_table->items;
 	if ( ! isset( $pre_current_active_plugins[1] ) ) {
 		return $dummy;
 	}
-	$backgroundColor          = secupress_get_module_option( 'plugins_show-all-color', '#FAC898', 'plugins-themes' );
-	$legend                   =  ' <span style="font-size:large;color:' . esc_attr( $backgroundColor ) .'">&#x25A0;</span>';
+
 	$removed_plugins          = array_diff_key( $pre_current_active_plugins[0], $pre_current_active_plugins[1] );
 	foreach( $removed_plugins as $slug => $data ) {
 		$css = "<style type='text/css'>
@@ -94,6 +123,7 @@ function secupress_plugin_show_all_force_all_plugins_view() {
 		secupress_cache_data( 'plugins_show-all-notice', 'all_plugins' );
 		secupress_add_notice( sprintf( __( 'The plugin %s has been hidden ! (using the WP Filter %s)', 'secupress' ), secupress_code_me( $slug ), secupress_code_me( 'all_plugins' ) ) . $legend . $css, 'error', 'all_plugins-tab-' . md5( $css ) );
 	}
+
 	// Handle the "plugins_list" filter
 	$all_plugins_filtered     = array_keys( apply_filters( 'plugins_list', ['mustuse'=>get_mu_plugins()] )['mustuse'] );
 	remove_all_filters( 'plugins_list' );
@@ -123,7 +153,7 @@ function secupress_plugin_show_all_force_all_plugins_view() {
 }
 
 
-add_action( 'admin_print_footer_scripts-plugins.php', 'secupress_plugin_show_all_hack_css', SECUPRESS_INT_MAX );
+add_action( 'admin_footer-plugins.php', 'secupress_plugin_show_all_hack_css', SECUPRESS_INT_MAX );
 /**
  * Handle the CSS case when a plugin use CSS to display:none
  *
@@ -140,6 +170,7 @@ function secupress_plugin_show_all_hack_css() {
 		const hiddenElements = Array.from(document.querySelectorAll('[data-plugin]:not(.plugin-update-tr)'))
 			.filter(element => {
 				const style  = window.getComputedStyle(element);
+				// console.log(element.getAttribute('data-slug')+' '+style.display);
 				return style.display === 'none';
 			});
 		hiddenElements.forEach(element => {
@@ -155,6 +186,7 @@ function secupress_plugin_show_all_hack_css() {
 			}
 			var existingNotice = document.querySelector('[data-id="plugins_all_js_css"]');
 			if (existingNotice) {
+				existingNotice.classList.remove('hidden');
 				existingNotice.innerHTML += '<p>' + "<?php echo esc_js( __( 'The plugin %s has been hidden! (using CSS)', 'secupress' ) ); ?>".replace('%s', '<code>'+slug+'</code>') + ' <span style="font-size:large;color:<?php echo esc_js( $backgroundColor ); ?>">&#x25A0;</span></p>';
 			}
 		});
@@ -165,7 +197,7 @@ function secupress_plugin_show_all_hack_css() {
 <?php
 }
 
-add_action( 'admin_footer', 'secupress_plugin_show_all_maybe_add_notice', 1 );
+add_action( 'admin_head-plugins.php', 'secupress_plugin_show_all_maybe_add_notice', 1 );
 /**
  * Add an empty notice if need by CSS and JS hidden plugins since they cannot add it.
  *
@@ -178,21 +210,24 @@ function secupress_plugin_show_all_maybe_add_notice() {
 	if ( 'plugins.php' !== $pagenow ) {
 		return;
 	}
-	$type = secupress_cache_data( 'plugins_show-all-notice' );
-	if ( ! $type ) {
-		secupress_add_notice( ' ', 'error', 'plugins_all_js_css' );
-	}
+	// $type = secupress_cache_data( 'plugins_show-all-notice' );
+	// if ( ! $type ) {
+		secupress_add_notice( ' ', 'error hidden', 'plugins_all_js_css' );
+	// }
 }
 
-add_action( 'admin_print_footer_scripts-plugins.php', 'secupress_plugin_show_all_hack_js', 1 );
+add_action( 'admin_enqueue_scripts', 'secupress_plugin_show_all_hack_js', 1 );
 /**
  * Handle the JS case when a plugin use JS to .remove()
  *
- * @author Julio Potier
  * @since 2.2.6
+ * @author Julio Potier
  * 
  **/
-function secupress_plugin_show_all_hack_js() {
+function secupress_plugin_show_all_hack_js( $hook_suffix ) {
+	if ( 'plugins.php' !== $hook_suffix ) {
+		return;
+	}
 	$backgroundColor                           = secupress_get_module_option( 'plugins_show-all-color', '#FAC898', 'plugins-themes' );
 	?>
 <script>
@@ -213,7 +248,20 @@ function secupress_plugin_show_all_hack_js() {
 		});
 		var existingNotice                     = document.querySelector('[data-id="plugins_all_js_css"]');
 		if (existingNotice) {
-			existingNotice.innerHTML          += '<br class="separator">' + "<?php echo esc_js( __( 'The plugin %s has been hidden! (using JS)', 'secupress' ) ); ?>".replace('%s', '<code>'+slug+'</code>') + ' <span style="font-size:large;color:<?php echo esc_js( $backgroundColor ); ?>">&#x25A0;</span>';
+			existingNotice.classList.remove('hidden');
+			// Créer un élément temporaire pour vérifier la présence de <code>
+			const tempDiv = document.createElement('div');
+			tempDiv.innerHTML = existingNotice.innerHTML;
+
+			// Vérifier si l'élément contient une balise <code>
+			if (tempDiv.querySelector('code')) {
+				existingNotice.innerHTML += '<br class="separator">';
+			}
+
+			// Ajouter le nouveau contenu
+			existingNotice.innerHTML += "<p><?php echo esc_js( __( 'The plugin %s has been hidden! (using JS)', 'secupress' ) ); ?>"
+			.replace('%s', '<code>' + slug + '</code>') +
+			' <span style="font-size:large;color:<?php echo esc_js( $backgroundColor ); ?>">&#x25A0;</span></p>';
 		}
 
 		parentElement = document.getElementById('the-list');

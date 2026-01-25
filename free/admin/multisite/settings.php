@@ -248,7 +248,7 @@ function secupress_settings_page_access_denied_message() {
 		return;
 	}
 	/** Translators: %s is a link to the dashboard. */
-	$message = __( 'Since there are no other fixes to be done, this page does not exist anymore.<br/>You can go back to the %s.', 'secupress' );
+	$message = __( 'Since there are no other fixes to be done, this page does not exist anymore.<br/>Go back to %s.', 'secupress' );
 	$link    = '<a href="' . esc_url( admin_url() ) . '">' . __( 'Dashboard' ) . '</a>';
 	$title   = __( 'Back to the Dashboard', 'secupress' );
 	// HTTP code 403: "Forbidden".

@@ -85,7 +85,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 					secupress_admin_heading( __( 'Settings' ) );
 					settings_errors();
 					secupress_settings_heading( array(
-						'title'    => esc_html__( 'Settings', 'secupress' ),
+						'title'    => esc_html__( 'Settings' ),
 						'subtitle' => esc_html__( 'Overall plugin settings and fine-tuning', 'secupress' ),
 					) );
 					?>

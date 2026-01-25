@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
-if ( ! secupress_get_module_option( 'advanced-settings_admin-bar', true , 'welcome' ) ) {
+if ( ! secupress_show_adminbar() ) {
 	return;
 }
 
@@ -21,7 +21,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 	// Add a counter of scans with good result.
 	$counts = secupress_get_scanner_counts();
 
-	if ( secupress_get_module_option( 'advanced-settings_grade-system', true, 'welcome' ) && ( $counts['good'] || $counts['bad'] ) ) {
+	if ( secupress_show_grade_system() && ( $counts['good'] || $counts['bad'] ) ) {
 		$grade = sprintf( __( 'Grade %s', 'secupress' ), '<span class="letter">' . $counts['grade'] . '</span>' );
 	} else {
 		$grade = '';

@@ -127,10 +127,14 @@ function secupress_script_concat_plugin_activate( $rules ) {
  */
 function secupress_script_concat_apache_rules() {
 	$rules  = "<FilesMatch \"load-scripts\.php|load-styles\.php\">\n";
-	$rules .= "    Order allow,deny\n";
-	$rules .= "    Deny from all\n";
+	$rules .= "	<IfModule !mod_authz_core.c>\n";
+	$rules .= "		Order Allow,Deny\n";
+	$rules .= "		Deny from all\n";
+	$rules .= "	</IfModule>\n";
+	$rules .= "	<IfModule mod_authz_core.c>\n";
+	$rules .= "		Require all denied\n";
+	$rules .= "	</IfModule>\n";
 	$rules .= "</FilesMatch>\n";
-
 	return $rules;
 }
 
@@ -148,7 +152,7 @@ function secupress_script_concat_iis7_rules() {
 
 	$rules  = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
 	$rules .= "    <match url=\"load-scripts\.php|load-styles\.php\"/>\n";
-	$rules .= "    <action type=\"CustomResponse\" statusCode=\"403\" />\n";
+	$rules .= "    <action type=\"CustomResponse\" statusCode=\"403\" ubStatusCode=\"0\" statusReason=\"Forbidden\" statusDescription=\"Access denied.\"/>\n";
 	$rules .= "</rule>";
 
 	return $rules;

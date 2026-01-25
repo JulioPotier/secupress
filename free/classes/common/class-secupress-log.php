@@ -505,8 +505,23 @@ class SecuPress_Log {
 			}
 		}
 
-		// Add the data to the title.
-		$this->title = apply_filters( 'secupress.logs.set_title', vsprintf( $this->title, $data ), $this->title, $data, $post );
+		// Match both positional (%1$s) and non-positional (%s) placeholders
+		$placeholder_count = preg_match_all( '/%(?:\d+\$)?[diouxXeEfFgGaAcspn%]/', $this->title, $matches );
+		$data_count = count( $data );
+		
+		// Ensure we have the correct number of arguments for vsprintf()
+		if ( $placeholder_count > 0 ) {
+			if ( $placeholder_count > $data_count ) {
+				// Not enough arguments: pad with empty strings
+				$data = array_pad( $data, $placeholder_count, '' );
+			} elseif ( $placeholder_count < $data_count ) {
+				// Too many arguments: only use what we need
+				$data = array_slice( $data, 0, $placeholder_count );
+			}
+			$this->title = vsprintf( $this->title, $data );
+		}
+		
+		$this->title = apply_filters( 'secupress.logs.set_title', $this->title, $this->title, $data, $post );
 	}
 
 

@@ -607,7 +607,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 				'private'     => true,
 			),
 			'normal' => array(
-				'label'       => __( 'Normal', 'priority level', 'secupress' ),
+				'label'       => _x( 'Normal', 'priority level', 'secupress' ),
 				'label_count' => _nx_noop( 'Normal <span class="count">(%s)</span>', 'Normal <span class="count">(%s)</span>', 'priority level', 'secupress' ),
 				'public'      => false,
 				'internal'    => true,
@@ -615,7 +615,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 				'private'     => true,
 			),
 			'low'    => array(
-				'label'       => __( 'Low', 'priority level', 'secupress' ),
+				'label'       => _x( 'Low', 'priority level', 'secupress' ),
 				'label_count' => _nx_noop( 'Low <span class="count">(%s)</span>', 'Low <span class="count">(%s)</span>', 'priority level', 'secupress' ),
 				'public'      => false,
 				'internal'    => true,

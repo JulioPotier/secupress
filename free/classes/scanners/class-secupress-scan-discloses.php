@@ -47,7 +47,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			__( 'Activate the %1$s protection and/or the %2$s protection from the module %3$s.', 'secupress' ),
 			'<a href="' . $module_url . '#row-content-protect_wp-version">' . __( 'WordPress Version Disclosure', 'secupress' ) . '</a>',
 			'<a href="' . $module_url . '#row-content-protect_php-version">' . __( 'PHP Version Disclosure', 'secupress' ) . '</a>',
-			'<strong>' . __( 'Sensitive Data', 'secupress' ) . '</strong>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_bad-url-access">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
 		);
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {

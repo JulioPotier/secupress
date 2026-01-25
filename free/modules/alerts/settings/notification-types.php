@@ -9,14 +9,14 @@ $this->add_section( __( 'Notifications', 'secupress' ) );
 $activated_field_name = $this->get_field_name( 'types' );
 
 if ( secupress_is_submodule_active( 'logs', 'action-logs' ) ) {
-	$help = sprintf( __( 'If you wish to receive the alerts here in the back-end, <a href="%s">take a look at the WordPress action logs</a>.', 'secupress' ), esc_url( secupress_admin_url( 'logs' ) ) );
+	$help = sprintf( __( 'If you wish to receive the alerts here in the back-end, <a href="%s">take a look at the WordPress Action logs</a>.', 'secupress' ), esc_url( secupress_admin_url( 'logs' ) ) );
 } else {
-	$help = sprintf( __( 'If you want to receive the alerts here in the back-end, <a href="%s">please refer to the WordPress action logs</a>.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'logs' ) ) );
+	$help = sprintf( __( 'If you want to receive the alerts here in the back-end, <a href="%s">please refer to the WordPress Action logs</a>.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'logs' ) ) );
 }
 
 // E-mails.
 $this->add_field( array(
-	'title'        => __( 'Email Notifications', 'secupress' ),
+	'title'        => __( 'Email Notifications List', 'secupress' ),
 	'name'         => $this->get_field_name( 'emails' ),
 	'type'         => 'textarea',
 	'attributes'   => array( 'rows' => 3 ),

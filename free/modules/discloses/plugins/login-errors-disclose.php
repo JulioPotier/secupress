@@ -33,6 +33,7 @@ function secupress_replace_login_errors_disclose( $wp_errors ) {
 	$default = [	'authenticate'               => [ __( 'Authentication failed.', 'secupress' ) ], 
 					'registration_errors'        => [ __( 'Something went wrong.', 'secupress' ) ],
 					'user_profile_update_errors' => [ __( 'Incorrect data provided. Unable to proceed.', 'secupress' ) ],
+					'login_errors'               => [ __( 'Something went wrong.', 'secupress' ) ],
 				];
 	foreach ( $wp_errors->errors as $key => &$wp_error ) {
 		if ( isset( $ar_keys[ $key ] ) ) {

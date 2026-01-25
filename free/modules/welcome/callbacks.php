@@ -12,6 +12,11 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
  * @author Julio Potier
  */
 function secupress_welcome_settings_callback( $settings ) {
+	if ( isset( $settings['sanitized'] ) ) {
+		return $settings;
+	}
+	$settings['sanitized'] = 1;
+
 	$modulenow = 'welcome';
 	secupress_check_user_capability();
 	secupress_check_admin_referer( 'secupress_welcome_settings-options' );
@@ -36,15 +41,40 @@ function secupress_welcome_settings_callback( $settings ) {
 		return $settings;
 	}
 
-	if ( ! isset( $settings['advanced-settings_admin-bar'] ) ) {
-		$settings['advanced-settings_admin-bar'] = '0';
+	// "silent-deactivation" means it won't trigger the "module alerts" when deactivated. Useless on activation.
+	if ( is_null( secupress_show_adminbar( true ) ) ) {
+		$settings['advanced-settings_admin-bar'] = isset( $settings['advanced-settings_admin-bar'] ) ? '1' : '0';
+		if ( $settings['advanced-settings_admin-bar'] !== get_user_option( 'secupress-advanced-settings_admin-bar' ) ) {
+			update_user_option( get_current_user_id(), 'secupress-advanced-settings_admin-bar', $settings['advanced-settings_admin-bar'], true );
+			secupress_add_module_notice( '###USER###', __( 'Admin Bar Menu', 'secupress' ), $settings['advanced-settings_admin-bar'] ? 'activation' : 'silent-deactivation' );
+		}
 	}
-	if ( ! isset( $settings['advanced-settings_grade-system'] ) ) {
-		$settings['advanced-settings_grade-system'] = '0';
+	unset( $settings['advanced-settings_admin-bar'] ); // not global, remove it.
+
+	if ( is_null( secupress_show_contextual_help( true ) ) ) {
+		// expert-mode = no contextual help, don't change the name for retro-compat
+		$settings['advanced-settings_expert-mode'] = isset( $settings['advanced-settings_expert-mode'] ) ? '1' : '0';
+		if ( $settings['advanced-settings_expert-mode'] !== get_user_option( 'secupress-advanced-settings_expert-mode' ) ) {
+			update_user_option( get_current_user_id(), 'secupress-advanced-settings_expert-mode', $settings['advanced-settings_expert-mode'], true );
+			secupress_add_module_notice( '###USER###', __( 'Hide Contextual Help & Tips', 'secupress' ), $settings['advanced-settings_expert-mode'] ? 'activation' : 'silent-deactivation' );
+		}
 	}
-	if ( ! isset( $settings['advanced-settings_expert-mode'] ) ) {
-		$settings['advanced-settings_expert-mode'] = '0';
+	unset( $settings['advanced-settings_expert-mode'] ); // not global, remove it.
+
+	// if ( true === secupress_is_expert_mode( true ) ) { // no need to check
+		// expert-mode-main = real expert mode since 2.3.17
+		$settings['advanced-settings_expert-mode-main'] = isset( $settings['advanced-settings_expert-mode-main'] ) || secupress_get_expert_modules_on() ? '1' : '0';
+		if ( $settings['advanced-settings_expert-mode-main'] !== secupress_get_module_option( 'advanced-settings_expert-mode-main', '0', 'welcome' ) ) {
+			secupress_add_module_notice( '', __( 'Expert Mode', 'secupress' ), $settings['advanced-settings_expert-mode-main'] ? 'activation' : 'silent-deactivation' );
+		}
+	// }
+	if ( is_null( secupress_show_grade_system( true ) ) ) {
+		$settings['advanced-settings_grade-system'] = isset( $settings['advanced-settings_grade-system'] ) ? '1' : '0';
+		if ( $settings['advanced-settings_grade-system'] !== secupress_get_module_option( 'advanced-settings_grade-system', '1', 'welcome' ) ) {
+			secupress_add_module_notice( '', __( 'Grade System', 'secupress' ), $settings['advanced-settings_grade-system'] ? 'activation' : 'silent-deactivation' );
+		}
 	}
+
 	/**
 	 * Filter the settings before saving.
 	 *

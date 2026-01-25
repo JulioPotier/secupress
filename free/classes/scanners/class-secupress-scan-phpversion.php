@@ -66,14 +66,14 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 			// "good"
 			0   => sprintf( __( 'You are using <strong>PHP v%s</strong>.', 'secupress' ), $versions['current'] ),
 			1   => sprintf( __( 'You are using <strong>PHP v%s</strong>, do not go lower!', 'secupress' ), $versions['current'] ), // last
-			2   => sprintf( __( 'You are using <strong>PHP v%s</strong>, this is the last old supported.', 'secupress' ), $versions['current'] ), // mini
+			2   => sprintf( __( 'You are using <strong>PHP v%s</strong>, this is correctly supported.', 'secupress' ), $versions['current'] ), // mini
 			3   => sprintf( __( 'You are using <strong>PHP v%s</strong>, the last one? Perfect!', 'secupress' ), $versions['current'] ), // best
 			// "warning"
 			100 => __( 'Unable to determine version of PHP.', 'secupress' ),
 			// "bad"
 			200 => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the oldest major supported version is <strong>PHP v%2$s</strong>, and the last one is <strong>PHP v%3$s</strong>.', 'secupress' ), $versions['current'], $versions['mini'], $versions['best'] ),
 			// "cantfix"
-			300 => __( 'Cannot be fixed automatically. You have to contact you host provider to ask him to <strong>upgrade you version of PHP</strong>.', 'secupress' ),
+			300 => __( 'Cannot be fixed automatically. You have to contact your host provider to ask him to <strong>upgrade your version of PHP</strong>.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -116,10 +116,10 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 		}
 
 		$versions = secupress_get_php_versions();
-		if ( version_compare( $versions['current'], $versions['mini'] ) < 0 ) { // minimum supported
+		if ( version_compare( $versions['current'], $versions['mini'] ) < 0 ) { // minimum supported, they need more!
 			$this->add_message( 200 );
 			$this->add_pre_fix_message( 300 );
-		} elseif ( version_compare( $versions['current'], $versions['last'] ) < 0 ) { // last supported
+		} elseif ( version_compare( $versions['current'], $versions['last'] ) < 0 ) { // last supported by security
 			$this->add_message( 1 );
 		} elseif ( version_compare( $versions['current'], $versions['best'] ) < 0 ) { // best supported
 			$this->add_message( 2 );

@@ -14,6 +14,10 @@ if ( defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRESS_ALLOW_LOGIN_ACCESS )
 	return;
 }
 
+if ( ! secupress_is_soft_request() || is_admin() ) {
+	return;
+}
+
 /**
  * Start a session if needed
  *
@@ -22,16 +26,26 @@ if ( defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRESS_ALLOW_LOGIN_ACCESS )
  */
 function secupress_captcha_session() {
 	if ( session_status() === PHP_SESSION_NONE && ! headers_sent() ) {
-		session_start( [
-			'read_and_close' => true,
-		] );
-		secupress_update_captcha_seed();
+		session_start();
 	}
+	secupress_update_captcha_seed();
 }
-secupress_captcha_session();
-if ( ! session_id() ) {
-	define( 'SECUPRESS_CAPTCHA_NO_SESSION', true );
-	return; // No session, the captcha won't work.
+
+add_action( 'login_form_login', 'secupress_captcha_init' );
+add_action( 'login_form_register', 'secupress_captcha_init' );
+/**
+ * Init only on login form
+ *
+ * @since 2.3.19 + login_form_register hook
+ * @since 2.3.6
+ * @author Julio Potier
+ **/
+function secupress_captcha_init() {
+	secupress_captcha_session();
+	if ( ! session_id() ) {
+		// No session, the captcha won't work.
+		define( 'SECUPRESS_CAPTCHA_NO_SESSION', true );
+	}
 }
 
 /**
@@ -69,6 +83,10 @@ function secupress_captcha_key( $seed = 0 ) {
  */
 function secupress_can_display_captcha() {
 	global $pagenow;
+
+	if ( defined( 'SECUPRESS_CAPTCHA_NO_SESSION' ) && SECUPRESS_CAPTCHA_NO_SESSION ) {
+		return;
+	}
 
 	if ( ! is_multisite() ) {
 		// Only on the login form and the registration form.
@@ -271,7 +289,7 @@ function secupress_manage_captcha( $object ) {
 	}
 	$running = true;
 
-	if ( defined( 'XMLRPC_REQUEST' ) || defined( 'APP_REQUEST' ) ) {
+	if ( ! secupress_is_soft_request() ) {
 		$running = false;
 		return $object;
 	}
@@ -310,7 +328,9 @@ function secupress_manage_captcha( $object ) {
 	$real_timer    = (int) ( time() - $captcha_timer );
 	$timer_equals  = $real_timer >= 3 && $real_timer <= 60;
 	$running       = false;
-	session_destroy();
+	if ( session_status() !== PHP_SESSION_NONE ) {
+		session_destroy();
+	}
 	secupress_captcha_session();
 	if ( $hash_equals && $timer_equals ) {
 		return $object;

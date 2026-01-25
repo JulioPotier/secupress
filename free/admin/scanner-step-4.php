@@ -46,7 +46,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 					<p class="secupress-text-medium secupress-mb0"><?php printf( _x( 'Nothing fixed yet, %d left.', 'always plural form', 'secupress' ), count( $scanned_items ) ); ?></p>
 					<?php
 				}
-				if ( secupress_get_module_option( 'advanced-settings_grade-system', true, 'welcome' ) ) {
+				if ( secupress_show_grade_system() ) {
 				?>
 				<p>
 					<?php

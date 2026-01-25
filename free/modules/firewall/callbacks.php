@@ -47,7 +47,6 @@ function secupress_firewall_settings_callback( $settings ) {
 	return $settings;
 }
 
-
 /**
  * Bad Headers plugins.
  *
@@ -66,7 +65,6 @@ function secupress_bad_headers_settings_callback( $modulenow, &$settings, $activ
 		}
 		secupress_manage_submodule( $modulenow, 'fake-google-bots', ! empty( $activate['bbq-headers_fake-google-bots'] ) );
 	}
-
 	// Settings.
 	if ( ! empty( $settings['bbq-headers_user-agents-list'] ) ) {
 		$settings['bbq-headers_user-agents-list'] = sanitize_text_field( $settings['bbq-headers_user-agents-list'] );
@@ -95,23 +93,19 @@ function secupress_bad_headers_settings_callback( $modulenow, &$settings, $activ
 function secupress_bad_contents_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
-		if ( ! empty( $settings['bbq-url-content_block-functions-sources'] ) ) {
-			secupress_manage_submodule( $modulenow, 'block-functions', ! empty( $activate['bbq-url-content_block-functions'] ) );
-		}
 		secupress_manage_submodule( $modulenow, 'bad-url-contents', ! empty( $activate['bbq-url-content_bad-contents'] ) );
 		secupress_manage_submodule( $modulenow, 'ban-404-php', ! empty( $activate['bbq-url-content_ban-404-php'] ) );
 	}
-
 	// Settings.
-	if ( ! empty( $settings['bbq-url-content_bad-contents-list'] ) ) {
-		// Do not sanitize the value or the sky will fall.
-		$settings['bbq-url-content_bad-contents-list'] = secupress_sanitize_list( $settings['bbq-url-content_bad-contents-list'] );
-		$settings['bbq-url-content_bad-contents-list'] = secupress_unique_sorted_list( $settings['bbq-url-content_bad-contents-list'], ', ' );
-	}
+	// if ( ! empty( $settings['bbq-url-content_bad-contents-list'] ) ) {
+		// // Do not sanitize the value or the sky will fall.
+		// $settings['bbq-url-content_bad-contents-list'] = secupress_sanitize_list( $settings['bbq-url-content_bad-contents-list'] );
+		// $settings['bbq-url-content_bad-contents-list'] = secupress_unique_sorted_list( $settings['bbq-url-content_bad-contents-list'], ', ' );
+	// }
 
-	if ( empty( $settings['bbq-url-content_bad-contents-list'] ) ) {
+	// if ( empty( $settings['bbq-url-content_bad-contents-list'] ) ) {
 		$settings['bbq-url-content_bad-contents-list'] = secupress_firewall_bbq_url_content_bad_contents_list_default();
-	}
+	// }
 }
 
 

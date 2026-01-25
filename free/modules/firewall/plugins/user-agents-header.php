@@ -26,7 +26,6 @@ function secupress_block_bad_user_agents() {
 		echo 'SecuPress_Scan_Bad_User_Agent OK';
 		die();
 	}
-
 	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? trim( $_SERVER['HTTP_USER_AGENT'] ) : '';
 	// Empty is fine, can't harm anything.
 	if ( empty( $user_agent ) ) {
@@ -39,7 +38,7 @@ function secupress_block_bad_user_agents() {
 		secupress_block( 'UAHT', [ 'code' => 403, 'b64' => [ 'data' => $user_agent ] ] );
 	}
 
-	$bad_user_agents = secupress_get_module_option( 'bbq-headers_user-agents-list', '', 'firewall' );
+	$bad_user_agents = secupress_firewall_bbq_headers_user_agents_list_default();
 
 	if ( ! empty( $bad_user_agents ) ) {
 		$bad_user_agents = preg_replace( '#\s*,\s*#', '|', preg_quote( $bad_user_agents ) );

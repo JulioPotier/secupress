@@ -80,7 +80,8 @@ function secupress_plugins_to_deactivate() {
 		secupress_add_notice( $message, 'error', 'deactivate-plugin' );
 	}
 
-	$plugins_to_warn = [ // deactivation not mandatory, dismissable
+	$plugins_to_warn = []; // deactivation not mandatory, dismissable
+	/*
 		'all-in-one-wp-security-and-firewall/wp-security.php', // repo
 		'better-wp-security/better-wp-security.php', // Solid Security Free repo
 		'ithemes-security-pro/ithemes-security-pro.php', // Solid Security Pro
@@ -93,8 +94,9 @@ function secupress_plugins_to_deactivate() {
 		'security-ninja-pro/security-ninja.php', // not sure
 		'security-ninja-pro/security-ninja-pro.php', // not sure
 		'sucuri-scanner/sucuri.php', // repo
+		'patchstack/patchstack.php', // repo
 		'wordfence/wordfence.php', // repo
-		'wp-cerber/wp-cerber.php', // repo
+		'wp-cerber/wp-cerber.php', // premium only, deleted from repo 2022
 		'wp-defender/wp-defender.php', // repo
 		'wp-simple-firewall/icwp-wpsf.php', // repo
 		'user-name-security/user-name-security.php', // repo
@@ -102,7 +104,7 @@ function secupress_plugins_to_deactivate() {
 		'really-simple-ssl/really-simple-ssl.php', // repo
 		'really-simple-ssl-pro/really-simple-ssl-pro.php',
 	];
-
+*/
 	$plugins_to_warn = array_filter( $plugins_to_warn, 'is_plugin_active' );
 
 	if ( $plugins_to_warn ) {
@@ -112,7 +114,7 @@ function secupress_plugins_to_deactivate() {
 			return;
 		}
 
-		$message  = _n( 'The following plugin is not compatible with us and may cause conflicts:', 'The following plugins are not compatible with us and may cause conflicts:', count( $plugins_to_warn ), 'secupress' );
+		$message  = sprintf( _n( 'The following plugin may cause conflicts with %s:', 'The following plugins may cause conflicts with %s:', count( $plugins_to_warn ), 'secupress' ), SECUPRESS_PLUGIN_NAME );
 		$message .= '</p><ul>';
 		foreach ( $plugins_to_warn as $plugin ) {
 			$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
@@ -124,7 +126,7 @@ function secupress_plugins_to_deactivate() {
 		}
 		$message .= '</ul>';
 
-		secupress_add_transient_notice( $message, 'error', SECUPRESS_MAJOR_VERSION . '-warn-plugin-' . $hash );
+		secupress_add_transient_notice( $message, 'warning', SECUPRESS_MAJOR_VERSION . '-warn-plugin-' . $hash );
 	}
 
 }
@@ -233,11 +235,10 @@ function secupress_warning_module_activity() {
 		return;
 	}
 
-	$current_user_id = get_current_user_id();
-
 	if ( ! current_user_can( secupress_get_capability() ) ) {
 		return;
 	}
+	$current_user_id = get_current_user_id();
 
 	$activated_modules   = secupress_get_site_transient( 'secupress_module_activation_' . $current_user_id );
 	$deactivated_modules = secupress_get_site_transient( 'secupress_module_deactivation_' . $current_user_id );
@@ -258,8 +259,6 @@ function secupress_warning_module_activity() {
 		secupress_delete_site_transient( 'secupress_module_deactivation_' . $current_user_id );
 	}
 }
-
-
 
 add_action( 'all_admin_notices', 'secupress_warning_no_oneclick_scan_yet', 50 );
 /**
@@ -372,5 +371,105 @@ function secupress_updates_message( $plugin_data, $new_plugin_data ) {
 		}
 		echo '</ul>';
 		echo '</div>';
+	}
+}
+
+add_action( 'admin_init', 'secupress_active_plugins_error' );
+/**
+ * If the constant SECUPRESS_ACTIVE_PLUGINS_ERROR is set, we got a problem.
+ *
+ * @since 2.3.11
+ * @author Julio Potier
+ **/
+function secupress_active_plugins_error() {
+	if ( wp_doing_ajax() ) {
+		return;
+	}
+
+	if ( ! current_user_can( secupress_get_capability() ) ) {
+		return;
+	}
+
+	if ( ! defined( 'SECUPRESS_ACTIVE_PLUGINS_ERROR' ) || ! SECUPRESS_ACTIVE_PLUGINS_ERROR ) {
+		return;
+	}
+
+	$message = sprintf( __( 'There is an issue with the %s module. It will not be active until the problem is fixed.<br>Go to %sModule page%s or %sread the documentation%s.', 'secupress' ), 
+				secupress_tag_me( __( 'Plugin Actions', 'secupress' ), 'strong' ), 
+				sprintf( '<a href="%s">', 
+					esc_url( secupress_admin_url( 'modules', 'plugins-themes#row-plugins_actions' ) )
+				), 
+				'</a>',
+				sprintf( '<a href="%s">', 
+					esc_url( __( 'https://docs.secupress.me/article/233-plugin-actions', 'secupress' ) )
+				), 
+				'</a>',
+				);
+	secupress_add_notice( $message, 'error', 'active-plugins-error' );
+}
+
+add_action( 'admin_init', 'secupress_active_plugins_network_error' );
+/**
+ * If the constant SECUPRESS_ACTIVE_PLUGINS_NETWORK_ERROR is set, we got a problem.
+ *
+ * @since 2.3.13
+ * @author Julio Potier
+ **/
+function secupress_active_plugins_network_error() {
+	if ( wp_doing_ajax() ) {
+		return;
+	}
+
+	if ( ! current_user_can( secupress_get_capability() ) ) {
+		return;
+	}
+
+	if ( ! is_multisite() ) {
+		return;
+	}
+
+	if ( ! defined( 'SECUPRESS_ACTIVE_PLUGINS_NETWORK_ERROR' ) || ! SECUPRESS_ACTIVE_PLUGINS_NETWORK_ERROR ) {
+		return;
+	}
+
+	$message = sprintf( __( 'There is an issue with the %s module. It will not be active until the problem is fixed.<br>Go to %sModule page%s or %sread the documentation%s.', 'secupress' ), 
+				secupress_tag_me( __( 'Plugin Actions', 'secupress' ), 'strong' ), 
+				sprintf( '<a href="%s">', 
+					esc_url( secupress_admin_url( 'modules', 'plugins-themes#row-plugins_actions' ) )
+				), 
+				'</a>',
+				sprintf( '<a href="%s">', 
+					esc_url( __( 'https://docs.secupress.me/article/233-plugin-actions', 'secupress' ) )
+				), 
+				'</a>',
+				);
+	secupress_add_notice( $message, 'error', 'active-plugins-error' );
+}
+
+
+add_action( 'admin_notices', 'secupress_check_default_login_slug_notice' );
+/**
+ * Display a notice if the login slug is still set to the default value "login".
+ *
+ * @since 2.5
+ * @author Julio Potier
+ */
+function secupress_check_default_login_slug_notice() {
+	if ( ! current_user_can( secupress_get_capability() ) ) {
+		return;
+	}
+	if ( ! secupress_is_submodule_active( 'users-login', 'move-login' ) ) {
+		return;
+	}
+	$login_slug = secupress_get_module_option( 'move-login_slug-login', 'login', 'users-login' );
+	if ( 'login' === $login_slug ) {
+		$settings_url = secupress_admin_url( 'modules', 'users-login' );
+		$message = sprintf(
+			'<p>' . __( 'The login page slug is still set to its default value "%1$s". Please configure a custom slug in the %2$ssettings%3$s to secure your login page.', 'secupress' ) . '</p>',
+			'<code>login</code>',
+			sprintf( '<a href="%s">', esc_url( $settings_url ) ),
+			'</a>'
+		);
+		secupress_add_notice( $message, 'warning', 'default-login-slug' );
 	}
 }

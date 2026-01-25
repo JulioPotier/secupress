@@ -6,6 +6,7 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 /**
  * Wrapper for the 3 next plugins functions
  *
+ * @since 2.3.11 return []
  * @since 2.2.6
  * @author Julio Potier
  * 
@@ -43,7 +44,7 @@ function secupress_get_bad_plugins( $type ) {
 			return secupress_get_notupdated_plugins();
 		break;
 	}
-	return false;
+	return [];
 }
 
 /**
@@ -58,12 +59,13 @@ function secupress_get_bad_plugins( $type ) {
  */
 function secupress_get_removed_plugins() {
 	$plugins = get_site_option( SECUPRESS_CLOSED_PLUGINS );
-	return $plugins ?? [];
+	return is_array( $plugins ) ? $plugins : [];
 }
 
 /**
  * Get the plugins not update since 2 years from repo
  *
+ * @since 2.5 Filter plugins with updates older than 2 years
  * @since 2.2.6 Get from our option
  * @author Julio Potier
  * @since 1.0
@@ -72,8 +74,14 @@ function secupress_get_removed_plugins() {
  * @return (array|bool) The plugins from the repository not updated for 2 years
  */
 function secupress_get_notupdated_plugins() {
-	$plugins = get_site_option( SECUPRESS_OLD_PLUGINS );
-	return $plugins ?? [];
+	$all_plugins = get_site_option( SECUPRESS_OLD_PLUGINS, [] );
+	if ( ! is_array( $all_plugins ) || empty( $all_plugins ) ) {
+		return [];
+	}
+	$two_years_ago = time() - ( 2 * YEAR_IN_SECONDS );
+	return array_filter( $all_plugins, function( $timestamp ) use ( $two_years_ago ) {
+		return $timestamp < $two_years_ago;
+	} );
 }
 
 
@@ -107,16 +115,20 @@ function secupress_get_not_installed_plugins_list( $type = '' ) {
 		return [];
 	}
 
-	$ins_plugins    = get_site_option( SECUPRESS_INSTALLED_PLUGINS );
-	$mus_plugins    = _secupress_get_not_installed_muplugins_list();
+	$ins_plugins     = get_site_option( SECUPRESS_INSTALLED_PLUGINS );
+	if ( ! $ins_plugins ) {
+		$ins_plugins = [];
+	}
+
+	$mus_plugins     = _secupress_get_not_installed_muplugins_list();
 	if ( ! $ins_plugins && ! $mus_plugins ) {
 		return [];
 	}
-	$plugins        = [];
-	$get_plugins    = get_plugins();
-	$plugins['all'] = array_diff_key( $get_plugins, $ins_plugins );
+	$plugins         = [];
+	$get_plugins     = get_plugins();
+	$plugins['all']  = array_diff_key( $get_plugins, $ins_plugins );
 
-	$plugins['mu']  = $mus_plugins;
+	$plugins['mu']   = $mus_plugins;
 
 	if ( isset( $plugins[ $type ] ) ) {
 		return $plugins[ $type ];
@@ -206,7 +218,7 @@ function _secupress_get_deleted_mu_plugins_list() {
 	if ( false === $all_plugins ) {
 		return [];
 	}
-	$difs_plugins = array_diff_key( $all_plugins, get_mu_plugins() );
+	$difs_plugins = array_diff_key( $all_plugins, secupress_get_mu_plugins() );
 	
 	array_walk($difs_plugins, function( &$item ) {
 		$item['muplugin'] = 1;
@@ -580,10 +592,10 @@ function secupress_handle_bulk_actions_on_plugins_page( $sendback, $action ) {
 	} elseif ( strpos( $action, 'clear_secupress_deleted' ) === 0 ) {
 		if ( ! is_multisite() ) {
 			update_option( SECUPRESS_INSTALLED_PLUGINS, get_plugins() );
-			update_option( SECUPRESS_INSTALLED_MUPLUGINS, get_mu_plugins() );
+			update_option( SECUPRESS_INSTALLED_MUPLUGINS, secupress_get_mu_plugins() );
 		} else {
 			update_site_option( SECUPRESS_INSTALLED_PLUGINS, get_plugins() );
-			update_site_option( SECUPRESS_INSTALLED_MUPLUGINS, get_mu_plugins() );
+			update_site_option( SECUPRESS_INSTALLED_MUPLUGINS, secupress_get_mu_plugins() );
 			remove_all_filters( 'pre_site_update_option_active_sitewide_plugins' );
 			remove_all_filters( 'pre_site_option_active_sitewide_plugins' );
 			update_site_option( SECUPRESS_ACTIVE_PLUGINS_NETWORK, get_site_option( 'active_sitewide_plugins' ) );
@@ -669,29 +681,36 @@ function secupress_reinstall_plugins( $plugins = [] ) {
 	}
 	$count = count( $reinstalled );
 	$list  = sprintf( '<ul>%s</ul>', implode( '', $reinstalled ) );
-	secupress_add_transient_notice( sprintf( __( 'Plugin reinstallation results: %s', 'secupress' ), $list ) );
+	secupress_add_transient_notice( sprintf( __( 'Plugin reinstallation results: %s', 'secupress' ), $list ), 'info' );
 }
 
 add_action( 'wp_ajax_secupress_reinstall_plugins', 'secupress_reinstall_plugins_admin_ajax_cb' );
 /**
  * Handle the ajax plugin reinstallation
  *
- * @author Julio Potier
+ * @since 2.3.10 array_intersect_key to prevent installation of non already present plugins + current_user_can() for missing security check
  * @since 2.2.6
+ * @author Julio Potier
  **/
 function secupress_reinstall_plugins_admin_ajax_cb() {
-	if ( ! isset( $_GET['action'] ) || ! check_ajax_referer( $_GET['action'] ) ) {
+	if ( ! isset( $_GET['action'] ) || 'secupress_reinstall_plugins' !== $_GET['action'] || ! check_ajax_referer( $_GET['action'] ) || ! current_user_can( 'install_plugins' ) ) {
 		wp_die( -1, 403 );
+	}
+	if ( ! $get_plugins = secupress_cache_data( 'get_plugins' ) ) {
+		$get_plugins    = get_plugins();
+		unset( $get_plugins[ 'secupress-pro/secupress-pro.php' ] );
+		secupress_cache_data( 'get_plugins', $get_plugins );
 	}
 	$plugins = [];
 	if ( isset( $_GET['plugins'] ) ) {
 		if ( is_array( $_GET['plugins'] ) ) {
-			$plugins = $_GET['plugins'];
+			$plugins   = $_GET['plugins'];
 		} else {
 			$plugins[] = $_GET['plugins'];
 		}
 	}
 	$plugins = array_flip( $plugins );
+	$plugins = array_intersect_key( $get_plugins, $plugins );
+
 	wp_send_json_success( secupress_reinstall_plugins( $plugins ) );
 }
-

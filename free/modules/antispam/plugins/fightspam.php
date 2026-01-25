@@ -4,7 +4,7 @@
  * Description: The Secupress Anti Spam module
  * Main Module: antispam
  * Author: SecuPress
- * Version: 1.0.3
+ * Version: 2.4
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
@@ -341,13 +341,12 @@ function secupress_fightspam_blacklist_as_spam_check( $approved, $commentdata ) 
  * @return (string) The blacklist.
  */
 function secupress_fightspam_better_blacklist_comment( $value ) {
-	$file = SECUPRESS_INC_PATH . 'data/spam-blacklist.data';
+	$file = secupress_get_data_path( 'spam-disallowed-terms' );
 
-	if ( is_readable( $file ) ) {
+	if ( file_exists( $file ) ) {
 		$spam_words = file( $file );
 		$value     .= "\n" . implode( "\n", $spam_words );
 	}
-
 	return trim( $value );
 }
 
@@ -617,7 +616,6 @@ function secupress_fightspam_return_spam_status_setting( $context ) {
 	return $approved;
 }
 
-
 /**
  * Tell if spam needs to be tested. This is the same test used in `wp_allow_comment()`.
  *
@@ -771,85 +769,6 @@ function secupress_fightspam_get_spam_status( $value ) {
 	return $status;
 }
 
-add_action( 'wp_footer', 'secupress_fightspam_dont_comment_too_soon_timer' );
-/**
- * Add a timer to change and disabled the submit button on the comment form
- *
- * @author Julio Potier
- * @since 2.3
- **/
-function secupress_fightspam_dont_comment_too_soon_timer() {
-	// Do not do it if the setting is not set
-	if ( ! secupress_get_module_option( 'antispam_comment-delay', 1, 'antispam' ) ) {
-		return;
-	}
-	// Only do this if we are on a singular page which supports comments and where comments are open with a non logged in user
-	if ( ! is_singular() || is_user_logged_in() || post_type_supports( get_post_type(), 'comments' ) || comments_open() ) {
-		return;
-	}
-	// Set our timer in PHP with a filter
-	/**
-	 * Filter the default timer, 30 by default
-	 */
-	$secupress_dcts_timer = (int) apply_filters( 'secupress.plugins.fightspam.comment_timer', 30 );
-	// Just check if it's correct (>0)
-	if ( $secupress_dcts_timer <= 0 ) {
-		return;
-	}
-	// Get the 2 filtered IDs for the form
-	$comment_form_defaults = [ 'id_form' => 'commentform', 'id_submit' => 'submit' ];
-	$comment_form_defaults = wp_parse_args( $comment_form_defaults, apply_filters( 'comment_form_defaults', $comment_form_defaults ) );
-	?>
-	<script>
-	//<![CDATA[
-	// Get the submit from the WP comment form
-	var secupress_dcts_submit = document.getElementById('<?php echo esc_js( $comment_form_defaults['id_form'] ); ?>').querySelectorAll('#<?php echo esc_js( $comment_form_defaults['id_submit'] ); ?>');
-	// If there is not, bail.
-	if ( secupress_dcts_submit.length ) {
-		// Get the button label
-		var secupress_dcts_submit_value = secupress_dcts_submit[0].value;
-		// Set our timer in JS from our filter
-		var secupress_dcts_timer = <?php echo esc_js( $secupress_dcts_timer ); ?>;
-		// Disable the button and make it alpha 50%
-		secupress_dcts_submit[0].setAttribute("disabled", "");
-		secupress_dcts_submit[0].style.opacity = 0.5;
-		// Change the label to include the timer at max value
-		secupress_dcts_submit[0].value = secupress_dcts_submit[0].value + ' (' + secupress_dcts_timer + ')';
-		// Every second, reduce the timer by 1 and print it in the button
-		secupress_dcts_submit_interval = setInterval(
-			function() {
-				secupress_dcts_timer--;
-				secupress_dcts_submit[0].value = secupress_dcts_submit_value + ' (' + secupress_dcts_timer + ')';
-			},
-		1000 );
-		// When the timer is done, rset the label, alpha, disabled status of the button
-		setTimeout(
-			function() { 
-				clearInterval( secupress_dcts_submit_interval );
-				secupress_dcts_submit[0].value = secupress_dcts_submit_value;
-				secupress_dcts_submit[0].removeAttribute("disabled");
-				secupress_dcts_submit[0].style.opacity = 1;
-			},
-		secupress_dcts_timer * 1000 );
-
-	var xmlhttp = new XMLHttpRequest();
-	// Do the AJAX request, vanilla style
-    xmlhttp.onreadystatechange = function() {
-        if (xmlhttp.readyState == XMLHttpRequest.DONE) { // XMLHttpRequest.DONE == 4
-           if (xmlhttp.status == 200) {
-               document.getElementById("secupress_dcts_timer").value = xmlhttp.responseText;
-           }
-        }
-    };
-
-    xmlhttp.open("GET", "<?php echo esc_js( esc_url( admin_url( 'admin-ajax.php?action=secupress_dcts_timer' ) ) ); ?>", true);
-    xmlhttp.send();
-	}
-	//]]>
-	</script>
-	<?php
-}
-
 add_action( 'comment_form_top', 'secupress_fightspam_dont_comment_too_soon_field' );
 /**
  * Add our field at the top of the form
@@ -866,8 +785,9 @@ function secupress_fightspam_dont_comment_too_soon_field() {
 	if ( is_user_logged_in() ) {
 		return;
 	}
-	// Our timer field
-	echo '<input type="hidden" name="secupress_dcts_timer" id="secupress_dcts_timer" value="' . time() . '" />';
+	// Our timer fields
+	echo '<input type="hidden" name="secupress_dcts_timer" id="secupress_dcts_timer" value="' . date_i18n( 'U' ) . '" />';
+	echo '<input type="hidden" name="secupress_dcts_timer_witness" id="secupress_dcts_timer_witness" value="1" />';
 }
 
 add_action( 'pre_comment_on_post', 'secupress_fightspam_dont_comment_too_soon_check', 9 );
@@ -890,28 +810,57 @@ function secupress_fightspam_dont_comment_too_soon_check() {
 	 * Filter the deffault timer, 30 by default
 	 */
 	$secupress_dcts_timer = (int) apply_filters( 'secupress.plugins.fightspam.comment_timer', 30 );
-	// Bad timer? Bail!
+
 	if ( $secupress_dcts_timer <= 0 ) {
-		return;
+		$secupress_dcts_timer = 30;
 	}
 	// Timer is too short, block!
-	if ( ! isset( $_POST['secupress_dcts_timer'] ) || ( time() - $_POST['secupress_dcts_timer'] ) < ( $secupress_dcts_timer + 1 ) ) { // +1sec because of page load + AJAX call.
+	if ( isset( $_POST['secupress_dcts_timer_witness'] ) || ! isset( $_POST['secupress_dcts_timer'] ) || ( date_i18n( 'U' ) - $_POST['secupress_dcts_timer'] ) < ( $secupress_dcts_timer + 1 ) ) { // +1sec because of page load
 		secupress_block( 'ATS', __( 'Sorry, you cannot send that now.', 'secupress' ) );
 	}
 }
 
-add_action( 'wp_ajax_nopriv_secupress_dcts_timer', 'secupress_dcts_timer_cb' );
+add_action( 'wp_enqueue_scripts', 'secupress_dcts_timer_script' );
 /**
- * Get a timer with AJAX
+ * Add a timer to change and disabled the submit button on the comment form using JS and i10n
  *
+ * @since 2.4
  * @author Julio Potier
- * @since 2.3
  **/
-function secupress_dcts_timer_cb() {
-	// Do not do it if the setting is not set
+function secupress_dcts_timer_script() {
 	if ( ! secupress_get_module_option( 'antispam_comment-delay', 1, 'antispam' ) ) {
 		return;
 	}
-	echo time();
-	die();
+	// Trust the logged in users.
+	if ( is_user_logged_in() ) {
+		return;
+	}
+	$suffix     = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$version    = $suffix ? SECUPRESS_VERSION : time();
+	// Set our timer in PHP with a filter
+	/**
+	 * Filter the default timer, 30 by default
+	 * 
+	 * @since 2.2.4.1
+	 * 
+	 * @param (int)
+	 * 
+	 * @return (int)
+	 */
+	$dcts_timer     = (int) apply_filters( 'secupress.plugins.fightspam.comment_timer', 30 );
+	// Just check if it's correct (>0)
+	if ( $dcts_timer <= 0 ) {
+		$dcts_timer = 30;
+	}
+	$gmt_offset            = get_option( 'gmt_offset' );
+	// Get the 2 filtered IDs for the form
+	$comment_form_defaults = [ 'id_form' => 'commentform', 'id_submit' => 'submit' ];
+	$comment_form_defaults = wp_parse_args( $comment_form_defaults, apply_filters( 'comment_form_defaults', $comment_form_defaults ) );
+	wp_enqueue_script( 'secupress-dcts-timer', SECUPRESS_ADMIN_JS_URL . 'secupress-antispam' . $suffix . '.js', null, $version, true );
+	wp_localize_script( 'secupress-dcts-timer', 'secupressDctsTimer', 
+		[
+			'gmtOffset'  => $gmt_offset,
+			'dctsTimer'  => $dcts_timer,
+			'cfDefaults' => $comment_form_defaults,
+		] );
 }

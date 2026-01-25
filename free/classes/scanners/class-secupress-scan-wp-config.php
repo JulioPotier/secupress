@@ -28,7 +28,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 * @var (object)
 	 */
 	protected static $_instance;
-
+	protected $delayed_fix = 2;
 	/**
 	 * Constants to test, with values to test against.
 	 *
@@ -39,8 +39,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		'ALLOW_UNFILTERED_UPLOADS' => false,
 		'DIEONDBERROR'             => false,
 		'DISALLOW_FILE_EDIT'       => 1,
-		'FS_CHMOD_DIR'             => 755,
-		'FS_CHMOD_FILE'            => 644,
 		'RELOCATE'                 => false,
 		'WP_ALLOW_REPAIR'          => false,
 		'WP_DEBUG'                 => false,
@@ -79,7 +77,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		$messages = array(
 			// "good"
 			/** Translators: %s is a file name. */
-			0   => sprintf( __( 'Your %s file is correct.', 'secupress' ), '<code>' . secupress_get_wpconfig_filename() . '</code>' ),
+			0   => sprintf( __( 'Your %s file is correct.', 'secupress' ), secupress_code_me( secupress_get_wpconfig_filename() ) ),
 			/** Translators: %s is a constant name. */
 			1   => sprintf( __( 'A <a href="https://codex.wordpress.org/Must_Use_Plugins" hreflang="en">must-use plugin</a> has been added in order to change the default value for %s.', 'secupress' ), '<code>COOKIEHASH</code>' ),
 			// "warning"
@@ -88,7 +86,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			/** Translators: %s is a constant name. */
 			201 => sprintf( __( 'The PHP constant %s is defined with the default value, it should be modified.', 'secupress' ), '<code>COOKIEHASH</code>' ),
 			/** Translators: 1 is a file name, 2 is a constant name. */
-			202 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set.', 'secupress' ), '<code>' . secupress_get_wpconfig_filename() . '</code>', '%s' ),
+			202 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set.', 'secupress' ), secupress_code_me( secupress_get_wpconfig_filename() ), '%s' ),
 			207 => _n_noop(
 				/** Translators: 1 is a file name, 2 is a constant name. */
 				'In your %1$s file, the PHP constant %2$s should not be set.',
@@ -172,6 +170,8 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			return parent::scan();
 		}
 
+		SecuPress_Scanner_Results::update_fix_result( 'wp_config', false );
+
 		// COOKIEHASH.
 		$check = defined( 'COOKIEHASH' ) && COOKIEHASH === md5( get_site_option( 'siteurl' ) );
 
@@ -188,27 +188,17 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 
 			switch ( $compare ) {
 				case 1:
-					if ( ! $check ) {
+					if ( is_null( $check ) || ! $check ) {
 						$results[209]           = isset( $results[209] )         ? $results[209]         : [];
 						$results[209]['true']   = isset( $results[209]['true'] ) ? $results[209]['true'] : [];
 						$results[209]['true'][] = '<code>' . $constant . '</code>';
 					}
 					break;
 				case false:
-					if ( $check ) {
+					if ( is_null( $check ) || $check ) {
 						$results[210]            = isset( $results[210] )          ? $results[210]          : [];
 						$results[210]['false']   = isset( $results[210]['false'] ) ? $results[210]['false'] : [];
 						$results[210]['false'][] = '<code>' . $constant . '</code>';
-					}
-					break;
-				default:
-					$check  = ! is_null( $check ) ? decoct( $check ) <= $compare : false;
-					$msg_id = 755 === $compare ? 211 : 212;
-
-					if ( ! $check ) {
-						$results[ $msg_id ]                     = isset( $results[ $msg_id ] )                   ? $results[ $msg_id ]                   : [];
-						$results[ $msg_id ][ '0' . $compare ]   = isset( $results[ $msg_id ][ '0' . $compare ] ) ? $results[ $msg_id ][ '0' . $compare ] : [];
-						$results[ $msg_id ][ '0' . $compare ][] = '<code>' . $constant . '</code>';
 					}
 					break;
 			}
@@ -221,11 +211,11 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 				if ( is_array( $first ) ) {
 					foreach ( $maybe_constants as $compare => $constants ) {
 						// "bad"
-						$this->add_message( $message_id, array( count( $constants ), '<code>' . secupress_get_wpconfig_filename() . '</code>', $constants, '<code>' . $compare . '</code>' ) );
+						$this->add_message( $message_id, array( count( $constants ), secupress_code_me( secupress_get_wpconfig_filename() ), $constants, secupress_code_me( $compare ) ) );
 					}
 				} else {
 					// "bad"
-					$this->add_message( $message_id, array( count( $maybe_constants ), '<code>' . secupress_get_wpconfig_filename() . '</code>', $maybe_constants ) );
+					$this->add_message( $message_id, array( count( $maybe_constants ), secupress_code_me( secupress_get_wpconfig_filename() ), $maybe_constants ) );
 				}
 			}
 		}
@@ -272,7 +262,12 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			$this->fix();
 		}
 		// "good"
-		$this->add_fix_message( 1 );
+		$check = defined( 'COOKIEHASH' ) && COOKIEHASH === md5( get_site_option( 'siteurl' ) );
+		if ( $check ) {
+			$this->add_fix_message( 1 );
+		}
+		$this->add_fix_message( 0 );
+		
 		return parent::manual_fix();
 	}
 
@@ -286,13 +281,17 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	public function fix() {
 		global $current_user;
 
-		if ( secupress_delete_site_transient( 'secupress-cookiehash-muplugin-failed' ) ) {
+		if ( secupress_get_site_transient( 'secupress-cookiehash-muplugin-failed' ) &&
+			secupress_delete_site_transient( 'secupress-cookiehash-muplugin-failed' )
+		) {
 			// MU Plugin creation failed.
 			$this->add_fix_message( 301 );
 			return parent::fix();
 		}
 
-		if ( secupress_delete_site_transient( 'secupress-cookiehash-muplugin-succeeded' ) ) {
+		if ( secupress_get_site_transient( 'secupress-cookiehash-muplugin-succeeded' ) &&
+			secupress_delete_site_transient( 'secupress-cookiehash-muplugin-succeeded' )
+		) {
 			// MU Plugin creation succeeded.
 			$this->add_fix_message( 1 );
 			return parent::fix();
@@ -316,8 +315,8 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		}
 
 		$new_content = '';
-		$results     = array();
-		$not_fixed   = array();
+		$results     = [];
+		$not_fixed   = [];
 
 		foreach ( $this->constants as $constant => $compare ) {
 			$check     = defined( $constant ) ? constant( $constant ) : null;
@@ -334,9 +333,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 						$not_fixed[] = sprintf( '<code>%s</code>', $constant );
 					}
 				break;
-				default:
-					$check = decoct( $check ) <= $compare;
-				break;
 			}
 		}
 
@@ -345,7 +341,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		}
 
 		$this->maybe_set_fix_status( 0 );
-
 		return parent::fix();
 	}
 
@@ -369,8 +364,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			'COOKIEHASH'               => 'cookiehash',
 			'DIEONDBERROR'             => 'dieondberror',
 			'DISALLOW_FILE_EDIT'       => 'file-edit',
-			'FS_CHMOD_DIR'             => 'fs-chmod',
-			'FS_CHMOD_FILE'            => 'fs-chmod',
 			'RELOCATE'                 => 'locations',
 			'WP_ALLOW_REPAIR'          => 'repair',
 			'WP_DEBUG'                 => 'debugging',
@@ -384,6 +377,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			return false;
 		}
 
+		secupress_deactivate_submodule_silently( 'wordpress-core', 'wp-config-constant-' . $has_plugin[ $constant ] );
 		secupress_activate_submodule( 'wordpress-core', 'wp-config-constant-' . $has_plugin[ $constant ] );
 
 		$last_error  = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;

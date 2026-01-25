@@ -70,6 +70,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
+		$_107 = ! secupress_is_pro() ? sprintf( __( 'The %sPRO version%s will be more accurate.', 'secupress' ), '<a href="' . secupress_admin_url( 'get-pro' ) . '">', '</a>' ) : ' ' . __( 'Scan it now.', 'secupress' );
 		$messages = array(
 			// "good"
 			0   => __( 'You don’t use plugins known to be vulnerable.', 'secupress' ),
@@ -86,7 +87,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 			104 => __( 'No plugins selected for deactivation.', 'secupress' ),
 			105 => _n_noop( 'Selected plugin has been deactivated (but some are still there).', 'All selected plugins have been deactivated (but some are still there).', 'secupress' ),
 			106 => _n_noop( 'Sorry, the following plugin could not be deactivated: %s.', 'Sorry, the following plugins could not be deactivated: %s.', 'secupress' ),
-			107 => sprintf( __( 'Your installation may contain vulnerable plugins. The %sPRO version%s will be more accurate.', 'secupress' ), '<a href="' . secupress_admin_url( 'get-pro' ) . '">', '</a>' ),
+			107 => sprintf( __( 'Your installation may contain vulnerable plugins.%s', 'secupress' ), $_107 ),
 			// "bad"
 			/** Translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
 			200 => _n_noop( '<strong>%1$d plugin</strong> is known to be vulnerable: %2$s.', '<strong>%1$d plugins</strong> are known to be vulnerable: %2$s.', 'secupress' ),

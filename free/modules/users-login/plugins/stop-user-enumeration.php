@@ -1,6 +1,6 @@
 <?php
 /**
- * Module Name: Stop User Enumeration
+ * Module Name: Forbid User Enumeration
  * Description: Forbid the user listing from front with ?author=X and from REST API with /users/
  * Main Module: users_login
  * Author: SecuPress
@@ -77,6 +77,7 @@ add_filter( 'rest_request_before_callbacks', 'secupress_stop_user_enumeration_re
  *
  * @param WP_Error|null   $response The current error object if any.
  * *
+ * @since 2.3.12 Let "/me/" being read
  * @since 2.2.6 Remove home_url() from strpos()
  * @since 2.2.5 Remove REST API calls made using query parameters + usage of rawurldecode()
  * @since 2.2.2 'raw'
@@ -86,12 +87,23 @@ add_filter( 'rest_request_before_callbacks', 'secupress_stop_user_enumeration_re
  **/
 function secupress_stop_user_enumeration_rest( $response ) {
 	$rest_base_url  = home_url( 'wp-json/' . Secupress_WP_REST_Users_Controller::get_rest_base() );
-	$rest_query_url = 'rest_route=/wp/v2/users';
-	if ( ! current_user_can( 'list_users' ) && (
-		strpos( rawurldecode( secupress_get_current_url( 'raw' ) ), $rest_base_url ) === 0 ||
-		strpos( rawurldecode( secupress_get_current_url( 'raw' ) ), $rest_query_url ) !== false )
-	) {
-		wp_send_json( array( 'code' => 'rest_cannot_access', 'message' => __( 'Something went wrong.', 'secupress' ), 'data' => [ 'status' => 401 ] ) , 401 );
+	$rest_query_url = '/wp/v2/users';
+	$current_url    = rawurldecode( secupress_get_current_url( 'base' ) );
+	$is_request     = isset( $_REQUEST['rest_route'] );
+	$is_me_route    = preg_match( '#^' . preg_quote( $rest_base_url, '#' ) . '/me/?#', $current_url ) || ( $is_request && preg_match( '#^' . preg_quote( $rest_query_url, '#' ) . '/me/?#', $_REQUEST['rest_route'] ) );
+
+	if ( ! current_user_can( 'list_users' ) && ! $is_me_route && (
+		preg_match( '#^' . preg_quote( $rest_base_url, '#' ) . '/?#', $current_url ) ||
+		( $is_request && preg_match( '#^' . preg_quote( $rest_query_url, '#' ) . '/?#', $_REQUEST['rest_route'] ) )
+	) ) {
+		wp_send_json( [
+			'code'    => 'rest_cannot_access',
+			'message' => __( 'Something went wrong.', 'secupress' ),
+			'data'    => [ 'status' => 401 ]
+			],
+		401 );
 	}
-    return $response;
+
+	return $response;
 }
+

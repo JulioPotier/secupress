@@ -346,18 +346,6 @@ function secupress_set_site_transient( $transient, $value ) {
 		 * @param (string) $transient  The name of the transient.
 		 */
 		do_action( 'set_site_transient_' . $transient, $value, 0, $transient );
-
-		/**
-		 * Fires after the value for a site transient has been set.
-		 *
-		 * @since 1.0
-		 * @since WP 3.0.0
-		 *
-		 * @param (string) $transient  The name of the transient.
-		 * @param (mixed)  $value      Transient value.
-		 * @param (int)    $expiration Time until expiration in seconds, forced to 0.
-		 */
-		do_action( 'setted_site_transient', $transient, $value, 0 );
 	}
 	return $result;
 }
@@ -640,4 +628,50 @@ function secupress_update_module_options( $values, $module = false ) {
 	$options = array_merge( $options, $values );
 
 	update_site_option( "secupress_{$module}_settings", $options );
+}
+
+add_filter( 'pre_secupress_get_module_option_' . 'advanced-settings_admin-bar', 'secupress_shortcut_module_option_get_user_admin_bar_setting' );
+/**
+ * Make the old site setting "advanced-settings_admin-bar" a user setting now
+ *
+ * @since 2.3.19 secupress- prefix
+ * @since 2.3.18.1
+ * @author Julio Potier
+ * @param (string) $pre '1' shows the admin bar in WP menu
+ * @return (string)
+ **/
+function secupress_shortcut_module_option_get_user_admin_bar_setting( $pre ) {
+	$user_id      = get_current_user_id();
+	$user_setting = get_user_option( 'secupress-advanced-settings_admin-bar', $user_id );
+	if ( false !== $user_setting ) {
+		$pre = $user_setting;
+	} else {
+		remove_filter( 'pre_secupress_get_module_option_' . 'advanced-settings_admin-bar', 'secupress_shortcut_module_option_get_user_admin_bar_setting' );
+		$pre = secupress_get_module_option( 'advanced-settings_admin-bar', '1' );
+		update_user_option( $user_id, 'secupress-advanced-settings_admin-bar', $pre, true );
+	}
+	return $pre;
+}
+
+add_filter( 'pre_secupress_get_module_option_' . 'advanced-settings_expert-mode', 'secupress_shortcut_module_option_get_user_expert_mode_setting' );
+/**
+ * Make the old site setting "advanced-settings_expert-mode" (hide contextual help) a user setting now
+ *
+ * @since 2.3.19 secupress- prefix
+ * @since 2.3.18.1
+ * @author Julio Potier
+ * @param (string) $pre '1' hides the help paragraphs
+ * @return (string)
+ **/
+function secupress_shortcut_module_option_get_user_expert_mode_setting( $pre ) {
+	$user_id      = get_current_user_id();
+	$user_setting = get_user_option( 'secupress-advanced-settings_expert-mode', $user_id );
+	if ( false !== $user_setting ) {
+		$pre = $user_setting;
+	} else {
+		remove_filter( 'pre_secupress_get_module_option_' . 'advanced-settings_expert-mode', 'secupress_shortcut_module_option_get_user_expert_mode_setting' );
+		$pre = secupress_get_module_option( 'advanced-settings_expert-mode', '1' );
+		update_user_option( $user_id, 'secupress-advanced-settings_expert-mode', $pre, true );
+	}
+	return $pre;
 }

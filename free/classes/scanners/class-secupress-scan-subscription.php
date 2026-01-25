@@ -59,7 +59,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			$this->more     = sprintf( __( 'If user registrations are open, the default user role should be %s. Moreover, your registration page should be protected from bots.', 'secupress' ), $this->role_minimum_i18n );
 			$this->more_fix = sprintf(
 				__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
-				'<em>' . __( 'Use a Captcha for everyone', 'secupress' ) . '</em>',
+				'<em>' . __( 'Use a Captcha on login page', 'secupress' ) . '</em>',
 				'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-captcha_activate">' . __( 'Users & Login', 'secupress' ) . '</a>'
 			);
 
@@ -86,7 +86,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	public static function get_messages( $message_id = null ) {
 		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
 		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
-			'<strong>' . __( 'Use a Captcha for everyone', 'secupress' ) . '</strong>',
+			'<strong>' . __( 'Use a Captcha on login page', 'secupress' ) . '</strong>',
 			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-captcha_activate">' . __( 'Users & Login', 'secupress' ) . '</a>'
 		);
 

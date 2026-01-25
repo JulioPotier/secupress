@@ -72,7 +72,7 @@ function secupress_antiphishing_notice() {
 	}
 	$digit = get_user_option( 'secupress_antiphishingcode', $current_user->ID );
 	if ( ! secupress_notice_is_dismissed( 'antiphishingcode' ) && ! $digit ) {
-		$message = sprintf( __( 'You can now set up an Anti-Phishing Code to protect yourself from phishing attempts on this website. <a href="%s">Set my code now.</a>', 'secupress' ), get_edit_profile_url() . '#antiphishingcode' );
+		$message = sprintf( '<p>' . __( 'You can now set up an Anti-Phishing Code to protect yourself from phishing attempts on this website. <a href="%s">Set my code now.</a>', 'secupress' ) . '</p>', get_edit_profile_url() . '#antiphishingcode' );
 		secupress_add_notice( $message, 'updated', 'antiphishingcode' );
 	}
 }

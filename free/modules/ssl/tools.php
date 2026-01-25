@@ -55,7 +55,7 @@ class secupress_ssl_status_tests {
 				],
 				'fail'      => [
 					'title' => __( 'Your SSL certificate is NOT valid', 'secupress' ),
-					'desc'  => __( 'While testing your SSL certificate the following error occurred: %1$s', 'secupress' ),
+					'desc'  => __( 'SSL certificate test failed: %s', 'secupress' ),
 				],
 			]
 		];
@@ -83,7 +83,7 @@ class secupress_ssl_status_tests {
 				],
 				'fail'      => [
 					'title' => __( 'Website‘s URLs are NOT properly redirected from HTTP to HTTPS', 'secupress' ),
-					'desc'  => __( 'While testing the redirect the following error occurred: %1$s', 'secupress' ),
+					'desc'  => __( 'While testing the redirect the following issue occurred: %1$s', 'secupress' ),
 				],
 			]
 		];

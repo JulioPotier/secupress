@@ -1,4 +1,4 @@
-/* globals jQuery: false, ajaxurl: false, wp: false, SecuPressi18nModules: false, secupressIsSpaceOrEnterKey: false, swal2: false */
+ /* globals jQuery: false, ajaxurl: false, wp: false, SecuPressi18nModules: false, secupressIsSpaceOrEnterKey: false, swal2: false */
 // Global vars =====================================================================================
 var SecuPress = {
 	doingAjax:           {},
@@ -265,28 +265,28 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 }
 
 
-// Roles: at least one role must be chosen. ========================================================
+// Roles : at least one role must be chosen. ========================================================
 (function($, d, w, undefined) {
 
 	if ( "function" === typeof document.createElement( "input" ).checkValidity ) {
 		$( ".affected-role-row :checkbox" ).on( "click.secupress", function() {
-			this.setCustomValidity( '' );
+			var $checkboxes = $( '[name="' + this.name + '"]' );
+			
+			// Clear custom validity from all checkboxes in this group
+			$checkboxes.each( function() {
+				this.setCustomValidity( '' );
+			} );
 
-			if ( 0 === $( '[name="' + this.name + '"]:checked' ).length ) {
-				this.setCustomValidity( SecuPressi18nModules.selectOneRoleMinimum );
-				$( "#secupress-module-form-settings [type='submit']" ).first().trigger( "click.secupress" );
-			}
-		} );
-		$( ".secupress-setting-row_bbq-url-content_block-functions-sources :checkbox" ).on( "click.secupress", function() {
-			this.setCustomValidity( '' );
-
-			if ( 0 === $( '[name="' + this.name + '"]:checked' ).length ) {
-				this.setCustomValidity( SecuPressi18nModules.selectOneOptMinimum );
+			if ( 0 === $checkboxes.filter( ':checked' ).length ) {
+				// Set custom validity on all checkboxes in this group
+				$checkboxes.each( function() {
+					this.setCustomValidity( SecuPressi18nModules.selectOneRoleMinimum );
+				} );
 				$( "#secupress-module-form-settings [type='submit']" ).first().trigger( "click.secupress" );
 			}
 		} );
 	} else {
-		$( ".affected-role-row p.warning, .secupress-setting-row_bbq-url-content_block-functions-sources p.warning" ).removeClass( "hide-if-js" );
+		$( ".affected-role-row p.warning" ).removeClass( "hide-if-js" );
 	}
 
 } )(jQuery, document, window);
@@ -1533,11 +1533,84 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 } )(jQuery, document, window);
 
 
+// Malware button "Update data" =======================================================================
+(function( w, d, $, undefined ) {
+	$( '#button-update-malware-data' ).on( 'click', function(e) {
+		e.preventDefault();
+		var _this = $(this);
+		var href  = secupressPreAjaxCall( $(this).attr('href').replace('admin-post.php', 'admin-ajax.php'), e, 'button-update-malware-data' );
+		secupressDisableAjaxButton( $(this), null, 'button-update-malware-data' );
+		_this.find('.spinner').addClass('secupress-inline-spinner-active');
+		$.getJSON( href )
+		.done( function( r ) {
+			if ( r.success ) {
+				if ( wp.a11y && wp.a11y.speak ) {
+					wp.a11y.speak( SecuPressi18nModules.malwareUpdateOK );
+				}
+				$('p.description.warning.secupress-show-expert').text( SecuPressi18nModules.malwareUpdateOK ).removeClass('warning').addClass('help');
+				try {
+					location.reload();
+				} catch (e) {
+					window.location.href = window.location.href;
+				}				
+			} else {
+				secupressDisplayAjaxError( _this, SecuPressi18nModules.malwareUpdateKO, "data" );
+			}
+		} )
+		.fail( function() {
+			secupressDisplayAjaxError( _this, null, "data" );
+		} );
+	} );
+} )(window, document, jQuery);
+
 // Malware Scan "Search for malwares" =======================================================================
 (function( w, d, $, undefined ) {
 	$( '#toggle_file_scanner' ).on( 'click', function(e) {
-		$( this ).text( $( this ).data( 'loading-i18n' ) ).parent().next().remove();
+		var $button  = $( this );
+		var $wrapper = $button.closest( '.secupress-scanner-promo' );
 
+		$button.text( $button.data( 'loading-i18n' ) );
+
+		if ( $wrapper.length ) {
+			var $results = $wrapper.find( '.secupress-scanner-results-content:visible' );
+			$results.slideUp( 200 );
+
+			var $toggles = $wrapper.find( '.secupress-scanner-toggle-btn' );
+			$toggles.each( function() {
+				var $btn  = $( this );
+				var $icon = $btn.find( '.dashicons' );
+
+				$icon.removeClass( 'dashicons-arrow-up-alt2' ).addClass( 'dashicons-arrow-down-alt2' );
+				$btn.attr( 'aria-expanded', 'false' );
+			} );
+			$toggles.remove();
+
+			$wrapper.find( '.secupress-scanner-feature:not(.state-dev):not(.state-file-missing) .secupress-scanner-feature > .secupress-icon, .secupress-scanner-feature:not(.state-dev):not(.state-file-missing) > .secupress-icon' ).each( function() {
+				$( this ).replaceWith( '<span class="spinner secupress-inline-spinner secupress-inline-spinner-active"></span>' );
+			} );
+		}
+
+	} );
+	
+	$( document ).on( 'click', '.secupress-scanner-toggle-btn', function(e) {
+		e.preventDefault();
+		var $button = $( this );
+		var $target = $( '#' + $button.data( 'target' ) );
+		var $icon = $button.find( '.dashicons' );
+		
+		if ( $target.length === 0 ) {
+			return;
+		}
+		
+		if ( $target.is( ':visible' ) ) {
+			$target.slideUp( 300 );
+			$icon.removeClass( 'dashicons-arrow-up-alt2' ).addClass( 'dashicons-arrow-down-alt2' );
+			$button.attr( 'aria-expanded', 'false' );
+		} else {
+			$target.slideDown( 300 );
+			$icon.removeClass( 'dashicons-arrow-down-alt2' ).addClass( 'dashicons-arrow-up-alt2' );
+			$button.attr( 'aria-expanded', 'true' );
+		}
 	} );
 } )(window, document, jQuery);
 
@@ -1565,22 +1638,11 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	};
 
 	// Open all signatures info
-	$( '.secupress-toggle-sort' ).css('cursor', 'pointer').on( 'click', function( e ) {
+	$( document ).on( 'click', '.secupress-toggle-sort', function( e ) {
+		e.preventDefault();
 		var data = $( this ).data( 'file' );
 		$( this ).toggleClass( 'dashicons-arrow-right dashicons-arrow-down' );
 		$( '.secupress-toggle-me.' + data ).toggle('fast');
-	} );
-	var flag = 0;
-	$( '.secupress-toggle-sort-all' ).css('cursor', 'pointer').on( 'click', function( e ) {
-		if ( 0 === flag ) {
-			$( this ) . next( 'ul' ). find( '.secupress-toggle-me' ).show('fast');
-			$( this ) . next( 'ul' ). find( 'li span.dashicons-arrow-right' ).toggleClass( 'dashicons-arrow-right dashicons-arrow-down' );
-			flag = 1;
-		} else {
-			$( this ) . next( 'ul' ). find( '.secupress-toggle-me' ).hide('fast');
-			$( this ) . next( 'ul' ). find( 'li span.dashicons-arrow-down' ).toggleClass( 'dashicons-arrow-right dashicons-arrow-down' );
-			flag = 0;
-		}
 	} );
 
 	// Check all checkboxes.
@@ -1730,4 +1792,313 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	        $(this).insertAfter($paragraphToInsertAfter);
 	    }
     });
+} )(jQuery, document, window);
+
+// Delete Files Confirmation =======================================================================
+(function($, w, undefined) {
+	$( '#form-not-wp-files' ).on( 'submit', function( e ) {
+		var $form = $( this ),
+			$checkedFiles = $form.find( 'input[name="files[]"]:checked' ),
+			confirmMessage = SecuPressi18nModules.confirmDeleteFiles;
+
+		// Vérifier qu'au moins un fichier est sélectionné
+		if ( $checkedFiles.length === 0 ) {
+			e.preventDefault();
+			return false;
+		}
+
+		// Demander confirmation
+		if ( 'function' === typeof w.swal2 ) {
+			e.preventDefault();
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
+				text:              confirmMessage,
+				confirmButtonText: SecuPressi18nModules.yesDeleteFiles,
+				type:              'warning',
+				reverseButtons:    true
+			} ) ).then( function( isConfirm ) {
+				if ( isConfirm ) {
+					$form.off( 'submit' ).submit();
+				}
+			} );
+			return false;
+		} else if ( ! w.confirm( confirmMessage ) ) {
+			e.preventDefault();
+			return false;
+		}
+	} );
+} )(jQuery, window);
+
+// Toggle Malware Signatures =======================================================================
+(function($, d, w, undefined) {
+	$( '.secupress-malware-files-table, .secupress-database-scanner-table' ).on( 'click', '.secupress-toggle-signatures', function( e ) {
+		e.preventDefault();
+		var $btn = $( this ),
+			targetId = $btn.data( 'target' ),
+			$target = $( '#' + targetId ),
+			$icon = $btn.find( '.dashicons' );
+
+		$target.slideToggle( 200 );
+		$icon.toggleClass( 'dashicons-arrow-down-alt2 dashicons-arrow-up-alt2' );
+	} );
+
+	// Toggle Database Scanner Content =======================================================================
+	$( '.secupress-database-scanner-table' ).on( 'click', '.secupress-toggle-content', function( e ) {
+		e.preventDefault();
+		var $btn = $( this ),
+			targetId = $btn.data( 'target' ),
+			$target = $( '#' + targetId ),
+			$icon = $btn.find( '.dashicons' );
+
+		$target.slideToggle( 200 );
+		$icon.toggleClass( 'dashicons-arrow-down-alt2 dashicons-arrow-up-alt2' );
+	} );
+
+	// Recover Single File =======================================================================
+	$( document ).on( 'click', '.secupress-recover-single-file', function( e ) {
+		e.preventDefault();
+		var $link = $( this ),
+			formId = $link.data( 'form-id' ),
+			checkboxId = $link.data( 'checkbox-id' ),
+			submitName = $link.data( 'submit-name' ),
+			$form = $( '#' + formId ),
+			$checkbox = $( '#' + checkboxId ),
+			$submitButton = $form.find( 'input[name="' + submitName + '"], button[name="' + submitName + '"]' );
+
+		if ( ! $form.length || ! $checkbox.length ) {
+			return;
+		}
+
+		$form.find( '.secupress-row-check' ).prop( 'checked', false );
+		
+		$checkbox.prop( 'checked', true );
+		
+		if ( $submitButton.length ) {
+			$submitButton.trigger( 'click' );
+		} else {
+			$form.append( '<input type="hidden" name="' + submitName + '" value="1" />' );
+			$form.submit();
+		}
+	} );
+
+	// Module search handler.
+	( function() {
+		var $searchWrapper = $( '.secupress-module-search-wrapper' ),
+			$searchInput = $( '#secupress-module-search' ),
+			$resultsList = $( '#secupress-module-search-results' ),
+			$spinner = $searchWrapper.find( '.spinner' ),
+			searchTimeout = null,
+			currentRequest = null;
+		var cache_key = 'secupress_search_cache';
+		var cache_version = SecuPressi18nModules.version || '0';
+		var cache_data = null;
+
+		if ( ! $searchInput.length ) {
+			return;
+		}
+
+		function secupress_load_search_cache() {
+			if ( ! window.localStorage ) {
+				return null;
+			}
+
+			try {
+				var stored = window.localStorage.getItem( cache_key );
+				if ( ! stored ) {
+					return {
+						version: cache_version,
+						order: [],
+						results: {}
+					};
+				}
+
+				var parsed = JSON.parse( stored );
+				if ( ! parsed || parsed.version !== cache_version ) {
+					return {
+						version: cache_version,
+						order: [],
+						results: {}
+					};
+				}
+
+				if ( ! parsed.order || ! parsed.results ) {
+					return {
+						version: cache_version,
+						order: [],
+						results: {}
+					};
+				}
+
+				return parsed;
+			} catch ( e ) {
+				return {
+					version: cache_version,
+					order: [],
+					results: {}
+				};
+			}
+		}
+
+		function secupress_save_search_cache() {
+			if ( ! window.localStorage || ! cache_data ) {
+				return;
+			}
+
+			try {
+				window.localStorage.setItem( cache_key, JSON.stringify( cache_data ) );
+			} catch ( e ) {}
+		}
+
+		function secupress_reset_other_versions_cache() {
+			if ( ! window.localStorage ) {
+				return;
+			}
+
+			try {
+				var stored = window.localStorage.getItem( cache_key );
+				if ( ! stored ) {
+					return;
+				}
+
+				var parsed = JSON.parse( stored );
+				if ( parsed && parsed.version && parsed.version !== cache_version ) {
+					window.localStorage.removeItem( cache_key );
+				}
+			} catch ( e ) {}
+		}
+
+		secupress_reset_other_versions_cache();
+		cache_data = secupress_load_search_cache();
+
+		$searchInput.on( 'input', function() {
+			var searchValue = $( this ).val().trim();
+			var search_key = function() {
+				var normalized = searchValue.toLowerCase();
+				return normalized;
+			}();
+
+			// Cancel previous timeout - this ensures we wait 300ms from THIS keystroke.
+			if ( searchTimeout ) {
+				clearTimeout( searchTimeout );
+				searchTimeout = null;
+			}
+
+			// Cancel previous request if still pending.
+			if ( currentRequest && currentRequest.state() === 'pending' ) {
+				currentRequest.abort();
+				currentRequest = null;
+			}
+
+			// Hide spinner and results if less than 2 characters.
+			if ( searchValue.length < 2 ) {
+				$spinner.removeClass( 'secupress-inline-spinner-active' );
+				$resultsList.hide().empty();
+				return;
+			}
+
+			if ( cache_data && cache_data.results && cache_data.results[ search_key ] ) {
+				var cached_results = cache_data.results[ search_key ];
+				var cached_html = '';
+				cached_results.forEach( function( item ) {
+					cached_html += '<li><a href="' + ( item.url || '#' ) + '">' + ( item.title || '' ) + '</a></li>';
+				} );
+				$resultsList.html( cached_html ).show();
+				return;
+			}
+
+			// Debounce: set a new timeout that will execute only if no new keystroke occurs within 300ms.
+			// Each new keystroke cancels the previous timeout and creates a new one.
+			searchTimeout = setTimeout( function() {
+				// Clear the timeout reference since it's executing.
+				searchTimeout = null;
+
+				// Get the current value at the moment the timeout executes.
+				var finalSearchValue = $searchInput.val().trim();
+				var final_search_key = finalSearchValue.toLowerCase();
+
+				// Double check: if less than 2 characters, don't proceed.
+				if ( finalSearchValue.length < 2 ) {
+					$spinner.removeClass( 'secupress-inline-spinner-active' );
+					$resultsList.hide().empty();
+					return;
+				}
+
+				// Show spinner.
+				$spinner.addClass( 'secupress-inline-spinner-active' );
+
+				var params = {
+					action: 'secupress_search',
+					secupress_module_search: finalSearchValue,
+					secupress_search_nonce: SecuPressi18nModules.searchNonce
+				};
+
+				currentRequest = $.post( ajaxurl, params )
+					.done( function( response ) {
+						// Hide spinner.
+						$spinner.removeClass( 'secupress-inline-spinner-active' );
+
+						// Verify the input value hasn't changed during the request.
+						if ( $searchInput.val().trim() !== finalSearchValue ) {
+							return;
+						}
+
+						if ( response && response.success && response.data && response.data.length > 0 ) {
+							var html = '';
+							response.data.forEach( function( item ) {
+								html += '<li><a href="' + ( item.url || '#' ) + '">' + ( item.title || '' ) + '</a></li>';
+							} );
+							$resultsList.html( html ).show();
+							if ( cache_data ) {
+								cache_data.results[ final_search_key ] = response.data;
+								cache_data.order = cache_data.order.filter( function( entry ) {
+									return entry !== final_search_key;
+								} );
+								cache_data.order.push( final_search_key );
+								while ( cache_data.order.length > 10 ) {
+									var removed_key = cache_data.order.shift();
+									if ( cache_data.results[ removed_key ] ) {
+										delete cache_data.results[ removed_key ];
+									}
+								}
+								secupress_save_search_cache();
+							}
+						} else {
+							$resultsList.hide().empty();
+							if ( cache_data ) {
+								cache_data.results[ final_search_key ] = [];
+								cache_data.order = cache_data.order.filter( function( entry ) {
+									return entry !== final_search_key;
+								} );
+								cache_data.order.push( final_search_key );
+								while ( cache_data.order.length > 10 ) {
+									var removed_empty_key = cache_data.order.shift();
+									if ( cache_data.results[ removed_empty_key ] ) {
+										delete cache_data.results[ removed_empty_key ];
+									}
+								}
+								secupress_save_search_cache();
+							}
+						}
+					} )
+					.fail( function( jqXHR ) {
+						// Hide spinner.
+						$spinner.removeClass( 'secupress-inline-spinner-active' );
+
+						// Don't hide results if request was aborted (user kept typing).
+						if ( jqXHR.statusText !== 'abort' ) {
+							$resultsList.hide().empty();
+						}
+					} )
+					.always( function() {
+						currentRequest = null;
+					} );
+			}, 300 );
+		} );
+
+		// Hide results when clicking outside.
+		$( document ).on( 'click', function( e ) {
+			if ( ! $searchWrapper.is( e.target ) && $searchWrapper.has( e.target ).length === 0 ) {
+				$resultsList.hide();
+			}
+		} );
+	} )();
 } )(jQuery, document, window);

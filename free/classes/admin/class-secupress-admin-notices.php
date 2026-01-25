@@ -63,7 +63,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 * @since 1.0
 	 *
 	 * @param (string)      $message    The message to display in the notice.
-	 * @param (string)      $error_code Like WordPress notices: "error" or "updated". Default is "updated".
+	 * @param (string)      $error_code Like WordPress notices: "error" "updated" "success" "warning" "info". Default is "updated".
 	 * @param (string|bool) $notice_id  A unique identifier to tell id the notice is dismissible.
 	 *                                  false: the notice is not dismissible.
 	 *                                  string: the notice is dismissible and send an ajax call to store the "dismissed" state into a user meta to prevent it to popup again.
@@ -85,7 +85,6 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		// Add notices style.
 		self::enqueue_style();
 
-		$error_code = 'error' === $error_code ? 'error' : 'updated';
 		$notice_id  = $notice_id ? sanitize_title( $notice_id ) : $notice_id;
 
 		if ( ! isset( $this->notices[ $error_code ] ) ) {
@@ -112,11 +111,12 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	/**
 	 * Add a temporary admin notice.
 	 *
-	 * @since 1.0
+	 * @since 2.4 Fix duplicate notices (based on ID, not content)
 	 * @since 1.3 Added $notice_id parameter.
+	 * @since 1.0
 	 *
 	 * @param (string)      $message    The message to display in the notice.
-	 * @param (string)      $error_code Like WordPress notices: "error" or "updated". Default is "updated".
+	 * @param (string)      $error_code Like WordPress notices: "error" "updated" "success" "warning" "info". Default is "updated".
 	 * @param (string|bool) $notice_id  A unique identifier to tell id the notice is dismissible.
 	 *                                  false: the notice is not dismissible.
 	 *                                  string: the notice is dismissible and send an ajax call to store the "dismissed" state into a user meta to prevent it to popup again.
@@ -124,11 +124,9 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 * @param (null|string) $capa       A WordPress capability or role. "null" = secupress_get_capability()
 	 */
 	public function add_temporary( $message, $error_code = 'updated', $notice_id = false, $capa = null ) {
-		$error_code = 'error' === $error_code ? 'error' : 'updated';
-		$notices    = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
-		$notices    = is_array( $notices ) ? $notices : array();
-		$notices[]  = compact( 'message', 'error_code', 'capa', 'notice_id' );
-
+		$notices               = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
+		$notices               = is_array( $notices ) ? $notices : array();
+		$notices[ $notice_id ] = compact( 'message', 'error_code', 'capa', 'notice_id' );
 		secupress_set_transient( 'secupress-notices-' . get_current_user_id(), $notices );
 	}
 
@@ -301,7 +299,8 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		if ( is_array( $notices ) ) {
 			foreach ( $notices as $notice ) {
 				$notice_id = isset( $notice['notice_id'] ) ? $notice['notice_id'] : false;
-				$this->add( $notice['message'], $notice['error_code'], $notice_id );
+				$capa      = isset( $notice['capa'] ) ? $notice['capa'] : null;
+				$this->add( $notice['message'], $notice['error_code'], $notice_id , $capa);
 			}
 		}
 	}
@@ -310,7 +309,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	/**
 	 * Display the notices.
 	 *
-	 * The notices are displayed by error code ("error" or "updated"), then by type (dismissible with state stored, dismissible like WP, not dismissible).
+	 * The notices are displayed by error code ("error" "updated" "success" "warning" "info"), then by type (dismissible with state stored, dismissible like WP, not dismissible).
 	 * All not dismissible ones are grouped into one notice. Same thing for the "dismissible like WP" ones.
 	 * Only the "dismissible with state stored" are printed separately, so the user can dismiss some and not others.
 	 *
@@ -337,17 +336,26 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 					if ( ! current_user_can( $capa ) ) {
 						continue;
 					}
-					$plugin_name = SECUPRESS_PLUGIN_NAME . ( secupress_has_pro() && ! secupress_is_white_label() ? ' Pro' : '' );
-					$label       = secupress_is_expert_mode() ? '' : '<label class="plugin-title">' . esc_html( $plugin_name ) . '</label>';
-					$lab_class   = secupress_is_expert_mode() ? '' : ' has-plugin-title';
+					$plugin_name     = SECUPRESS_PLUGIN_NAME . ( secupress_has_pro() && ! secupress_is_white_label() ? ' Pro' : '' );
+					$label           = ! secupress_show_contextual_help() ? '' : '<label class="plugin-title">' . esc_html( $plugin_name ) . '</label>';
+					$lab_class       = ! secupress_show_contextual_help() ? '' : ' has-plugin-title';
+					$error_class     = str_replace( '_', ' ', $error_code );
+					if ( strpos( $error_class, 'no-plugin-title' ) !== false ) {
+						$error_class = str_replace( 'no-plugin-title', '', $error_class );
+						$lab_class   = '';
+						$label       = '';
+					}
 					if ( 'sp-dismissible' === $type ) {
 						foreach ( $messages as $notice_id => $message ) {
-							$button = admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=' . $notice_id . '&_wp_http_referer=' . $referer );
-							$button = wp_nonce_url( $button, 'secupress-notices' );
-							$button = '<a href="' . esc_url( $button ) . '" class="notice-dismiss"><span class="screen-reader-text">' . __( 'Dismiss', 'secupress' ) . '</span></a>';
-							$message = strpos( $message, '<p>' ) === false && trim( $message ) ? '<p>' . $message . '</p>' : $message;
+							$button  = admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=' . $notice_id . '&_wp_http_referer=' . $referer );
+							$button  = wp_nonce_url( $button, 'secupress-notices' );
+							$button  = '<a href="' . esc_url( $button ) . '" class="notice-dismiss"><span class="screen-reader-text">' . __( 'Dismiss', 'secupress' ) . '</span></a>';
+							// $message = strpos( $message, '<p>' ) === false && trim( $message ) ? '<p>' . $message . '</p>' : $message;
+							if ( 'error' === $error_code && ! empty( trim( $message ) ) ) {
+								$message = '<p>' . sprintf( __( '<strong>Error</strong>: %s', 'secupress' ), $message ) . '</p>';
+							}
 							?>
-							<div class="<?php echo $error_code . $lab_class; ?> notice secupress-notice secupress-is-dismissible" data-id="<?php echo $notice_id; ?>">
+							<div class="secupress-notice notice <?php echo $error_class . $lab_class; ?> secupress-is-dismissible" data-id="<?php echo $notice_id; ?>">
 								<?php echo $label; ?>
 								<?php echo $message; ?>
 								<?php echo $button; ?>
@@ -357,10 +365,13 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 						}
 					} elseif ( 'wp-dismissible' === $type ) {
 						?>
-						<div class="<?php echo $error_code . $lab_class; ?> notice secupress-notice secupress-is-dismissible">
+						<div class="secupress-notice notice <?php echo $error_class . $lab_class; ?> secupress-is-dismissible">
 							<?php echo $label; ?>
 							<?php
-							$message = implode( '<br class="separator"/>', $messages );
+							$message     = implode( '<br class="separator"/>', $messages );
+							if ( 'error' === $error_code ) {
+								$message = sprintf( __( '<strong>Error</strong>: %s', 'secupress' ), $message );
+							}
 							echo strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
 				    		unset( $this->notices[ $error_code ][ $type ] );
 							?>
@@ -368,11 +379,14 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 						<?php
 					} else {
 						?>
-						<div class="<?php echo $error_code . $lab_class; ?> notice secupress-notice">
+						<div class="secupress-notice notice <?php echo $error_class . $lab_class; ?>">
 							<?php echo $label; ?>
 							<?php
-							$message = implode( '<br class="separator"/>', $messages );
+							$message     = implode( '<br class="separator"/>', $messages );
 							echo strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
+							if ( 'error' === $error_code ) {
+								$message = sprintf( __( '<strong>Error</strong>: %s', 'secupress' ), $message );
+							}
 				    		unset( $this->notices[ $error_code ][ $type ] );
 							?>
 						</div>
@@ -394,11 +408,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		if ( empty( $_REQUEST['notice_id'] ) ) { // WPCS: CSRF ok.
 			wp_die( -1 );
 		}
-		if ( wp_doing_ajax() ) {
-			secupress_check_admin_referer( 'secupress-notices' );
-		} else {
-			secupress_check_admin_referer( 'secupress-notices' );
-		}
+		secupress_check_admin_referer( 'secupress-notices' );
 
 		$notice_id = $_REQUEST['notice_id'];
 		$notice_id = $notice_id ? sanitize_title( $notice_id ) : $notice_id;

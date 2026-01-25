@@ -41,7 +41,7 @@ $this->add_field( array(
 
 $lastupdate = secupress_get_option( 'bad_themes_last_update', 0 );
 $lastupdate = 0 !== $lastupdate ? $lastupdate : __( 'Not yet', 'secupress' );
-if ( secupress_is_expert_mode() ) {
+if ( ! secupress_is_expert_mode() ) {
 	$this->add_field( array(
 		'title'        => __( 'Last Update', 'secupress' ),
 		'depends'      => secupress_is_submodule_active( 'plugins-themes', 'detect-bad-themes' ) ? $main_field_name : 'not_installed_yet',
@@ -56,12 +56,16 @@ if ( secupress_is_expert_mode() ) {
 		),
 	) );
 } else {
+	$update_button = sprintf( '<p class="secupress-show-expert"><a href="%s" class="button button-secondary">%s</a></p>',
+								wp_nonce_url( admin_url( 'admin-post.php?action=secupress_bad_themes_update_data' ), 'secupress_bad_themes_update_data' ),
+								__( 'Update data', 'secupress' )
+					);
 	$this->add_field( array(
 		'title'        => __( 'Manual Update', 'secupress' ),
 		'label_for'    => 'themes_manual_update',
 		'depends'      => secupress_is_submodule_active( 'plugins-themes', 'detect-bad-themes' ) ? $main_field_name : 'not_installed_yet',
 		'type'         => 'html',
-		'value'        => secupress_is_submodule_active( 'plugins-themes', 'detect-bad-themes' ) ? '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_bad_themes_update_data' ), 'secupress_bad_themes_update_data' ) . '" class="button button-secondary">' . __( 'Update the data', 'secupress' ) . '</a>' : '<a disabled class="button button-secondary">' . __( 'Save changes first', 'secupress' ) . '</a>',
+		'value'        => secupress_is_submodule_active( 'plugins-themes', 'detect-bad-themes' ) ? $update_button : '<a disabled class="button button-secondary">' . __( 'Save changes first', 'secupress' ) . '</a>',
 		'helpers'      => array(
 			array(
 				'type'        => 'description',
@@ -82,7 +86,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Only compatible with any public theme from wp.org. Cannot be unchecked.', 'secupress' ),
+			'description' => __( 'Only compatible with any public theme from wp.org.', 'secupress' ) . ' ' . _x( ' Cannot be unchecked.', 'checkbox/option/setting', 'secupress' ),
 		),
 	),
 ) );

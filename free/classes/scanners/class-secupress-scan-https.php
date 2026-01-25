@@ -1,75 +1,6 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
-
-add_filter( 'pre_wp_update_https_detection_errors', 'secupress_update_https_detection_errors' );
-/**
- * Just for our scanner, do not use wp_is_local_html_output() which is crazy bad.
- *
- * @since 2.0.1
- * @author Julio Potier
- *
- * @return (WP_Error)
- **/
-function secupress_update_https_detection_errors() {
-	$support_errors = new WP_Error();
-
-	$response = wp_remote_request(
-		home_url( '/', 'https' ),
-		array(
-			'headers'   => array(
-				'Cache-Control' => 'no-cache',
-			),
-			'sslverify' => true,
-		)
-	);
-
-	if ( is_wp_error( $response ) ) {
-		$unverified_response = wp_remote_request(
-			home_url( '/', 'https' ),
-			array(
-				'headers'   => array(
-					'Cache-Control' => 'no-cache',
-				),
-				'sslverify' => false,
-			)
-		);
-
-		if ( is_wp_error( $unverified_response ) ) {
-			$support_errors->add(
-				'https_request_failed',
-				__( 'HTTPS request failed.', 'secupress' )
-			);
-		} else {
-			$support_errors->add(
-				'ssl_verification_failed',
-				__( 'SSL verification failed.', 'secupress' )
-			);
-		}
-
-		$response = $unverified_response;
-	}
-
-	if ( ! is_wp_error( $response ) ) {
-		if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
-			$support_errors->add( 'bad_response_code', wp_remote_retrieve_response_message( $response ) );
-		}
-	}
-
-	/**
-	* Filter the returned errors
-	*
-	* @since 2.0.3
-	* @author Julio Potier
-	* @param (WP_Error) $support_errors
-	* @param (WP_HTTP) $response
-	* @return (WP_Error) $support_errors
-	*/
-	$support_errors = apply_filters( 'secupress.https_detection_errors', $support_errors, $response );
-	return $support_errors;
-}
-
-
 /**
  * HTTPS scan class.
  *
@@ -148,7 +79,7 @@ class SecuPress_Scan_HTTPS extends SecuPress_Scan implements SecuPress_Scan_Inte
 			// "bad"
 			200 => __( 'Your site does not totally use HTTPS/SSL: %s', 'secupress' ),
 			201 => __( 'Your site does not use HTTPS/SSL. Error: %s', 'secupress' ),
-			202 => __( 'Your website seems to run under maintenance mode, relaunch the HTTPS scanner later when you set it off.', 'secupress' ),
+			// 202 => __( 'Your website seems to run under maintenance mode, relaunch the HTTPS scanner later when you set it off.', 'secupress' ),
 			// "cantfix"
 			300 => __( 'Cannot be fixed automatically. You have to contact you host provider to ask him to <strong>upgrade your site with HTTPS/SSL</strong>.', 'secupress' ),
 			301 => sprintf( __( 'Update your HOME url and SITE url with %s.', 'secupress' ), secupress_code_me( 'https://' ) ),
@@ -183,6 +114,7 @@ class SecuPress_Scan_HTTPS extends SecuPress_Scan implements SecuPress_Scan_Inte
 	/**
 	 * Scan for flaw(s).
 	 *
+	 * @since 2.3.16 Revamp
 	 * @since 1.0
 	 *
 	 * @return (array) The scan results.
@@ -194,16 +126,11 @@ class SecuPress_Scan_HTTPS extends SecuPress_Scan implements SecuPress_Scan_Inte
 			$this->add_message( 0 );
 			return parent::scan();
 		}
-		delete_option( 'https_detection_errors' );
-		delete_transient( 'secupress_is_https_supported' );
-		$supports_https = secupress_wp_version_is( '5.7' ) ? wp_is_https_supported() : true; // if not detectable, let's say it is.
-		if ( ! $supports_https ) {
+		if ( ! secupress_is_https_supported() ) {
 			// very bad
-			$error = (array) get_option( 'https_detection_errors' );
-			if ( isset( $error['bad_response_code'] ) && 'Service Unavailable' === reset( $error['bad_response_code'] ) ) {
-				$this->add_message( 202 );
-			} else {
-				$this->add_message( 201, reset( $error ) );
+			$response = get_transient( 'secupress_is_https_supported' );
+			if ( is_wp_error( $response ) && isset( $response->errors ) ) {
+				$this->add_message( 201, [ implode( ', ', reset( $response->errors ) ) ] );
 			}
 		} elseif ( ! secupress_site_is_using_https() ) {
 			$bad   = [];
@@ -212,7 +139,7 @@ class SecuPress_Scan_HTTPS extends SecuPress_Scan implements SecuPress_Scan_Inte
 			$bad   = array_filter( $bad );
 			$bad   = ucfirst( wp_sprintf_l( '%l', $bad ) ) . '.';
 			// bad
-			$this->add_message( 200, array( $bad ) );
+			$this->add_message( 200, [ $bad ] );
 		}
 		// "good"
 		$this->maybe_set_status( 0 );

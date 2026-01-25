@@ -38,7 +38,8 @@ $this->add_field( array(
 		),
 		array(
 			'type'        => 'warning',
-			'description' => secupress_is_pro() ? sprintf( __( 'This module will store GeoIP data in the database, incresing its size for approximately %dMB.', 'secupress' ), 40 ) : '',
+			'depends'     => $main_field_name . '_blacklist ' . $main_field_name . '_whitelist',
+			'description' => secupress_is_pro() ? sprintf( __( 'This module will store GeoIP data in your database, increasing its size for approximately %dMB.', 'secupress' ), 45 ) : '',
 		),
 	),
 ) );

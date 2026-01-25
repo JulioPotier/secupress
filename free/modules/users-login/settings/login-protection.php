@@ -40,7 +40,7 @@ $this->add_field( array(
 	'label_for'    => $this->get_field_name( 'number_attempts' ),
 	'type'         => 'number',
 	'default'      => '10',
-	'move_item'    => '.secupress-field-login-protection_type_limitloginattempts',
+	// 'move_item'    => '.secupress-field-login-protection_type_limitloginattempts',
 	'attributes'   => array(
 		'min' => 3,
 		'max' => 99,
@@ -86,4 +86,94 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'discloses', 'login-errors-disclose' ),
 	'label'             => __( 'Yes, hide the common login errors', 'secupress' ),
+) );
+
+$main_field_name = $this->get_field_name( 'geoip_login' );
+$this->add_field( array(
+	'title'             => __( 'GeoIP Login', 'secupress' ),
+	'description'       => __( 'Challenge the login when the location does not match the previous ones.', 'secupress' ),
+	'label_for'         => $main_field_name,
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'users-login', 'geoip-login' ),
+	'label'             => __( 'Yes, confront logins that does not match the required location', 'secupress' ),
+) );
+
+$options           = array(
+	'ip-strict' => sprintf( __( 'Check by %s', 'secupress' ), secupress_tag_me( __( 'Strict IP Address', 'secupress' ), 'strong' ) ),
+	'ip-smooth' => sprintf( __( 'Check by %s', 'secupress' ), secupress_tag_me( __( 'Smooth IP Address', 'secupress' ), 'strong' ) ) . ' <em>(' . __( 'Default', 'secupress' ) . ')</em>',
+	'city'      => sprintf( __( 'Check by %s', 'secupress' ), secupress_tag_me( __( 'City', 'secupress' ), 'strong' ) ),
+	'region'    => sprintf( __( 'Check by %s', 'secupress' ), secupress_tag_me( __( 'Region', 'secupress' ), 'strong' ) ),
+	'country'   => sprintf( __( 'Check by %s', 'secupress' ), secupress_tag_me( __( 'Country', 'secupress' ), 'strong' ) ),
+);
+
+$field_name = $main_field_name  .'_mode';
+if ( secupress_feature_is_expert( $field_name ) && secupress_is_expert_mode() ) {
+	$this->add_field( array(
+		'title'             => __( 'Checking Level', 'secupress' ),
+		'description'       => __( 'From strict to large', 'secupress' ),
+		'depends'           => $main_field_name,
+		'name'              => $field_name,
+		'type'              => 'radios',
+		'options'           => $options,
+		'default'           => 'ip-smooth',
+		'helpers'           => array(
+			array(
+				'type'        => 'description',
+				'depends'     => $field_name . '_ip-strict',
+				'description' => sprintf( __( 'Test Level: %d/%d.', 'secupress' ), 5, 5 ) . ' ' . __( 'Strict IP Comparison is applied.', 'secupress' ),
+			),
+			array(
+				'type'        => 'description',
+				'depends'     => $field_name . '_ip-smooth',
+				'description' => sprintf( __( 'Test Level: %d/%d.', 'secupress' ), 4, 5 ) . ' ' . __( 'Smooth IP Comparison is applied.', 'secupress' ),
+			),
+			array(
+				'type'        => 'description',
+				'depends'     => $field_name . '_city',
+				'description' => sprintf( __( 'Test Level: %d/%d.', 'secupress' ), 3, 5 ) . ' ' . __( 'City Name Comparison is applied.', 'secupress' ),
+			),
+			array(
+				'type'        => 'description',
+				'depends'     => $field_name . '_region',
+				'description' => sprintf( __( 'Test Level: %d/%d.', 'secupress' ), 2, 5 ) . ' ' . __( 'Region Name Comparison is applied.', 'secupress' ),
+			),
+			array(
+				'type'        => 'description',
+				'depends'     => $field_name . '_country',
+				'description' => sprintf( __( 'Test Level: %d/%d.', 'secupress' ), 1, 5 ) . ' ' . __( 'Country Name Comparison is applied.', 'secupress' ),
+			),
+		),
+	) );
+	
+	$this->add_field( array(
+		'title'             => __( 'Device Check', 'secupress' ),
+		'description'       => __( 'The Device, OS, and Browser will be checked as Strict comparison for all cases.', 'secupress' ),
+		'label_for'         => $main_field_name . '_device',
+		'depends'           => $main_field_name,
+		'type'              => 'checkbox',
+		'label'             => __( 'Yes, also check the device on login', 'secupress' ),
+		) );
+}
+
+$this->add_field( array(
+	'title'        => '<span class="dashicons dashicons-groups"></span> ' . __( 'Affected Roles', 'secupress' ),
+	'description'  => __( 'Which roles does this module affect?', 'secupress' ),
+	'depends'      => $main_field_name,
+	'row_class'    => 'affected-role-row',
+	'name'         => $this->get_field_name( 'geoip_login_affected_role' ),
+	'type'         => 'roles',
+	// 'value'        => $roles,
+	'label_screen' => __( 'Affected Roles', 'secupress' ),
+	'helpers'      => array(
+		array(
+			'type'        => 'description',
+			'description' => __( 'Future roles will be automatically selected', 'secupress' ),
+		),
+		array(
+			'type'        => 'warning',
+			'class'       => 'hide-if-js',
+			'description' => __( 'Select at least 1 role', 'secupress' ),
+		),
+	),
 ) );

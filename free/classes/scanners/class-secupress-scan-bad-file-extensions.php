@@ -30,13 +30,6 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	protected static $_instance;
 
 	/**
-	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
-	 *
-	 * @var (bool|string)
-	 */
-	protected $fixable = 'pro';
-
-	/**
 	 * The test file path.
 	 *
 	 * @var (bool|string)
@@ -66,7 +59,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		$this->more_fix = sprintf(
 			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
 			'<strong>' . __( 'Bad File Extensions', 'secupress' ) . '</strong>',
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'file-system' ) ) . '#module-bad-file-extensions">' . __( 'Malware Scanner', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_bad-url-access">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
 		);
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
@@ -93,7 +86,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
 		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
 			'<strong>' . __( 'Bad File Extensions', 'secupress' ) . '</strong>',
-			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'file-system' ) ) . '#module-bad-file-extensions">' . __( 'Malware Scan', 'secupress' ) . '</a>'
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_bad-url-access">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
 		);
 
 		$messages = array(
@@ -331,15 +324,18 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	/**
 	 * Create a test file in the uploads folder. Also set the test file path and URL.
 	 *
+	 * @since 2.3.17 Use a forbidden ext directly from the list
 	 * @since 1.0
 	 */
 	protected function create_file() {
 		$wp_filesystem = secupress_get_filesystem();
 		$uploads       = wp_upload_dir( null, false );
 		$basedir       = wp_normalize_path( $uploads['basedir'] );
+		$extensions    = secupress_bad_file_extensions_get_forbidden_extensions();
 
 		// Get the file name.
-		$file_ext  = 'sp' . strtolower( secupress_generate_key( 3 ) );
+		$file_ext  = mt_rand( 0, count( $extensions ) - 1 );
+		$file_ext  = $extensions[ $file_ext ];
 		$file_name = 'secupress-temporary-file-' . secupress_generate_hash( 'file_name', 2, 6 ) . '.' . $file_ext;
 		$file_path = $basedir . '/' . $file_name;
 
@@ -361,6 +357,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 			$this->file_url  = trailingslashit( $uploads['baseurl'] ) . $file_name;
 		}
 	}
+
 
 
 	/**

@@ -162,6 +162,15 @@ function secupress_3rd_compat__wordpress_2_step_verification( $activated ) {
 	return $activated;
 }
 
+// https://plugins.svn.wordpress.org/wp-2fa/trunk/wp-2fa.php
+add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__wp_2fa' );
+function secupress_3rd_compat__wp_2fa( $activated ) {
+	if ( ! $activated && defined( 'WP_2FA_VERSION' ) ) {
+		return 'WP 2FA - Two-factor authentication for WordPress';
+	}
+	return $activated;
+}
+
 /*
 For wpserveur.net
 */

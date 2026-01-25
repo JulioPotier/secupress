@@ -2,27 +2,10 @@
 defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
- * Depending on the value of `$activate`, will activate or deactivate a sub-module.
- *
- * @since 1.0
- *
- * @param (string) $module    The module.
- * @param (string) $submodule The sub-module.
- * @param (bool)   $activate  True to activate, false to deactivate.
- */
-function secupress_manage_submodule( $module, $submodule, $activate ) {
-	if ( $activate ) {
-		secupress_activate_submodule( $module, $submodule );
-	} else {
-		secupress_deactivate_submodule( $module, $submodule );
-	}
-}
-
-
-/**
  * This is used when submitting a module form.
  * If we submitted the given module form, it will return an array containing the values of sub-modules to activate.
  *
+ * @since 2.3.12 Return the previous result instead of false when done
  * @since 1.0
  *
  * @param (string) $module The module.
@@ -30,16 +13,16 @@ function secupress_manage_submodule( $module, $submodule, $activate ) {
  * @return (array|bool) False if we're not submitting the module form. An array like `array( 'submodule1' => 1, 'submodule2' => 1 )` otherwise.
  */
 function secupress_get_submodule_activations( $module ) {
-	static $done = array();
+	static $done = [];
 
 	if ( isset( $done[ $module ] ) ) {
-		return false;
+		return $done[ $module ];
 	}
 
-	$done[ $module ] = true;
-
 	if ( isset( $_POST['option_page'] ) && 'secupress_' . $module . '_settings' === $_POST['option_page'] ) { // WPCS: CSRF ok.
-		return isset( $_POST['secupress-plugin-activation'] ) && is_array( $_POST['secupress-plugin-activation'] ) ? $_POST['secupress-plugin-activation'] : array(); // WPCS: CSRF ok.
+		$return = isset( $_POST['secupress-plugin-activation'] ) && is_array( $_POST['secupress-plugin-activation'] ) ? $_POST['secupress-plugin-activation'] : array(); // WPCS: CSRF ok.
+		$done[ $module ] = $return;
+		return $return;
 	}
 
 	return false;

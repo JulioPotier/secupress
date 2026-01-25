@@ -72,7 +72,6 @@ function secupress_move_login_get_default_slugs() {
  */
 function secupress_move_login_get_slugs() {
 	$slugs = secupress_move_login_get_default_slugs();
-
 	foreach ( $slugs as $action => $dummy ) {
 		$slugs[ $action ] = secupress_get_module_option( 'move-login_slug-' . $action, $action, 'users-login' );
 		$slugs[ $action ] = sanitize_title( $slugs[ $action ], $action, 'display' );
@@ -82,7 +81,10 @@ function secupress_move_login_get_slugs() {
 	$slugs['confirmaction']           = 'confirmaction';
 	$slugs['confirm_admin_email']     = 'confirm_admin_email';
 	$slugs['lostpassword']            = 'lostpassword';
-
+	// If registration is disabled, we generate a random slug at each page load for the register page.
+	if ( '1' !== get_option( 'users_can_register' ) ) {
+		$slugs['register']   = secupress_generate_key();
+	}
 	return $slugs;
 }
 
@@ -576,10 +578,12 @@ add_filter( 'register_url', 'secupress_register_url_redirect' );
 /**
  * Fordib the redirection on the registration URL if not logged-in, you have to know the correct new page
  *
- * @param (string) $url The register_url from WP.
  * @since 1.4
- * @return (string) $url
  * @author Julio Potier
+ * 
+ * @param (string) $url The register_url from WP.
+ * 
+ * @return (string) $url
  **/
 function secupress_register_url_redirect( $url ) {
 	if ( ! is_user_logged_in() ) {
@@ -589,4 +593,26 @@ function secupress_register_url_redirect( $url ) {
 		}
 	}
 	return $url;
+}
+
+add_filter( 'wp_login_errors', 'secupress_register_errors' );
+/**
+ * Only displays the error and not the login form, seriously WP...
+ *
+ * @since 2.3.7
+ * @author Julio Potier
+ * 
+ * @param (WP_Error) $errors
+ * @return (WP_Error) $errors
+ **/
+function secupress_register_errors( $errors ) {
+	if ( isset( $_REQUEST['action'] ) && 'registration_disabled' === $_REQUEST['action'] ) {
+		if ( isset( $_REQUEST['reauth'] ) ) {
+			wp_clear_auth_cookie();
+		}
+		login_header( __( 'Log In', 'secupress' ), '', $errors );
+		login_footer();
+		die();
+	}
+	return $errors;
 }

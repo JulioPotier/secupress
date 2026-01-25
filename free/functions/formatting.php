@@ -71,7 +71,7 @@ function secupress_action_page( $title, $content, $args = array() ) {
 	</head>
 	<body <?php echo $body; ?>>
 		<div class="secupress-action-page-content">
-			<?php echo $logo ? $logo : '<div class="wrap"><img src="' . get_site_icon_url( 160, secupress_get_logo( [], 'url' ) ) . '" alt="' . __( 'Site Icon', 'secupress' ) . '"/></div>'; ?>
+			<?php echo $logo ? $logo : '<div class="wrap"><img src="' . get_site_icon_url( 90, secupress_get_logo( [], 'url' ) ) . '" alt="' . __( 'Site Icon', 'secupress' ) . '"/></div>'; ?>
 			<?php echo $content; ?>
 		</div>
 	</body>
@@ -79,6 +79,374 @@ function secupress_action_page( $title, $content, $args = array() ) {
 	die();
 }
 
+/**
+ * Outputs a fake login page design.
+ *
+ * @since 2.3.19
+ * @author Julio Potier
+ *
+ * @param (string)   $title    Fake login page title to display in the `<title>` element.
+ * @param (string)   $content  Content to display in body.
+ * @param (WP_Error) $wp_error Optional. The errors to pass.
+ * @param (int)      $user_id  Optional. Needed when you there is no user logged in
+ */
+function secupress_login_page( $title, $content, $wp_error = null, $user_id = 0 ) {
+	global $sp_action;
+
+	if ( ! isset( $sp_action ) || ! $sp_action ) {
+		secupress_die( __( 'Something went wrong.', 'secupress' ), '', [ 'force_die' => true, 'context' => 'missing-sp_action', 'attack_type' => 'login' ] );
+	}
+
+	$user_id = $user_id ? $user_id : get_current_user_id();
+	if ( $user_id ) {
+		switch_to_locale( get_user_locale( $user_id ) );
+		// Add user color scheme to login page
+		global $_wp_admin_css_colors;
+		register_admin_color_schemes();
+		$color = get_user_option( 'admin_color', $user_id );
+		if ( empty( $color ) || ! isset( $_wp_admin_css_colors[ $color ] ) ) {
+			$color = 'fresh';
+		}
+		$color = $_wp_admin_css_colors[ $color ];
+		$url   = $color->url;
+		if ( $url ) {
+			$ver  = get_bloginfo( 'version' );
+			$hash = secupress_generate_hash( $ver );
+			$url  = add_query_arg( 'ver', $hash, $url );
+			add_action( 'login_head', function() use( $url ) {
+				echo "<link rel='stylesheet' id='colors-css' href='{$url}' media='all' />";
+			});
+		}
+	}
+
+	if ( ! is_wp_error( $wp_error ) ) {
+		$wp_error = new WP_Error();
+	}
+	?><!DOCTYPE html>
+	<html <?php language_attributes(); ?>>
+	<head>
+	<meta http-equiv="Content-Type" content="<?php bloginfo( 'html_type' ); ?>; charset=<?php bloginfo( 'charset' ); ?>" />
+	<title><?php echo $title; ?></title>
+	<style>
+		.secupress-notice.has-plugin-title {margin-bottom: 33px !important; position: relative; }
+		.secupress-notice label.plugin-title {background: rgba(0, 0, 0, 0.3); color: #fff; padding: 2px 10px; position: absolute; top: 100%; border-top: 2px solid rgba(0, 0, 0, 0.1); border-radius: 0px 0px 2px 2px; }
+	</style>
+	<?php
+	wp_enqueue_style( 'login' );
+
+	/**
+	 * Run actions after title tag
+	 *
+	 * @since 2.3.19
+	 */
+	do_action( 'secupress_login_page.after_title_tag' );
+
+	/**
+	 * Enqueues scripts and styles for the login page.
+	 *
+	 * @since WP 3.1.0
+	 */
+	do_action( 'login_enqueue_scripts' );
+	/**
+	 * Enqueues scripts and styles for the login page.
+	 *
+	 * @since 2.3.19
+	 */
+	do_action( 'secupress_login_page.login_enqueue_scripts' );
+
+	/**
+	 * Fires in the login page header after scripts are enqueued.
+	 *
+	 * @since WP 2.1.0
+	 */
+	do_action( 'login_head' );
+	/**
+	 * Fires in the login page header after scripts are enqueued.
+	 *
+	 * @since 2.3.19
+	 */
+	do_action( 'secupress_login_page.login_head' );
+	?><meta name="viewport" content="width=device-width, initial-scale=1.0" /><?php
+	?><meta name='referrer' content='strict-origin-when-cross-origin' /><?php
+
+	$login_header_url = home_url();
+
+	$login_header_text = get_bloginfo( 'blogdescription' );
+
+	$classes = array( 'login-action-' . $sp_action, 'wp-core-ui' );
+
+	if ( is_rtl() ) {
+		$classes[] = 'rtl';
+	}
+
+	$classes[] = ' locale-' . sanitize_html_class( strtolower( str_replace( '_', '-', get_user_locale() ) ) );
+
+	/**
+	 * Filters the login page body classes.
+	 *
+	 * @since WP 3.5.0
+	 *
+	 * @param string[] $classes An array of body classes.
+	 * @param string   $action  The action that brought the visitor to the login page.
+	 */
+	$classes = apply_filters( 'login_body_class', $classes, $sp_action );
+	/**
+	 * Filters the login page body classes.
+	 *
+	 * @since 2.3.19
+	 *
+	 * @param string[] $classes An array of body classes.
+	 * @param string   $action  The action that brought the visitor to the login page.
+	 */
+	$classes = apply_filters( 'secupress_login_page.login_body_class', $classes, $sp_action );
+	?>
+	</head>
+	<body class="login no-js <?php echo esc_attr( implode( ' ', $classes ) ); ?>">
+	<?php
+	wp_print_inline_script_tag( "document.body.className = document.body.className.replace('no-js','js');" );
+	?>
+
+	<?php
+	/**
+	 * Fires in the login page header after the body tag is opened.
+	 *
+	 * @since WP 4.6.0
+	 */
+	do_action( 'login_header' );
+	/**
+	 * Fires in the login page header after the body tag is opened.
+	 *
+	 * @since 2.3.19
+	 */
+	do_action( 'secupress_login_page.login_header' );
+	?>
+	<div id="login">
+		<h1 role="presentation" class="wp-login-logo"><a href="<?php echo esc_url( $login_header_url ); ?>"><?php echo $login_header_text; ?></a></h1>
+	<?php
+	if ( $wp_error->has_errors() ) {
+		$error_list = array();
+		$messages   = '';
+
+		foreach ( $wp_error->get_error_codes() as $code ) {
+			$severity = $wp_error->get_error_data( $code );
+			foreach ( $wp_error->get_error_messages( $code ) as $error_message ) {
+				if ( 'message' === $severity ) {
+					$messages .= '<p>' . $error_message . '</p>';
+				} else {
+					$error_list[] = $error_message;
+				}
+			}
+		}
+
+		if ( ! empty( $messages ) ) {
+			/**
+			 * Filters instructional messages displayed above the login form.
+			 *
+			 * @since WP 2.5.0
+			 *
+			 * @param string $messages Login messages.
+			 */
+			$messages = apply_filters( 'login_messages', $messages );
+			/**
+			 * Filters instructional messages displayed above the login form.
+			 *
+			 * @since 2.3.19
+			 *
+			 * @param string $messages Login messages.
+			 */
+			$messages    = apply_filters( 'secupress_login_page.login_messages', $messages );
+			$plugin_name = SECUPRESS_PLUGIN_NAME . ( secupress_has_pro() && ! secupress_is_white_label() ? ' Pro' : '' );
+			$label       = ! secupress_show_contextual_help() ? '' : '<label class="plugin-title">' . esc_html( $plugin_name ) . '</label>';
+			$lab_class   = ! secupress_show_contextual_help() ? '' : 'secupress-notice has-plugin-title';
+
+			wp_admin_notice(
+				$messages . $label,
+				array(
+					'type'               => 'info',
+					'id'                 => 'login-message',
+					'additional_classes' => array( 'message', $lab_class ),
+					'paragraph_wrap'     => false,
+				)
+			);
+		}
+
+		if ( ! empty( $error_list ) ) {
+			$errors = '';
+
+			if ( count( $error_list ) > 1 ) {
+				$errors .= '<ul class="login-error-list">';
+
+				foreach ( $error_list as $item ) {
+					$errors .= '<li>' . $item . '</li>';
+				}
+
+				$errors .= '</ul>';
+			} else {
+				$errors .= '<p>' . $error_list[0] . '</p>';
+			}
+
+			/**
+			 * Filters the error messages displayed above the login form.
+			 *
+			 * @since 2.1.0
+			 *
+			 * @param string $errors Login error messages.
+			 */
+			$errors = apply_filters( 'login_errors', $errors );
+			$errors = apply_filters( 'secupress_login_page.login_errors', $errors );
+
+			wp_admin_notice(
+				$errors,
+				array(
+					'type'           => 'error',
+					'id'             => 'login_error',
+					'paragraph_wrap' => false,
+				)
+			);
+		}
+
+	}
+	nocache_headers();
+	
+	header( 'Content-Type: ' . get_bloginfo( 'html_type' ) . '; charset=' . get_bloginfo( 'charset' ) );
+	
+	// Set a cookie now to see if they are supported by the browser.
+	$secure = ( 'https' === parse_url( wp_login_url(), PHP_URL_SCHEME ) );
+	setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN, $secure, true );
+	
+	if ( SITECOOKIEPATH !== COOKIEPATH ) {
+		setcookie( TEST_COOKIE, 'WP Cookie check', 0, SITECOOKIEPATH, COOKIE_DOMAIN, $secure, true );
+	}
+	
+	if ( isset( $_REQUEST['wp_lang'] ) ) {
+		setcookie( 'wp_lang', sanitize_text_field( $_REQUEST['wp_lang'] ), 0, COOKIEPATH, COOKIE_DOMAIN, $secure, true );
+	}
+	
+	/**
+	 * Fires when the login form is initialized.
+	 *
+	 * @since WP 3.2.0
+	 */
+	do_action( 'login_init' );
+	/**
+	 * Fires when the login form is initialized.
+	 *
+	 * @since 2.3.19
+	 */
+	do_action( 'secupress_login_page.login_init' );
+
+	/**
+	 * Fires before a specified login form action.
+	 *
+	 * The dynamic portion of the hook name, `$action`, refers to the action
+	 * that brought the visitor to the login form.
+	 *
+	 * @since WP 2.8.0
+	 */
+	do_action( "login_form_{$sp_action}" );
+	/**
+	 * Fires before a specified login form action.
+	 *
+	 * The dynamic portion of the hook name, `$action`, refers to the action
+	 * that brought the visitor to the login form.
+	 *
+	 * @since 2.3.19
+	 */
+	do_action( "secupress_login_page.login_form_{$sp_action}" );
+
+	/**
+	 * Filters the content of the form
+	 *
+	 * @since 2.3.19
+	 *
+	 * @param string $content
+	 */
+	$content = apply_filters( 'secupress_login_page.content', $content, $sp_action );
+
+	echo $content . "\n";
+
+	wp_enqueue_script( 'user-profile' );
+	
+	?>
+	<p id="backtoblog">
+	<?php
+	if ( 'honeypot' !== $sp_action ) {
+		$redirect_to = isset( $_REQUEST['redirect_to'] ) ? $_REQUEST['redirect_to'] : '';
+		$html_link = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( wp_login_url( $redirect_to, true ) ),
+			sprintf(
+				__( '&larr; Back to %s', 'secupress' ),
+				strtolower( __( 'Login Page', 'secupress' ) )
+			)
+		);
+		/**
+		 * Filters the "Go to site" link displayed in the login page footer.
+		 *
+		 * @since WP 5.7.0
+		 *
+		 * @param string $link HTML link to the home URL of the current site.
+		 */
+		$html_link = apply_filters( 'login_site_html_link', $html_link );
+		/**
+		 * Filters the "Go to site" link displayed in the login page footer.
+		 *
+		 * @since 2.3.19
+		 *
+		 * @param string $link HTML link to the home URL of the current site.
+		 */
+		$html_link = apply_filters( 'secupress_login_page.login_link', $html_link );
+	} else {
+		$html_link = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( home_url() ),
+			sprintf(
+				__( '&larr; Back to %s', 'secupress' ),
+				strtolower( get_bloginfo( 'name' ) )
+			)
+		);
+
+	}
+	echo $html_link;
+	?>
+	</p>
+	</div>
+	<script>
+	try {
+		const firstInput = document.querySelector('#loginform input:not([type="hidden"])');
+		if (typeof firstInput !== 'undefined') {
+			firstInput.focus();
+		}
+	} catch(e) {}
+	if (typeof wpOnload === 'function') wpOnload();
+	</script>
+	<?php
+	/**
+	 * Fires in the login page footer.
+	 *
+	 * @since WP 3.1.0
+	 */
+	do_action( 'login_footer' );
+	/**
+	 * Fires in the login page footer.
+	 *
+	 * @since 2.3.19
+	 */
+	do_action( 'secupress_login_page.login_footer' );
+	/**
+	 * Shake the form when true
+	 *
+	 * @since 2.3.19
+	 */
+	if ( apply_filters( 'secupress_login_page.shake_js', false ) ) {
+		wp_print_inline_script_tag( "document.querySelector('form').classList.add('shake');" );
+	}
+	?>
+	</body>
+	</html>
+	<?php
+	die();
+}
 
 /**
  * First half of escaping for LIKE special characters % and _ before preparing for MySQL.
@@ -166,7 +534,7 @@ function secupress_get_hashed_folder_name( $context = 'folder_name', $path = '/'
 
 
 /**
- * Generate a hash.
+ * Generate a hash depending on a context and 'hash_key'.
  *
  * @since 1.0
  *
@@ -177,17 +545,25 @@ function secupress_get_hashed_folder_name( $context = 'folder_name', $path = '/'
  * @return (string)
  */
 function secupress_generate_hash( $context, $start = 2, $length = 6 ) {
-	static $hash = array();
-
-	$key = "$context|$start|$length";
-
-	if ( ! isset( $hash[ $key ] ) ) {
-		$hash[ $key ] = substr( md5( secupress_get_option( 'hash_key' ) . $context ), $start, $length );
-	}
-
-	return $hash[ $key ];
+	$hk = secupress_get_option( 'hash_key' );
+	return substr( md5( $hk . $context ), $start, $length );
 }
 
+/**
+ * Generate a key depending on an object and 'master_key'.
+ *
+ * @since 2.3.21
+ * @author Julio Potier
+ * 
+ * @param (string|int|float) $object
+ * @param (int) $length
+ * 
+ * @return (string)
+ **/
+function secupress_generate_key_for_object( $object, $length = 6 ) {
+	$mk = secupress_get_option( 'master_key' );
+	return substr( md5( $mk . $object ), 2, $length );
+}
 
 /**
  * Generate a random key.
@@ -356,7 +732,8 @@ function secupress_readable_duration( $entry ) {
 	$to     = new \DateTime( "@$entry" );
 	$data   = explode( ':', $from->diff( $to )->format('%s:%i:%h:%d:%m:%y') );
 	$return = [];
-	$labels = [ _n_noop( '%s second', '%s seconds' ),
+	$labels = [ 
+				_n_noop( '%s second', '%s seconds' ),
 				_n_noop( '%s minute', '%s minutes' ),
 				_n_noop( '%s hour', '%s hours' ),
 				_n_noop( '%s day', '%s days' ),
@@ -390,7 +767,7 @@ function secupress_readable_duration( $entry ) {
  * @return (string)
  **/
 function secupress_tag_me( $str, $tag, $attrs = '' ) {
-	return sprintf( '<%1$s %3$s>%2$s</%1$s>', $tag, $str, $attrs );
+	return sprintf( '<%1$s%3$s>%2$s</%1$s>', $tag, $str, $attrs );
 }
 
 /**
@@ -508,4 +885,127 @@ function secupress_get_404_rule_for_rewrites() {
 
 	return $rule;
 
+}
+
+/**
+ * Migrate attacks data from old format to new format
+ * Old format: simple numeric values (e.g., "ban_ip" => 76)
+ * New format: arrays with dates (e.g., "ban_ip" => ["0725" => 26, "0825" => 27, ...])
+ * Also ensures "all" index exists with cumulative total
+ *
+ * @author Julio Potier
+ * @since 2.4.1
+ *
+ * @param (array) $attack_types The attacks data to migrate
+ * @return (array) Migrated attacks data
+ **/
+function secupress_migrate_attacks_data( $attack_types ) {
+	if ( ! is_array( $attack_types ) || empty( $attack_types ) ) {
+		return $attack_types;
+	}
+
+	$needs_migration = false;
+	$all_total = 0;
+	$current_date = date( 'md' ); // Format MMDD
+
+	foreach ( $attack_types as $type => $data ) {
+		if ( 'all' === $type ) {
+			continue;
+		}
+
+		// If it's a simple number (old format), we need migration
+		if ( is_numeric( $data ) && ! is_array( $data ) ) {
+			$needs_migration = true;
+			$all_total += (int) $data;
+		} elseif ( is_array( $data ) ) {
+			foreach ( $data as $value ) {
+				if ( is_numeric( $value ) ) {
+					$all_total += (int) $value;
+				}
+			}
+		}
+	}
+
+	// If no migration needed but "all" is missing, we still need to add it
+	if ( ! $needs_migration && ! isset( $attack_types['all'] ) ) {
+		// Calculate "all" from existing new format data
+		$all_total = 0;
+		foreach ( $attack_types as $type => $data ) {
+			if ( 'all' !== $type && is_array( $data ) ) {
+				foreach ( $data as $value ) {
+					if ( is_numeric( $value ) ) {
+						$all_total += (int) $value;
+					}
+				}
+			}
+		}
+		$attack_types['all'] = $all_total;
+		update_option( SECUPRESS_ATTACKS, $attack_types );
+		return $attack_types;
+	}
+
+	// If migration is needed
+	if ( $needs_migration ) {
+		$migrated = [];
+
+		foreach ( $attack_types as $type => $data ) {
+			if ( 'all' === $type ) {
+				continue;
+			}
+
+			if ( is_numeric( $data ) && ! is_array( $data ) ) {
+				$value = (int) $data;
+				$migrated[ $type ] = [];
+				
+				$months = [];
+				$date = new DateTime();
+				for ( $i = 0; $i < 6; $i++ ) {
+					$month_date = clone $date;
+					$month_date->modify( '-' . $i . ' months' );
+					$month_date->setDate( (int) $month_date->format( 'Y' ), (int) $month_date->format( 'm' ), 25 );
+					$months[] = $month_date->format( 'md' );
+				}
+				$months = array_reverse( $months ); // Oldest first
+				
+				$per_month = floor( $value / 6 );
+				$remainder = $value % 6;
+				$current_month = date( 'm' ); // Current month (MM format)
+				
+				foreach ( $months as $month_key ) {
+					$month_key_month = substr( $month_key, 0, 2 ); // Extract month (MM) from MMDD
+					if ( $month_key_month === $current_month ) {
+						$migrated[ $type ][ $month_key ] = $per_month + $remainder;
+					} else {
+						$migrated[ $type ][ $month_key ] = $per_month;
+					}
+				}
+			} else {
+				$migrated[ $type ] = $data;
+			}
+		}
+
+		$migrated['all'] = $all_total;
+
+		update_option( SECUPRESS_ATTACKS, $migrated );
+		return $migrated;
+	}
+
+	return $attack_types;
+}
+
+/**
+ * Return the Flag emoji for a given country code like "FR" or "UK"
+ *
+ * @since 2.6
+ * @author Julio Potier
+ * 
+ * @param (string)
+ * 
+ * @see JS Version here https://dev.to/jorik/country-code-to-flag-emoji-a21
+ * 
+ * @return (string)
+ **/
+function secupress_get_flag( $country_code ) {
+    $country_code = strtoupper( $country_code );
+    return mb_chr( ord( $country_code[0] ) + 127397, 'UTF-8') . mb_chr( ord( $country_code[1] ) + 127397, 'UTF-8' );
 }

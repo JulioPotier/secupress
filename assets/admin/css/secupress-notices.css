@@ -2,6 +2,7 @@
 
 .secupress-notice.has-plugin-title {
 	margin-bottom: 33px !important;
+	position: relative;
 }
 .secupress-notice.secupress-flex {
 	position: relative;

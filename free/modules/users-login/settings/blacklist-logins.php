@@ -124,19 +124,17 @@ $this->add_field( array(
 						]
 ) );
 
-$this->add_field( array(
-	'title'             => sprintf( __( 'Rename the users nickname', 'secupress' ), 'admin' ),
-	'description'       => __( 'Any new user or updated user who has their nickname as the same as their login will be renamed', 'secupress' ),
-	'label_for'         => $this->get_field_name( 'lexicomatisation' ),
-	'type'              => 'checkbox',
-	'depends'           => $this->get_field_name( 'activated' ),
-	'default'           => false,
-	'label'             => sprintf( __( 'Yes, prevent user‘s login to be the same as their display name', 'secupress' ), secupress_tag_me( 'admin', 'strong' ) ),
-	'helpers'           => [
-							[ 'type' => 'description',  'description' => sprintf( __( 'New nickname will look like this: "%s"', 'secupress' ), secupress_tag_me( secupress_usernames_lexicomatisation(), 'em' ) ), ],
-						]
-) );
-
+if ( secupress_is_expert_mode() ) {
+	$this->add_field( array(
+		'title'             => sprintf( __( 'Rename public user names', 'secupress' ), 'admin' ),
+		'description'       => __( 'All users whose nickname, display name, or nicename is identical to their login may be asked to rename it following our automatic fix attempt.', 'secupress' ),
+		'label_for'         => $this->get_field_name( 'lexicomatisation' ),
+		'type'              => 'checkbox',
+		'depends'           => $this->get_field_name( 'activated' ),
+		'default'           => false,
+		'label'             => sprintf( __( 'Yes, prevent user‘s login to be the same as their public names', 'secupress' ), secupress_tag_me( 'admin', 'strong' ) ),
+	) );
+}
 $woomobileurl = __( 'https://woocommerce.com/mobile/', 'secupress' );
 $this->add_field( array(
 	'title'             => __( 'Forbid User Enumeration', 'secupress' ),
@@ -146,22 +144,11 @@ $this->add_field( array(
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'stop-user-enumeration' ),
 	'label'             => __( 'Yes, prevent user and author enumeration', 'secupress' ),
 	'helpers'           => [
-							[ 'type' => 'warning', 'description' => sprintf( __( 'If you are using the %sWooCommerce Mobile App%s, do not activate this module.', 'secupress' ), '<a href="' . $woomobileurl . '" target="_blank" rel="noreferrer" rel="noopener">', '</a>' ), ],
+							[ 'type' => 'warning', 'description' => __( 'Author pages on the front end will redirect to your homepage to hide usernames.', 'secupress' ), ],
+							[ 'type' => 'warning', 'description' => secupress_is_plugin_active( 'woocommerce/cwoocommerce.php' ) ? sprintf( __( 'If you are using the %sWooCommerce Mobile App%s, do not activate this module.', 'secupress' ), '<a href="' . $woomobileurl . '" target="_blank" rel="noreferrer" rel="noopener">', '</a>' ) : '', ],
 						]
 ) );
-/*
-$this->add_field( array(
-	'title'             => __( 'Prevent Password Reset', 'secupress' ),
-	'label_for'         => $this->get_field_name( 'prevent-reset-password' ),
-	'plugin_activation' => true,
-	'type'              => 'checkbox',
-	'value'             => (int) secupress_is_submodule_active( 'users-login', 'prevent-reset-password' ),
-	'label'             => __( 'Yes, prevent the usage of Password Reset', 'secupress' ),
-	'helpers'           => [
-							[ 'type' => $e_helper_type, 'description' => $e_helper_desc, ],
-						]
-) );
-*/
+
 $main_field_name  = $this->get_field_name( 'default-role-activated' );
 $is_plugin_active = secupress_is_submodule_active( 'users-login', 'default-role' );
 $default_role     = secupress_translate_user_role( wp_roles()->roles[ get_option( 'default_role' ) ]['name'] );
@@ -189,7 +176,9 @@ $this->add_field( array(
 	'not'               => secupress_get_forbidden_default_roles(),
 	'disabled'          => $is_plugin_active,
 	'helpers'           => [
-							[ 'type' => 'warning',     'description' => $is_plugin_active ? __( 'To change the default role, you must first deactivate the module.', 'secupress' ) : '', ],
+							[ 'type' => 'warning',     
+							  'description' => $is_plugin_active ? __( 'To switch the default role, deactivate the module first.', 'secupress' ) : '',
+							],
 						]
 ) );
 $this->add_field( array(
